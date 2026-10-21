@@ -1,0 +1,153 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Third-party actions are pinned to commit SHAs; the tag is in the comment.
+jobs:
+  app:
+    name: Lint, typecheck, test, build and E2E
+    runs-on: ubuntu-24.04
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:3.3.2
+        ports:
+          - 8000:8000
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm db:init
+      - run: pnpm --filter web exec playwright install --with-deps chromium
+      - run: pnpm --filter web e2e
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
+
+  terraform:
+    name: Terraform fmt and validate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.16.6
+          terraform_wrapper: false
+      - run: terraform -chdir=infra fmt -check -recursive
+      - run: terraform -chdir=infra init -backend=false -input=false
+      - run: terraform -chdir=infra validate
+
+  security:
+    name: gitleaks and Trivy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trivy (dependencies and Terraform)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.75.0
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          trivyignores: .trivyignore
+
+  deploy:
+    name: Deploy to AWS
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [app, terraform, security]
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      IMAGE_TAG: ${{ github.sha }}
+      TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
+      # A secret, not a variable, so GitHub masks the allowlisted IPs in this public repo's logs.
+      TF_VAR_allowed_cidrs: ${{ secrets.ALLOWED_CIDRS }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          mask-aws-account-id: true
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the Lambda bundle
+        run: pnpm --filter policy-issuer build:lambda
+
+      # Tags are immutable in ECR, so a re-run of the same commit reuses its image.
+      - name: Check for an existing image
+        id: image
+        run: |
+          echo "ref=${{ steps.ecr.outputs.registry }}/zurich-life-direct:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          if aws ecr describe-images --repository-name zurich-life-direct --image-ids imageTag="$IMAGE_TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build the image
+        if: steps.image.outputs.exists == 'false'
+        run: docker build --platform linux/amd64 -t "${{ steps.image.outputs.ref }}" .
+      # Unfixed findings are skipped here: node:22-slim's Debian packages carry many HIGH CVEs
+      # with no fixed version yet, which would block every deploy with nothing to act on.
+      - name: Trivy (image)
+        if: steps.image.outputs.exists == 'false'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.75.0
+          scan-type: image
+          image-ref: ${{ steps.image.outputs.ref }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          trivyignores: .trivyignore
+      - name: Push the image
+        if: steps.image.outputs.exists == 'false'
+        run: docker push "${{ steps.image.outputs.ref }}"
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.16.6
+          terraform_wrapper: false
+      - name: Terraform apply
+        working-directory: infra
+        run: |
+          account_id=$(aws sts get-caller-identity --query Account --output text)
+          terraform init -input=false -backend-config="bucket=zurich-demo-tfstate-$account_id"
+          terraform apply -input=false -auto-approve -var "image_tag=$IMAGE_TAG"
+      # The runner isn't on the WAF allowlist, so the ALB health check is the smoke test.
+      - name: Wait for the ECS service to be stable
+        run: aws ecs wait services-stable --cluster zurich-demo --services web

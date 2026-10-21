@@ -19,6 +19,9 @@ RUN pnpm --filter policy-issuer build:lib && pnpm --filter web build
 FROM node:22-slim AS runtime
 ENV NODE_ENV=production \
     PORT=8080
+# The app never runs npm, npx, corepack or yarn, and npm's bundled packages carry known CVEs.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
+    /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 WORKDIR /app
 COPY --from=build /repo/apps/web/.output ./.output
 COPY --from=build /repo/apps/web/.output/otel.mjs ./otel.mjs
