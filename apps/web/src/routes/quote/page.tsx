@@ -8,6 +8,7 @@ import { useJourneyLoaded, useQuoteJourney } from '@/quote/journey-store';
 import { QuoteProgress } from '@/quote/quote-progress';
 import { QuoteSummary } from '@/quote/quote-summary';
 import { requestQuote } from '@/quote/request-quote';
+import { useSession, useSignInDialog } from '@/session/session';
 
 type Step = 1 | 2 | 3;
 
@@ -28,6 +29,8 @@ export default function QuotePage() {
   const loaded = useJourneyLoaded();
   const { aboutYou, cover, quote, saveAboutYou, saveQuote } = useQuoteJourney();
   const quoteRequest = useMutation({ mutationFn: requestQuote });
+  const session = useSession();
+  const requestSignIn = useSignInDialog((state) => state.request);
 
   // Steps can't be skipped: no answers means step 1, no price means step 2 at most.
   const requested = parseStep(searchParams.get('step'));
@@ -49,6 +52,7 @@ export default function QuotePage() {
   }, [step]);
 
   const goTo = (next: Step) => navigate(`/quote?step=${next}`);
+  const apply = () => (session.data?.signedIn ? navigate('/apply') : requestSignIn('/apply'));
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
@@ -94,7 +98,7 @@ export default function QuotePage() {
             }
           />
         ) : quote ? (
-          <QuoteSummary quote={quote} onChangeCover={() => goTo(2)} />
+          <QuoteSummary quote={quote} onApply={apply} onChangeCover={() => goTo(2)} />
         ) : null}
       </div>
     </div>
