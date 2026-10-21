@@ -14,7 +14,7 @@ CVE-2026-67213
 CVE-2026-67214
 CVE-2026-73086
 
-# The ALB has to be public so the WAF can answer IPs outside the allowlist with a 403.
+# The ALB is public on purpose: anyone may visit the demo.
 AWS-0053
 
 # No NAT gateway or VPC endpoints by design, so tasks reach AWS APIs over public HTTPS (port 443 only).

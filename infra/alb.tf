@@ -1,19 +1,29 @@
 resource "aws_security_group" "alb" {
-  name        = "${var.name}-alb"
-  description = "Public HTTP and HTTPS; the WAF decides who gets through"
+  name_prefix = "${var.name}-alb-"
+  description = "Public HTTP and HTTPS"
   vpc_id      = aws_vpc.main.id
+
+  # AWS can't edit a security group's description, so changes replace it. Creating the new one
+  # first lets the load balancer move across without losing its group.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-# Open to everyone on purpose: the WAF allowlist returns 403 to other IPs,
-# which a security group can't do.
+# The site is public: anyone can reach it on 80 (redirected) and 443.
 resource "aws_vpc_security_group_ingress_rule" "alb" {
   for_each          = toset(["80", "443"])
   security_group_id = aws_security_group.alb.id
-  description       = "Port ${each.value} from anywhere, filtered by the WAF"
+  description       = "Port ${each.value} from anywhere"
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "tcp"
   from_port         = tonumber(each.value)
   to_port           = tonumber(each.value)
+
+  # Replaced alongside the group above, so add the new rules before removing the old ones.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpc_security_group_egress_rule" "alb_to_tasks" {
@@ -23,6 +33,11 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_tasks" {
   ip_protocol                  = "tcp"
   from_port                    = 8080
   to_port                      = 8080
+
+  # Replaced alongside the group above, so add the new rules before removing the old ones.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lb" "app" {
@@ -79,53 +94,4 @@ resource "aws_lb_listener" "https" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.web.arn
   }
-}
-
-# Blocks everything except the allowlisted IPs. To change the list, edit allowed_cidrs.
-resource "aws_wafv2_ip_set" "allowed" {
-  name               = "${var.name}-allowed"
-  scope              = "REGIONAL"
-  ip_address_version = "IPV4"
-  addresses          = var.allowed_cidrs
-}
-
-resource "aws_wafv2_web_acl" "app" {
-  name  = var.name
-  scope = "REGIONAL"
-
-  default_action {
-    block {}
-  }
-
-  rule {
-    name     = "allow-listed-ips"
-    priority = 1
-
-    action {
-      allow {}
-    }
-
-    statement {
-      ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.allowed.arn
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "${var.name}-allowed"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = var.name
-    sampled_requests_enabled   = true
-  }
-}
-
-resource "aws_wafv2_web_acl_association" "alb" {
-  resource_arn = aws_lb.app.arn
-  web_acl_arn  = aws_wafv2_web_acl.app.arn
 }

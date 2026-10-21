@@ -88,8 +88,6 @@ jobs:
     env:
       IMAGE_TAG: ${{ github.sha }}
       TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
-      # A secret, not a variable, so GitHub masks the allowlisted IPs in this public repo's logs.
-      TF_VAR_allowed_cidrs: ${{ secrets.ALLOWED_CIDRS }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
@@ -148,6 +146,7 @@ jobs:
           account_id=$(aws sts get-caller-identity --query Account --output text)
           terraform init -input=false -backend-config="bucket=zurich-demo-tfstate-$account_id"
           terraform apply -input=false -auto-approve -var "image_tag=$IMAGE_TAG"
-      # The runner isn't on the WAF allowlist, so the ALB health check is the smoke test.
       - name: Wait for the ECS service to be stable
         run: aws ecs wait services-stable --cluster zurich-demo --services web
+      - name: Smoke test the public URL
+        run: curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "https://${{ vars.DOMAIN_NAME }}/api/health"
