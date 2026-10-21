@@ -4,6 +4,9 @@ import { bffPlugin } from '@modern-js/plugin-bff';
 // https://modernjs.dev/en/configure/app/usage
 export default defineConfig({
   plugins: [appTools(), bffPlugin()],
+  server: {
+    ssr: true,
+  },
   html: {
     title: 'Zurich Life Direct (demo)',
     meta: {
