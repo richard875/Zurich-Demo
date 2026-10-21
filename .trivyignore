@@ -1,0 +1,24 @@
+# One reason per suppression. CI fails on HIGH and CRITICAL only.
+
+# braces: build-time glob matching (fast-glob via Modern.js and shadcn). No fixed release yet; not in the runtime image.
+CVE-2026-93687
+
+# Old browserslist, js-yaml and nanoid compiled into @modern-js/utils 3.10.1 (the latest), so they can't be upgraded here.
+# They serve Modern.js build tooling, not request handling.
+CVE-2026-73088
+CVE-2026-73089
+CVE-2026-59869
+CVE-2026-84375
+GHSA-5p4m-2wfm-xmqj
+CVE-2026-67213
+CVE-2026-67214
+CVE-2026-73086
+
+# The ALB has to be public so the WAF can answer IPs outside the allowlist with a 403.
+AWS-0053
+
+# No NAT gateway or VPC endpoints by design, so tasks reach AWS APIs over public HTTPS (port 443 only).
+AWS-0104
+
+# The SNS topic is encrypted with the AWS-managed key; a customer-managed key isn't worth it for fake data.
+AWS-0136
