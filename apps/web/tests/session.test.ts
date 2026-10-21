@@ -5,7 +5,7 @@ import {
   SESSION_TTL_SECONDS,
   signSession,
   verifySession,
-} from './session';
+} from '../api/lambda/_lib/session';
 
 const secret = 'test-secret-value';
 const now = Date.parse('2026-10-24T09:00:00Z');

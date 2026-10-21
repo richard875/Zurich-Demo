@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { underwrite } from './_underwriting';
+import { underwrite } from '../api/lambda/mock-mulesoft/_underwriting';
 
 const answers = (...values: boolean[]) =>
   values.map((answer, index) => ({ questionId: `q${index + 1}`, answer }));

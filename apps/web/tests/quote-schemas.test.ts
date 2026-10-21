@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { aboutYouSchema, ageOn, coverSchema, isRealDate, todayInSydney } from './quote';
+import { aboutYouSchema, ageOn, coverSchema, isRealDate, todayInSydney } from '../shared/quote';
 
 describe('dates', () => {
   it('uses the calendar date in Sydney', () => {

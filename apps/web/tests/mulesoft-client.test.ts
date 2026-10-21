@@ -1,7 +1,7 @@
 import pino from 'pino';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { postToMulesoft } from './mulesoft-client';
+import { postToMulesoft } from '../api/lambda/_lib/mulesoft-client';
 
 const schema = z.object({ decision: z.enum(['ACCEPT', 'REFER']) });
 const log = pino({ level: 'silent' });

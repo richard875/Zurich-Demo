@@ -15,7 +15,8 @@ export default defineConfig({
     ],
   },
   test: {
-    include: ['{src,api,shared}/**/*.test.{ts,tsx}'],
+    // Server-side tests live in tests/, outside api/ and shared/, so Modern.js doesn't ship them.
+    include: ['src/**/*.test.tsx', 'tests/**/*.test.ts'],
     setupFiles: ['./vitest.setup.ts'],
   },
 });
