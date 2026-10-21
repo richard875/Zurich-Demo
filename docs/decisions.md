@@ -1,0 +1,9 @@
+- Modern.js BFF, not a separate Hono service: one deployable, and it runs on Hono anyway.
+- FingerprintJS mock sign-in: no identity provider to set up for a demo. Not real auth.
+- ECS Fargate, not EKS: no cluster to run for a four-day demo.
+- Own AWS account: closing it removes everything.
+- Mock MuleSoft lives in the app but is only reached over HTTP, like an external system.
+- Inline events locally and in CI: the Lambda's code runs in-process, so nothing needs AWS.
+- No NAT gateway: tasks get public IPs, and only the load balancer can reach them.
+- WAF IP allowlist on the load balancer: the mock sign-in protects nothing.
+- The Trivy image scan skips unfixed CVEs: the Debian base packages have no fix to apply.
