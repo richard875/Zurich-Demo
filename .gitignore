@@ -21,3 +21,6 @@ test-results/
 
 # Local editor and agent settings
 .claude/
+
+# Terraform backend config holds the account ID
+infra/backend.hcl
