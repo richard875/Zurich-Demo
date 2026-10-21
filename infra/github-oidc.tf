@@ -19,6 +19,8 @@ data "aws_iam_policy_document" "github_assume" {
       values   = ["sts.amazonaws.com"]
     }
 
+    # GitHub's subject includes the owner and repository IDs, so a renamed or re-created
+    # repository with the same name can't assume this role.
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
