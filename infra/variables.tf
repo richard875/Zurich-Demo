@@ -15,11 +15,6 @@ variable "domain_name" {
   type        = string
 }
 
-variable "allowed_cidrs" {
-  description = "IP ranges the WAF lets through. Everyone else gets a 403."
-  type        = list(string)
-}
-
 variable "image_tag" {
   description = "Tag of the web image in ECR to run (the commit SHA)."
   type        = string

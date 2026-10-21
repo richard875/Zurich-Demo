@@ -26,7 +26,7 @@ pnpm build && docker buildx build --platform linux/amd64 --push -t <ecr-url>:$(g
 terraform -chdir=infra apply -var image_tag=$(git rev-parse HEAD)
 ```
 
-Add the DNS records Terraform outputs. Then set the repository variables and the `ALLOWED_CIDRS` secret.
+Add the DNS records Terraform outputs, then set the repository variables.
 
 ## Where things are
 

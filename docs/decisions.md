@@ -5,5 +5,5 @@
 - Mock MuleSoft lives in the app but is only reached over HTTP, like an external system.
 - Inline events locally and in CI: the Lambda's code runs in-process, so nothing needs AWS.
 - No NAT gateway: tasks get public IPs, and only the load balancer can reach them.
-- WAF IP allowlist on the load balancer: the mock sign-in protects nothing.
+- Public URL, no IP allowlist: every page says it is a demo, and nothing is indexed.
 - The Trivy image scan skips unfixed CVEs: the Debian base packages have no fix to apply.
