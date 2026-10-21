@@ -7,9 +7,19 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@api/*": ["./api/lambda/*"]
+      "@api/*": ["./api/lambda/*"],
+      "@shared/*": ["./shared/*"]
     }
   },
-  "include": ["src", "api", "server", "scripts", "modern.config.ts"],
+  "include": [
+    "src",
+    "api",
+    "server",
+    "shared",
+    "scripts",
+    "modern.config.ts",
+    "vitest.config.ts",
+    "vitest.setup.ts"
+  ],
   "exclude": ["**/node_modules"]
 }
