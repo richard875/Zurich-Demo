@@ -2,6 +2,8 @@
 resource "aws_sns_topic" "application_submitted" {
   name              = "${var.name}-application-submitted"
   kms_master_key_id = "alias/aws/sns"
+  # Carries the publisher's X-Ray trace on to SQS and the Lambda.
+  tracing_config = "Active"
 }
 
 resource "aws_sqs_queue" "policy_issuer_dlq" {
