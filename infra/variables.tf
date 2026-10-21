@@ -26,7 +26,7 @@ variable "image_tag" {
 }
 
 variable "github_repository" {
-  description = "owner/name of the GitHub repository whose main branch may deploy."
+  description = "The repository whose main branch may deploy, as GitHub's OIDC subject names it: owner@owner-id/name@repo-id."
   type        = string
-  default     = "richard875/Zurich-Demo"
+  default     = "richard875@53744839/Zurich-Demo@1428594295"
 }
