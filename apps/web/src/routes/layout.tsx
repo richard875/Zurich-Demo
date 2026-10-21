@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
 import { Outlet } from '@modern-js/runtime/router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DemoBanner } from '@/components/site/demo-banner';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
@@ -14,17 +16,21 @@ import '@zurich/css-components/Logo.css';
 import '@/styles/globals.css';
 
 export default function Layout() {
+  // One client per browser session (and per server render), never shared between users.
+  const [queryClient] = useState(() => new QueryClient());
   return (
-    <div className="flex min-h-screen flex-col">
-      <Helmet htmlAttributes={{ lang: 'en-AU' }}>
-        <link rel="icon" href="data:," />
-      </Helmet>
-      <DemoBanner />
-      <SiteHeader />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <SiteFooter />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="flex min-h-screen flex-col">
+        <Helmet htmlAttributes={{ lang: 'en-AU' }}>
+          <link rel="icon" href="data:," />
+        </Helmet>
+        <DemoBanner />
+        <SiteHeader />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
+    </QueryClientProvider>
   );
 }
