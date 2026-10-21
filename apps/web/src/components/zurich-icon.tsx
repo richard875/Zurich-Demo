@@ -4,6 +4,7 @@ export type ZurichIconName =
   | 'arrow-left:line'
   | 'arrow-right:line'
   | 'check:line'
+  | 'close:line'
   | 'family:line'
   | 'financial-health:line';
 
