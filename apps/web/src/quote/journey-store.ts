@@ -9,6 +9,7 @@ interface QuoteJourney {
   quote: Quote | null;
   saveAboutYou: (aboutYou: AboutYou) => void;
   saveQuote: (cover: Cover, quote: Quote) => void;
+  reset: () => void;
 }
 
 export const useQuoteJourney = create<QuoteJourney>()(
@@ -20,6 +21,8 @@ export const useQuoteJourney = create<QuoteJourney>()(
       // New answers make any earlier price stale.
       saveAboutYou: (aboutYou) => set({ aboutYou, quote: null }),
       saveQuote: (cover, quote) => set({ cover, quote }),
+      // Once an application is in, its quote is used up.
+      reset: () => set({ aboutYou: null, cover: null, quote: null }),
     }),
     {
       name: 'zld-quote',

@@ -1,4 +1,3 @@
-import { Link } from '@modern-js/runtime/router';
 import { formatCents, formatWholeDollars } from '@shared/money';
 import type { Quote } from '@shared/quote';
 import { Button } from '@/components/ui/button';
@@ -9,9 +8,11 @@ const GENERAL_ADVICE_WARNING =
 
 export function QuoteSummary({
   quote,
+  onApply,
   onChangeCover,
 }: {
   quote: Quote;
+  onApply: () => void;
   onChangeCover: () => void;
 }) {
   const { life, incomeProtection } = quote;
@@ -69,11 +70,9 @@ export function QuoteSummary({
       <p className="rounded-lg bg-zurich-white p-4 text-sm">{GENERAL_ADVICE_WARNING}</p>
 
       <div className="flex flex-wrap items-center gap-4">
-        <Button asChild>
-          <Link to="/apply">
-            Apply now
-            <ZurichIcon name="arrow-right:line" />
-          </Link>
+        <Button type="button" onClick={onApply}>
+          Apply now
+          <ZurichIcon name="arrow-right:line" />
         </Button>
         <Button type="button" variant="ghost" onClick={onChangeCover}>
           Change cover
