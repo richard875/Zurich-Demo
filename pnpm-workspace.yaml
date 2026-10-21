@@ -3,7 +3,6 @@ packages:
   - functions/policy-issuer
   - infra
 allowBuilds:
+  '@parcel/watcher': false
   '@swc/core': false
   core-js: false
-minimumReleaseAgeExclude:
-  - '@aws-sdk/client-dynamodb@3.1154.0'

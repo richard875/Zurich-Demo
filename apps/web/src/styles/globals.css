@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@theme {
+  /* Only Zurich colours are available, so nothing can fall back to black. */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-zurich-blue: #2167ae;
+  --color-dark-blue: #23366f;
+  --color-mid-blue: #5495cf;
+  --color-light-blue: #91bfe3;
+  --color-sky-blue: #1fb1e6;
+  --color-sand-stone: #dad2bd;
+  --color-dove: #dde4e3;
+  --color-zurich-white: #eceeef;
+  --color-moss: #3a8367;
+  --color-lemon: #f9e547;
+  --color-peach: #fd7c6d;
+
+  --font-sans: ZurichSans, system-ui, sans-serif;
+  --font-display: Ogg, Georgia, serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  --radius: 0.25rem;
+  --background: var(--color-white);
+  --foreground: var(--color-dark-blue);
+  --card: var(--color-white);
+  --card-foreground: var(--color-dark-blue);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-dark-blue);
+  --primary: var(--color-zurich-blue);
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-zurich-white);
+  --secondary-foreground: var(--color-dark-blue);
+  /* Dark Blue mixed with white keeps secondary text above 4.5:1 on white and Zurich White. */
+  --muted: var(--color-zurich-white);
+  --muted-foreground: color-mix(in srgb, var(--color-dark-blue) 80%, white);
+  --accent: var(--color-dove);
+  --accent-foreground: var(--color-dark-blue);
+  --destructive: var(--color-peach);
+  --border: var(--color-dove);
+  /* Mid Blue gives form controls the 3:1 boundary contrast WCAG asks for. */
+  --input: var(--color-mid-blue);
+  --ring: var(--color-zurich-blue);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 2px;
+  }
+
+  h1 {
+    @apply text-4xl leading-tight font-light md:text-5xl;
+  }
+}
+
+@layer components {
+  /* Renders the design-tokens icon sets, which set --zi per [icon] value. */
+  i[z-icon] {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    mask: var(--zi) no-repeat center / 1em;
+  }
+
+  div[z-logo] {
+    --z-logo--fill: var(--color-zurich-blue);
+  }
+}
