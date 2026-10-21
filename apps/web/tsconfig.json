@@ -19,7 +19,9 @@
     "scripts",
     "modern.config.ts",
     "vitest.config.ts",
-    "vitest.setup.ts"
+    "vitest.setup.ts",
+    "e2e",
+    "playwright.config.ts"
   ],
   "exclude": ["**/node_modules"]
 }
