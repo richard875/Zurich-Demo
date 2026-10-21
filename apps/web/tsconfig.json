@@ -1,0 +1,15 @@
+{
+  "extends": "@modern-js/tsconfig/base",
+  "compilerOptions": {
+    "types": ["@modern-js/app-tools/types"],
+    "declaration": false,
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@api/*": ["./api/lambda/*"]
+    }
+  },
+  "include": ["src", "api", "server", "scripts", "modern.config.ts"],
+  "exclude": ["**/node_modules"]
+}

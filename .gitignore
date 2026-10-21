@@ -1,0 +1,23 @@
+# Planning files, never committed
+doc/
+
+node_modules/
+.env
+.env.*
+!.env.example
+.output/
+dist/
+coverage/
+playwright-report/
+test-results/
+.eslintcache
+
+.terraform/
+*.tfstate*
+*.tfvars
+!*.tfvars.example
+
+.DS_Store
+
+# Local editor and agent settings
+.claude/

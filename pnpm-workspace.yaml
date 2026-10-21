@@ -1,0 +1,9 @@
+packages:
+  - apps/web
+  - functions/policy-issuer
+  - infra
+allowBuilds:
+  '@swc/core': false
+  core-js: false
+minimumReleaseAgeExclude:
+  - '@aws-sdk/client-dynamodb@3.1154.0'
