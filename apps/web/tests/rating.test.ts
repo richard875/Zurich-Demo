@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { RatingRequest } from '../_lib/mulesoft-contract';
-import { rate } from './_rating';
+import type { RatingRequest } from '../api/lambda/_lib/mulesoft-contract';
+import { rate } from '../api/lambda/mock-mulesoft/_rating';
 
 const base: RatingRequest = {
   age: 36,
