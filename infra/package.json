@@ -1,5 +1,10 @@
 {
   "name": "infra",
   "version": "0.1.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "fmt": "terraform fmt -recursive",
+    "fmt:check": "terraform fmt -check -recursive",
+    "validate": "terraform init -backend=false -input=false >/dev/null && terraform validate"
+  }
 }
