@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "modern dev",
-    "build": "modern deploy && pnpm build:otel",
+    "build": "MODERNJS_DEPLOY=node modern deploy && pnpm build:otel",
     "typecheck": "tsc --noEmit",
     "db:init": "node scripts/db-init.mts",
     "test": "vitest run",
