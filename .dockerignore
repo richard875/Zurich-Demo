@@ -1,0 +1,11 @@
+.git
+doc
+**/node_modules
+**/.output
+**/dist
+**/.env
+**/.terraform
+**/test-results
+**/playwright-report
+infra/*.tfvars
+infra/backend.hcl
