@@ -2,5 +2,27 @@
   "name": "policy-issuer",
   "version": "0.1.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "main": "./dist/lib/index.cjs",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "pnpm build:lib && pnpm build:lambda",
+    "build:lib": "esbuild src/index.ts --bundle --platform=node --target=node22 --format=cjs --packages=external --outfile=dist/lib/index.cjs",
+    "build:lambda": "esbuild src/lambda.ts --bundle --platform=node --target=node22 --format=cjs --outfile=dist/lambda/index.cjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.1153.0",
+    "@aws-sdk/lib-dynamodb": "3.1153.0",
+    "pino": "^10.4.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.20.5",
+    "esbuild": "^0.28.2",
+    "typescript": "~5.7.3",
+    "vitest": "^5.0.5"
+  }
 }
