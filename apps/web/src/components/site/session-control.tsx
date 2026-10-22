@@ -16,7 +16,7 @@ export function SessionControl({ beforeSignIn }: { beforeSignIn?: () => void }) 
     return (
       <button
         type="button"
-        className={`inline-flex items-center gap-1 ${linkButton}`}
+        className={`inline-flex items-center gap-1 ${linkButton} cursor-pointer`}
         onClick={() => {
           beforeSignIn?.();
           requestSignIn();
@@ -29,11 +29,14 @@ export function SessionControl({ beforeSignIn }: { beforeSignIn?: () => void }) 
   }
 
   return (
-    <span className="flex flex-wrap items-center gap-x-3">
-      <span>Demo customer · device {session.data.deviceLabel}</span>
+    <span className="flex flex-wrap items-center">
+      <span>
+        Customer <b>{session.data.deviceLabel}</b>
+      </span>
+      <span>&nbsp;·&nbsp;</span>
       <button
         type="button"
-        className={`underline ${linkButton}`}
+        className={`underline ${linkButton} cursor-pointer`}
         disabled={signOut.isPending}
         onClick={() => signOut.mutate()}
       >
