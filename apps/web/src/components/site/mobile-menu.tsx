@@ -12,6 +12,8 @@ const rowLink =
   'flex items-center justify-between gap-4 border-b border-dove py-4 text-b-18 underline-offset-4 hover:underline';
 
 // Below 1024px the header's nav, Help & information menu, utility links and sign-in move in here.
+// Sign in sits under the title, then come the customer's own links, the products to quote for and
+// the Help & information groups.
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   return (
@@ -23,10 +25,14 @@ export function MobileMenu() {
         </Button>
       </SheetTrigger>
       <SheetContent className="gap-10">
-        <SheetTitle className="text-h-24 font-medium">Menu</SheetTitle>
-        <nav aria-label="Main">
+        {/* 24px before the button, as elsewhere. justify-items-start keeps the Sign in button its
+            own width rather than the menu's. */}
+        <div className="grid justify-items-start gap-6 text-base">
+          <SheetTitle className="text-h-24 font-medium">Menu</SheetTitle>
+          <SessionControl button beforeSignIn={() => setOpen(false)} />
+        </div>
+        <nav aria-label="Main" className="grid gap-10">
           <ul>
-            {/* The customer's own page comes first. */}
             <li>
               <Link
                 to="/policies"
@@ -36,7 +42,7 @@ export function MobileMenu() {
                 My policies
               </Link>
             </li>
-            {productNav.map((link) => (
+            {utilityLinks.map((link) => (
               <li key={link.href}>
                 <ExternalLink href={link.href} className={rowLink}>
                   {link.label}
@@ -44,6 +50,18 @@ export function MobileMenu() {
               </li>
             ))}
           </ul>
+          <div>
+            <h2 className="text-sm font-semibold">Get a quote</h2>
+            <ul className="mt-2">
+              {productNav.map((link) => (
+                <li key={link.href}>
+                  <ExternalLink href={link.href} className={rowLink}>
+                    {link.label}
+                  </ExternalLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
         {helpMenu.map((group) => (
           <div key={group.title}>
@@ -59,19 +77,6 @@ export function MobileMenu() {
             </ul>
           </div>
         ))}
-        {/* justify-items-start keeps the Sign in button its own width rather than the menu's. */}
-        <div className="grid justify-items-start gap-4 text-base">
-          {utilityLinks.map((link) => (
-            <ExternalLink
-              key={link.href}
-              href={link.href}
-              className="inline-flex items-center gap-1 text-zurich-blue underline-offset-4 hover:underline"
-            >
-              {link.label}
-            </ExternalLink>
-          ))}
-          <SessionControl button beforeSignIn={() => setOpen(false)} />
-        </div>
       </SheetContent>
     </Sheet>
   );
