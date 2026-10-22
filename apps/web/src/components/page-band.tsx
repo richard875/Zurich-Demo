@@ -20,12 +20,17 @@ export function PageBand({ children }: { children: ReactNode }) {
 }
 
 // The flow pages' body under the band: the page's content, at most 768px wide, with a side column
-// from lg that stays in view as the page scrolls. Below lg the side column follows the content.
+// from lg that stays in view as the page scrolls. Below lg the side column follows the content, and
+// stays hidden while the content is loading (globals.css).
 export function FlowLayout({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
   return (
     <Container className="grid grid-cols-1 gap-10 py-10 md:gap-16 md:py-16 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <div className="w-full max-w-3xl min-w-0">{children}</div>
-      {aside && <div className="grid content-start gap-6 lg:sticky lg:top-32">{aside}</div>}
+      {aside && (
+        <div data-slot="flow-aside" className="grid content-start gap-6 lg:sticky lg:top-32">
+          {aside}
+        </div>
+      )}
     </Container>
   );
 }
