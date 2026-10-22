@@ -99,10 +99,9 @@ export function ApplicationForm({
           name="declaration"
           control={control}
           render={({ field }) => (
-            <div className="flex items-start gap-4">
+            <div className="flex items-center gap-4">
               <Checkbox
                 id="declaration"
-                className="mt-0.5"
                 checked={field.value === true}
                 onCheckedChange={(checked) => field.onChange(checked === true)}
                 aria-describedby={describedBy(errors.declaration && 'declaration-error')}

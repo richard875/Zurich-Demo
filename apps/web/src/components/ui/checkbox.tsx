@@ -15,7 +15,8 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
       )}
       {...props}
     >
-      <CheckboxPrimitive.Indicator data-slot="checkbox-indicator">
+      {/* Flex, so the tick centres in the box instead of sitting on a text baseline. */}
+      <CheckboxPrimitive.Indicator data-slot="checkbox-indicator" className="flex">
         <ZurichIcon name="check:line" className="text-lg" />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
