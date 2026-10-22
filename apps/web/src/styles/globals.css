@@ -137,3 +137,11 @@
     --z-logo--fill: var(--color-zurich-blue);
   }
 }
+
+/* The icon sets have one line weight, so this layers the mask a hair either side to thicken it. */
+@utility icon-bold {
+  mask-image: var(--zi), var(--zi);
+  mask-position:
+    calc(50% - 0.015em) center,
+    calc(50% + 0.015em) center;
+}
