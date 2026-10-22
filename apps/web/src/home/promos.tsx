@@ -17,9 +17,11 @@ export function TalkToUs() {
           actions={
             <>
               <QuoteChooser>
-                <Button>Get a quote</Button>
+                <Button size="md" className="cursor-pointer">
+                  Get a quote
+                </Button>
               </QuoteChooser>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" size="md">
                 <a href={phones.sales.href}>Call {phones.sales.number}</a>
               </Button>
             </>
@@ -47,7 +49,7 @@ export function HomeLoanPromo() {
           tone="pink"
           photo={photos.homeLoanPromo}
           actions={
-            <Button asChild>
+            <Button asChild size="md">
               <ExternalLink href="https://direct.zurich.com.au/hlp">Learn more</ExternalLink>
             </Button>
           }
