@@ -33,7 +33,7 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          'fixed inset-y-0 right-0 z-50 flex w-full flex-col overflow-y-auto bg-popover px-4 pt-16 pb-4 text-popover-foreground shadow-lg duration-200 sm:max-w-[480px] sm:px-12 sm:pt-20 sm:pb-12 motion-safe:data-open:animate-in motion-safe:data-open:slide-in-from-right motion-safe:data-closed:animate-out motion-safe:data-closed:slide-out-to-right',
+          'fixed inset-y-0 right-0 z-50 flex w-full flex-col overflow-y-auto bg-popover px-4 pt-16 pb-4 text-popover-foreground shadow-lg duration-200 sm:max-w-[480px] sm:px-12 sm:pt-20 sm:pb-12 motion-safe:data-open:animate-in motion-safe:data-open:slide-in-from-right motion-safe:data-open:ease-sheet-in motion-safe:data-closed:animate-out motion-safe:data-closed:slide-out-to-right motion-safe:data-closed:ease-sheet-out',
           className,
         )}
         {...props}
