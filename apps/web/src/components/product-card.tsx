@@ -26,7 +26,7 @@ export function ProductCard({
       <Headline as="h3" size="card" className="mt-2">
         {title}
       </Headline>
-      <p className="mt-3 text-b-20">{description}</p>
+      <p className="mt-2 text-b-20">{description}</p>
       <a
         href={learnMore.href}
         {...newTab}
