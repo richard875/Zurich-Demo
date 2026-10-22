@@ -18,10 +18,10 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   );
 }
 
-// One line from sm. Below it a long label may wrap rather than push the page sideways, and the
-// pills are 44px tall for touch. A clicked or tapped pill shows no focus ring; one reached by
-// keyboard does. Browsers can ring a clicked tab under :focus-visible, so the pointer is tracked
-// here instead: data-pointer is set on press and cleared by any key or by leaving the pill.
+// The same pill at every width. Below sm a label wider than the screen, as the longest is at 320px,
+// wraps rather than push the page sideways. A clicked or tapped pill shows no focus ring; one
+// reached by keyboard does. Browsers can ring a clicked tab under :focus-visible, so the pointer is
+// tracked here instead: data-pointer is set on press and cleared by any key or by leaving the pill.
 function TabsTrigger({
   className,
   onPointerDown,
@@ -33,7 +33,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        'rounded-full bg-zurich-white px-4 py-3 text-left text-sm font-medium text-zurich-blue transition-colors sm:py-2 data-pointer:outline-none data-[state=inactive]:hover:bg-dove data-[state=inactive]:hover:text-dark-blue data-active:bg-dark-blue data-active:text-white data-active:shadow-sm sm:whitespace-nowrap',
+        'rounded-full bg-zurich-white px-4 py-2 text-left text-sm font-medium text-zurich-blue transition-colors data-pointer:outline-none data-[state=inactive]:hover:bg-dove data-[state=inactive]:hover:text-dark-blue data-active:bg-dark-blue data-active:text-white data-active:shadow-sm sm:whitespace-nowrap',
         className,
       )}
       onPointerDown={(event) => {
