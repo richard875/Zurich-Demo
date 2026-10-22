@@ -4,6 +4,7 @@ import { ExternalLink } from '@/components/external-link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ZurichIcon } from '@/components/zurich-icon';
+import { cn } from '@/lib/cn';
 import { helpMenu, productNav, utilityLinks } from './links';
 import { SessionControl } from './session-control';
 
@@ -25,6 +26,16 @@ export function MobileMenu() {
         <SheetTitle className="text-h-24 font-medium">Menu</SheetTitle>
         <nav aria-label="Main">
           <ul>
+            {/* The customer's own page comes first. */}
+            <li>
+              <Link
+                to="/policies"
+                className={cn(rowLink, 'font-medium')}
+                onClick={() => setOpen(false)}
+              >
+                My policies
+              </Link>
+            </li>
             {productNav.map((link) => (
               <li key={link.href}>
                 <ExternalLink href={link.href} className={rowLink}>
@@ -32,11 +43,6 @@ export function MobileMenu() {
                 </ExternalLink>
               </li>
             ))}
-            <li>
-              <Link to="/policies" className={rowLink} onClick={() => setOpen(false)}>
-                My policies
-              </Link>
-            </li>
           </ul>
         </nav>
         {helpMenu.map((group) => (
