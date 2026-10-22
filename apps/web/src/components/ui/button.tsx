@@ -20,6 +20,8 @@ const buttonVariants = cva(
       size: {
         default: 'h-12 px-6',
         sm: 'h-10 px-4 text-base',
+        // The home page's buttons, header included: 44px, as the product cards' "Get an online quote".
+        md: 'h-11 px-6',
         // Full-width choices, as in the quote chooser. Long labels wrap rather than overflow on phones.
         lg: 'min-h-14 w-full px-6 py-3 text-center whitespace-normal',
       },

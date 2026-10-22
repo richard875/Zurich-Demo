@@ -23,7 +23,7 @@ export function PromoCard({
         <div className="grid gap-4 text-b-20 [&_a]:underline [&_a]:underline-offset-4">
           {children}
         </div>
-        <div className="mt-auto flex flex-wrap gap-4 pt-8">{actions}</div>
+        <div className="mt-auto flex flex-wrap gap-4 pt-6">{actions}</div>
       </div>
       <div className="relative aspect-square md:aspect-auto">
         <Photo photo={photo} className="absolute inset-0 size-full object-cover" />

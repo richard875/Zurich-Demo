@@ -30,7 +30,7 @@ export function Hero() {
               </li>
             </ul>
             <QuoteChooser>
-              <Button variant="inverse" className="mt-8 lg:h-11 cursor-pointer">
+              <Button variant="inverse" size="md" className="mt-6 cursor-pointer">
                 Get a quote
               </Button>
             </QuoteChooser>

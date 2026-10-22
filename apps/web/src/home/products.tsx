@@ -17,8 +17,8 @@ function OnlineQuoteButton({ incomeProtection }: { incomeProtection: boolean }) 
     void startQuote(incomeProtection);
   };
   return (
-    <Button asChild>
-      <Link to={QUOTE_START} onClick={start} className="h-11!">
+    <Button asChild size="md">
+      <Link to={QUOTE_START} onClick={start}>
         Get an online quote
       </Link>
     </Button>
@@ -63,10 +63,8 @@ export function Products() {
               label: 'Learn more about Home Loan Protection',
             }}
             action={
-              <Button asChild variant="outline">
-                <ExternalLink className="h-11!" href={zurichLinks.homeLoanProtection}>
-                  Find out more
-                </ExternalLink>
+              <Button asChild variant="outline" size="md">
+                <ExternalLink href={zurichLinks.homeLoanProtection}>Find out more</ExternalLink>
               </Button>
             }
           />

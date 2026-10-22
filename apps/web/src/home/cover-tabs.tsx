@@ -207,10 +207,8 @@ export function CoverTabs() {
                     ))}
                   </ol>
                   <div className="mt-6">
-                    <Button asChild>
-                      <ExternalLink href={tab.learnMore} className="h-11!">
-                        Learn more
-                      </ExternalLink>
+                    <Button asChild size="md">
+                      <ExternalLink href={tab.learnMore}>Learn more</ExternalLink>
                     </Button>
                   </div>
                 </div>

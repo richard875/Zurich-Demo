@@ -103,7 +103,7 @@ export function SiteHeader() {
               My policies
             </Link>
             <QuoteChooser>
-              <Button size="sm" className="lg:h-10 lg:px-5 lg:text-base cursor-pointer">
+              <Button size="md" className="cursor-pointer h-10 px-5 text-base">
                 Get a quote
               </Button>
             </QuoteChooser>
