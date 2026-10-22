@@ -5,8 +5,8 @@ import { useSession, useSignInDialog, useSignOut } from '@/session/session';
 const linkButton = 'text-zurich-blue underline-offset-4 hover:underline disabled:opacity-50';
 
 // "Sign in", or the demo customer and Sign out. Takes the text size of where it sits. With `button`,
-// as at the foot of the mobile menu, Sign in is a primary button like the product cards'
-// "Get an online quote".
+// as in the mobile menu, Sign in is a primary button like the product cards' "Get an online quote",
+// keeping its person icon.
 export function SessionControl({
   beforeSignIn,
   button = false,
@@ -29,6 +29,7 @@ export function SessionControl({
     if (button) {
       return (
         <Button size="md" className="cursor-pointer" onClick={signIn}>
+          <ZurichIcon name="user-male:line" />
           Sign in
         </Button>
       );
