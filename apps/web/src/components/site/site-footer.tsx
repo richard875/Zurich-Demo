@@ -43,7 +43,7 @@ function LinkList({ links }: { links: ReactNode[] }) {
 export function SiteFooter() {
   return (
     <footer className="on-blue bg-zurich-blue text-white">
-      <Container className="pt-16 pb-12">
+      <Container className="pt-10 md:pt-16 pb-12">
         <div className="hidden gap-8 md:grid md:grid-cols-2 lg:grid-cols-4">
           {groups.map((group) => (
             <div key={group.title}>
