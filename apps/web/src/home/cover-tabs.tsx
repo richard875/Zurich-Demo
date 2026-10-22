@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { Container } from '@/components/container';
+import { ExternalLink } from '@/components/external-link';
 import { Headline } from '@/components/headline';
-import { IconLink } from '@/components/icon-link';
 import { Photo, type PhotoSource } from '@/components/photo';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { photos } from './photos';
 
@@ -157,7 +158,8 @@ const tabs: CoverTab[] = [
 // zurich.com.au's pill tabs. Each panel has its photo on the left from md (the lime band above has its
 // photo on the right) and the text beside it; below md the photo is left out, as on Zurich Direct.
 // The gaps follow the rest of the page: 40px under the heading and between blocks, 64px between
-// photo and text as in the lime band, and 32px before the panel's link, as before a promo's buttons.
+// photo and text as in the lime band, and 32px before the panel's button, as before a promo's buttons.
+// Learn more is styled like the product cards' "Get an online quote" button.
 export function CoverTabs() {
   return (
     <section aria-labelledby="cover-tabs-heading">
@@ -204,11 +206,13 @@ export function CoverTabs() {
                       </li>
                     ))}
                   </ol>
-                  <p className="mt-8">
-                    <IconLink href={tab.learnMore} external>
-                      Learn more
-                    </IconLink>
-                  </p>
+                  <div className="mt-8">
+                    <Button asChild>
+                      <ExternalLink href={tab.learnMore} className="h-11!">
+                        Learn more
+                      </ExternalLink>
+                    </Button>
+                  </div>
                 </div>
               </TabsContent>
             ))}
