@@ -140,6 +140,22 @@
   h1 {
     @apply text-4xl leading-tight font-light md:text-5xl;
   }
+
+  /* Modern.js streams each page into main after the header and footer have arrived: until then
+     main holds only React's placeholder <template>, or nothing while a page's code loads on a
+     client-side visit. A page's loading blocks then give way to content of another height. Through
+     all of that the footer stays hidden, so it never shows under a half-built page and then jumps;
+     it appears once, directly under the finished page. */
+  main:is(:empty, :has(> template, [data-slot='loading-panel'])) + footer {
+    visibility: hidden;
+  }
+
+  /* Below lg the flow pages' side card follows the page's content, so it waits for it too. */
+  @media (width < 64rem) {
+    main:has([data-slot='loading-panel']) [data-slot='flow-aside'] {
+      visibility: hidden;
+    }
+  }
 }
 
 @layer components {

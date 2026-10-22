@@ -22,10 +22,11 @@ export function MessagePanel({
   );
 }
 
-// Pulsing blocks in the shape of what's loading, with the message for screen readers.
+// Pulsing blocks in the shape of what's loading, with the message for screen readers. The footer
+// stays hidden while one shows (globals.css).
 export function LoadingPanel({ label, blocks = 1 }: { label: string; blocks?: number }) {
   return (
-    <div role="status">
+    <div role="status" data-slot="loading-panel">
       <span className="sr-only">{label}</span>
       <div aria-hidden="true" className="grid gap-6">
         {Array.from({ length: blocks }, (_, index) => (
