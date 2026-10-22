@@ -5,17 +5,59 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ZurichIcon } from '@/components/zurich-icon';
 import { cn } from '@/lib/cn';
+import { useSession, useSignInDialog, useSignOut } from '@/session/session';
 import { helpMenu, makeClaim, productNav } from './links';
-import { SessionControl } from './session-control';
 
-const rowLink =
-  'flex items-center justify-between gap-4 border-b border-dove py-4 text-b-18 underline-offset-4 hover:underline';
+const row = 'flex items-center justify-between gap-4 border-b border-dove py-4 text-b-18';
+const rowLink = cn(row, 'underline-offset-4 hover:underline');
 // The customer's own links, My policies and Make a claim, are slightly bolder.
 const ownRowLink = cn(rowLink, 'font-medium');
 
+// The first row: Sign in, marked out from the links below it, or the signed-in customer and Sign out.
+function SessionRow({ beforeSignIn }: { beforeSignIn: () => void }) {
+  const session = useSession();
+  const signOut = useSignOut();
+  const requestSignIn = useSignInDialog((state) => state.request);
+
+  // Hold the row's height until the session is known, so "Sign in" never flashes for a signed-in user.
+  if (!session.data) return <span className="block h-15 border-b border-dove" aria-hidden="true" />;
+
+  if (!session.data.signedIn) {
+    return (
+      <button
+        type="button"
+        className={cn(row, 'group w-full cursor-pointer text-left font-medium text-zurich-blue')}
+        onClick={() => {
+          beforeSignIn();
+          requestSignIn();
+        }}
+      >
+        <span className="underline-offset-4 group-hover:underline">Sign in</span>
+        <ZurichIcon name="arrow-right:line" />
+      </button>
+    );
+  }
+
+  return (
+    <div className={row}>
+      <span>
+        Customer <b className="font-medium">{session.data.deviceLabel}</b>
+      </span>
+      <button
+        type="button"
+        className="cursor-pointer text-base text-zurich-blue underline underline-offset-4 disabled:opacity-50"
+        disabled={signOut.isPending}
+        onClick={() => signOut.mutate()}
+      >
+        Sign out
+      </button>
+    </div>
+  );
+}
+
 // Below 1024px the header's nav, Help & information menu, utility links and sign-in move in here.
-// Sign in sits under the title, then come the customer's own links, the products to quote for and
-// the Help & information groups.
+// Sign in and the customer's own links come first, then the products to quote for and the
+// Help & information groups.
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   return (
@@ -27,14 +69,13 @@ export function MobileMenu() {
         </Button>
       </SheetTrigger>
       <SheetContent className="gap-10">
-        {/* 24px from the title to Sign in and on to the first list, as before and after a button
-            elsewhere. justify-items-start keeps the Sign in button its own width rather than the
-            menu's. */}
-        <div className="grid justify-items-start gap-6 text-base">
+        <div className="grid gap-6">
           <SheetTitle className="text-h-24 font-medium">Menu</SheetTitle>
-          <SessionControl button beforeSignIn={() => setOpen(false)} />
-          <nav aria-label="Main" className="grid gap-10 justify-self-stretch">
+          <nav aria-label="Main" className="grid gap-10">
             <ul>
+              <li>
+                <SessionRow beforeSignIn={() => setOpen(false)} />
+              </li>
               <li>
                 <Link to="/policies" className={ownRowLink} onClick={() => setOpen(false)}>
                   My policies
