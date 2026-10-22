@@ -33,7 +33,7 @@ export function Products() {
         <div className="mt-10 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
           <ProductCard
             photo={photos.productLife}
-            teaser="Help care for the people who depend on you - even if you're not around"
+            teaser="Help care for the people who depend on you - even if you're not around with..."
             title="Ezicover Life Insurance"
             description="Ezicover Life Insurance could help you protect and provide for loved ones who depend on you, with a lump sum payment if you die or become terminally ill."
             learnMore={{
@@ -44,7 +44,7 @@ export function Products() {
           />
           <ProductCard
             photo={photos.productIncome}
-            teaser="Help protect your ability to earn a living if things go wrong"
+            teaser="Help protect your ability to earn a living if things go wrong with..."
             title="Ezicover Income Protection"
             description="Ezicover Income Protection provides you a monthly payment for up to 5 years if you're unable to work due to a sickness or injury."
             learnMore={{
@@ -55,7 +55,7 @@ export function Products() {
           />
           <ProductCard
             photo={photos.homeLoanCard}
-            teaser="Buying a home is hard. Make sure you get protected"
+            teaser="Buying a home is hard. Make sure you get protected..."
             title="Zurich Home Loan Protection"
             description="Zurich Home Loan Protection can help you cover mortgage payments if you can't work temporarily because of illness, injury or involuntary unemployment."
             learnMore={{
