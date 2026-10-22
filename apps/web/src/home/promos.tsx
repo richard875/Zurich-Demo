@@ -5,8 +5,11 @@ import { PromoCard } from '@/components/promo-card';
 import { phones } from '@/components/site/links';
 import { QuoteChooser } from '@/components/site/quote-chooser';
 import { Button } from '@/components/ui/button';
+import { ZurichIcon } from '@/components/zurich-icon';
 import { photos } from './photos';
 
+// The card is about talking to us, so Call leads and Get a quote follows. The two share a width:
+// side by side where both fit, otherwise stacked full width.
 export function TalkToUs() {
   return (
     <section aria-labelledby="talk-heading">
@@ -15,16 +18,19 @@ export function TalkToUs() {
           tone="mint"
           photo={photos.talkToUs}
           actions={
-            <>
+            <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(14.5rem,1fr))] gap-4">
+              <Button asChild size="md">
+                <a href={phones.sales.href}>
+                  <ZurichIcon name="phone:line" />
+                  Call {phones.sales.number}
+                </a>
+              </Button>
               <QuoteChooser>
-                <Button size="md" className="cursor-pointer">
+                <Button variant="outline" size="md" className="cursor-pointer">
                   Get a quote
                 </Button>
               </QuoteChooser>
-              <Button asChild variant="outline" size="md">
-                <a href={phones.sales.href}>Call {phones.sales.number}</a>
-              </Button>
-            </>
+            </div>
           }
         >
           <Headline id="talk-heading">
