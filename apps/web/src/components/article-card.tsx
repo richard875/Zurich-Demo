@@ -1,7 +1,6 @@
 import { newTab, NewTabText } from '@/components/external-link';
 import { Photo, type PhotoSource } from '@/components/photo';
 import { Tag } from '@/components/tag';
-import { ZurichIcon } from '@/components/zurich-icon';
 
 // One link per card, named by the title; its ::after stretches over the card so all of it is clickable.
 export function ArticleCard({
@@ -35,7 +34,6 @@ export function ArticleCard({
           className="underline-offset-4 group-hover:underline after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:outline-3 focus-visible:after:outline-offset-4 focus-visible:after:outline-dark-blue"
         >
           {title}
-          <ZurichIcon name="launch:line" className="ml-1 align-[-0.2em] text-xl text-zurich-blue" />
           <NewTabText />
         </a>
       </h3>
