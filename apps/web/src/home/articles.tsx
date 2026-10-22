@@ -46,7 +46,7 @@ export function Articles() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <Button asChild variant="outline" size="md">
+          <Button asChild size="md">
             <ExternalLink href={zurichLinks.educationHub}>Education hub</ExternalLink>
           </Button>
         </div>
