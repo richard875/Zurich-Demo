@@ -31,7 +31,7 @@ export async function getQuoteWithDemoDetails(page: Page, { checkAxe = false } =
   await page.getByRole('button', { name: 'Use demo details' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(heading(page, 'Choose your cover')).toBeVisible();
-  await page.getByRole('checkbox', { name: /Add income protection/ }).check();
+  await page.getByRole('checkbox', { name: /Add Ezicover Income Protection/ }).check();
   if (checkAxe) await expectNoSeriousAxeViolations(page);
 
   await page.getByRole('button', { name: 'See my price' }).click();

@@ -32,6 +32,10 @@ export function QuoteSummary({
         <p className="mt-1 text-muted-foreground">
           or {formatCents(quote.yearlyPremiumCents)} a year
         </p>
+        <p className="mt-4 flex items-center gap-2 font-medium">
+          <ZurichIcon name="check:line" className="text-xl text-moss" />
+          Your first month is free.
+        </p>
       </section>
 
       <section aria-labelledby="breakdown-heading">
@@ -41,7 +45,7 @@ export function QuoteSummary({
         <dl className="mt-4 divide-y border-y">
           <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-4">
             <dt>
-              <span className="block font-medium">Life cover</span>
+              <span className="block font-medium">Ezicover Life Insurance</span>
               <span className="text-sm text-muted-foreground">
                 {formatWholeDollars(life.sumInsured)} lump sum
               </span>
@@ -51,7 +55,7 @@ export function QuoteSummary({
           {incomeProtection && (
             <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-4">
               <dt>
-                <span className="block font-medium">Income protection</span>
+                <span className="block font-medium">Ezicover Income Protection</span>
                 <span className="text-sm text-muted-foreground">
                   {formatWholeDollars(incomeProtection.monthlyBenefit)} a month benefit
                 </span>
@@ -59,7 +63,7 @@ export function QuoteSummary({
               <dd className="sm:text-right">
                 {formatCents(incomeProtection.monthlyPremiumCents)} a month
                 <span className="block text-sm font-medium text-moss">
-                  Includes 10% bundle discount ({formatCents(incomeProtection.discountCents)} off)
+                  Includes 5% bundle discount ({formatCents(incomeProtection.discountCents)} off)
                 </span>
               </dd>
             </div>

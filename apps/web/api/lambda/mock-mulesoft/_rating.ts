@@ -16,7 +16,7 @@ export const AGE_BANDS = [
 ] as const;
 
 export const SMOKER_LOADING = 1.5;
-export const BUNDLE_DISCOUNT = 0.1;
+export const BUNDLE_DISCOUNT = 0.05;
 
 // State is accepted but doesn't change the price.
 export function rate(request: RatingRequest): RatingResponse {

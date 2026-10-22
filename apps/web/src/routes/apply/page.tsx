@@ -29,9 +29,9 @@ function Apply() {
   }
 
   const cover = [
-    `${formatWholeDollars(quote.life.sumInsured)} life cover`,
+    `${formatWholeDollars(quote.life.sumInsured)} of Ezicover Life Insurance`,
     quote.incomeProtection &&
-      `${formatWholeDollars(quote.incomeProtection.monthlyBenefit)} a month income protection`,
+      `Ezicover Income Protection of ${formatWholeDollars(quote.incomeProtection.monthlyBenefit)} a month`,
   ]
     .filter(Boolean)
     .join(' and ');

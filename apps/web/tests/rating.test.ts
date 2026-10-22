@@ -23,22 +23,22 @@ describe('rate', () => {
     expect(rate({ ...base, smoker: true }).life.monthlyPremiumCents).toBe(8_250);
   });
 
-  it('takes 10% off income protection when both covers are chosen', () => {
+  it('takes 5% off income protection when both covers are chosen', () => {
     const result = rate({ ...base, incomeProtectionMonthlyBenefit: 5_000 });
-    expect(result.incomeProtection).toEqual({ monthlyPremiumCents: 7_200, discountCents: 800 });
-    expect(result.monthlyPremiumCents).toBe(12_700);
-    expect(result.yearlyPremiumCents).toBe(152_400);
+    expect(result.incomeProtection).toEqual({ monthlyPremiumCents: 7_600, discountCents: 400 });
+    expect(result.monthlyPremiumCents).toBe(13_100);
+    expect(result.yearlyPremiumCents).toBe(157_200);
   });
 
   it('rounds each premium to whole cents', () => {
-    // 15 x 135c x 1.5 = 3037.5c, which rounds to 3038c, and the discount to 304c.
+    // 15 x 135c x 1.5 = 3037.5c, which rounds to 3038c, and the discount (151.9c) to 152c.
     const result = rate({
       ...base,
       age: 30,
       smoker: true,
       incomeProtectionMonthlyBenefit: 1_500,
     });
-    expect(result.incomeProtection).toEqual({ monthlyPremiumCents: 2_734, discountCents: 304 });
+    expect(result.incomeProtection).toEqual({ monthlyPremiumCents: 2_886, discountCents: 152 });
   });
 
   it('uses the first and last age bands at 18 and 60', () => {

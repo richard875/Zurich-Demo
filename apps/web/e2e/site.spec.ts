@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { animationsDone, expectNoSeriousAxeViolations, heading } from './helpers';
 
 const incomeProtection = (page: Page) =>
-  page.getByRole('checkbox', { name: /Add income protection/ });
+  page.getByRole('checkbox', { name: /Add Ezicover Income Protection/ });
 
 async function chooseQuote(page: Page, option: string) {
   await page.getByRole('banner').getByRole('button', { name: 'Get a quote' }).click();

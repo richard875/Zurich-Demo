@@ -111,7 +111,7 @@ export function CoverForm({
           <ZurichIcon name="family:line" className="text-3xl text-zurich-blue" />
           <div>
             <h2 id="life-heading" className="text-xl font-medium">
-              Life cover
+              Ezicover Life Insurance
             </h2>
             <p className="mt-1 text-muted-foreground">
               A lump sum if you die or are diagnosed with a terminal illness.
@@ -142,7 +142,7 @@ export function CoverForm({
           <ZurichIcon name="financial-health:line" className="text-3xl text-zurich-blue" />
           <div>
             <h2 id="income-heading" className="text-xl font-medium">
-              Income protection{' '}
+              Ezicover Income Protection{' '}
               <span className="font-normal text-muted-foreground">(optional)</span>
             </h2>
             <p className="mt-1 text-muted-foreground">
@@ -161,7 +161,7 @@ export function CoverForm({
                 onCheckedChange={(checked) => field.onChange(checked === true)}
               />
               <Label htmlFor="include-income-protection" className="font-normal">
-                Add income protection and save 10% on it
+                Add Ezicover Income Protection and save 5% on it
               </Label>
             </div>
           )}

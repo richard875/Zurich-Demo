@@ -45,7 +45,7 @@ describe('CoverForm', () => {
 
   it('adds income protection with a $4,000 monthly benefit', async () => {
     const { onSubmit, user } = renderForm();
-    await user.click(screen.getByRole('checkbox', { name: /Add income protection/ }));
+    await user.click(screen.getByRole('checkbox', { name: /Add Ezicover Income Protection/ }));
     expect(screen.getByRole('slider', { name: 'Monthly benefit' })).toHaveAttribute(
       'aria-valuetext',
       '$4,000 a month',
@@ -57,7 +57,7 @@ describe('CoverForm', () => {
 
   it('starts with income protection on when the quote chooser asked for it', () => {
     renderForm({ incomeProtectionPreset: true });
-    expect(screen.getByRole('checkbox', { name: /Add income protection/ })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /Add Ezicover Income Protection/ })).toBeChecked();
   });
 
   it('lets the chooser switch off income protection from an earlier quote', () => {
@@ -65,7 +65,9 @@ describe('CoverForm', () => {
       defaultValues: { lifeCover: 750_000, incomeProtection: 3_000 },
       incomeProtectionPreset: false,
     });
-    expect(screen.getByRole('checkbox', { name: /Add income protection/ })).not.toBeChecked();
+    expect(
+      screen.getByRole('checkbox', { name: /Add Ezicover Income Protection/ }),
+    ).not.toBeChecked();
     expect(screen.getByRole('slider', { name: 'Amount of cover' })).toHaveAttribute(
       'aria-valuetext',
       '$750,000',
