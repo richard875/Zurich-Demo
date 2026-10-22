@@ -44,7 +44,7 @@ test('every page has the demo strip and noindex', async ({ page }) => {
   for (const path of ['/', '/quote', '/apply', '/apply/received', '/policies']) {
     await page.goto(path);
     await expect(page.getByRole('note')).toContainText(
-      'Design concept, not the live Zurich Direct site.',
+      'This is a Demo site and not the live Zurich Direct site.',
     );
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
       'content',
