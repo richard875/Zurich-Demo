@@ -156,14 +156,14 @@ const tabs: CoverTab[] = [
 
 // zurich.com.au's pill tabs. Each panel has its photo on the left from md (the lime band above has its
 // photo on the right) and the text beside it; below md the photo is left out, as on Zurich Direct.
-// From lg the photo centres against its own panel's text (each panel is only as tall as its text).
-// At md the text runs much longer than the smaller photo, so the photo stays at the top.
+// The gaps follow the rest of the page: 40px under the heading and between blocks, 64px between
+// photo and text as in the lime band, and 32px before the panel's link, as before a promo's buttons.
 export function CoverTabs() {
   return (
     <section aria-labelledby="cover-tabs-heading">
       <Container>
         <Headline id="cover-tabs-heading">Help choosing your cover</Headline>
-        <Tabs defaultValue={tabs[0].value} className="mt-8">
+        <Tabs defaultValue={tabs[0].value} className="mt-10">
           <TabsList aria-label="Help choosing your cover">
             {tabs.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value}>
@@ -171,12 +171,12 @@ export function CoverTabs() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <div className="mt-8 grid md:mt-10">
+          <div className="mt-10 grid">
             {tabs.map((tab) => (
               <TabsContent
                 key={tab.value}
                 value={tab.value}
-                className="md:grid md:grid-cols-[224px_1fr] md:items-start md:gap-10 md:self-start lg:grid-cols-[350px_1fr] lg:items-center lg:gap-16"
+                className="md:grid md:grid-cols-[224px_1fr] md:items-start md:gap-16 lg:grid-cols-[350px_1fr]"
               >
                 <Photo
                   photo={tab.photo}
@@ -194,19 +194,17 @@ export function CoverTabs() {
                       >
                         <span
                           aria-hidden="true"
-                          className="-mt-0.5 flex size-8 items-center justify-center rounded-full bg-zurich-blue text-base font-semibold text-white"
+                          className="-my-1 flex size-8 items-center justify-center self-center rounded-full bg-zurich-blue text-base font-semibold text-white"
                         >
                           {index + 1}
                         </span>
                         <strong className="font-semibold">{lead}</strong>
                         {/* Below md the text runs the full width under its number. */}
-                        <p className="col-span-2 mt-1 md:col-span-1 md:col-start-2 md:mt-0">
-                          {text}
-                        </p>
+                        <p className="col-span-2 mt-1 md:col-span-1 md:col-start-2">{text}</p>
                       </li>
                     ))}
                   </ol>
-                  <p className="mt-6">
+                  <p className="mt-8">
                     <IconLink href={tab.learnMore} external>
                       Learn more
                     </IconLink>

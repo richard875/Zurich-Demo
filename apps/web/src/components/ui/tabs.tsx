@@ -1,5 +1,5 @@
-// Radix Tabs drawn like zurich.com.au's: Zurich White pills, the selected one Dark Blue. Ours are
-// 16px and 44px tall (zurich.com.au's are 14px) so they hold their own under the section heading.
+// Radix Tabs drawn like zurich.com.au's: a wrapping row of 14px Zurich White pills, the selected one
+// Dark Blue.
 import * as React from 'react';
 import { Tabs as TabsPrimitive } from 'radix-ui';
 import { cn } from '@/lib/cn';
@@ -12,24 +12,20 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn(
-        // At 16px the four pills don't fit one row, so from md the list is just wide enough for two
-        // a row (2 + 2, not 3 + 1). Below md they stack.
-        'flex flex-col items-start gap-2 md:max-w-170 md:flex-row md:flex-wrap',
-        className,
-      )}
+      className={cn('flex flex-wrap gap-2', className)}
       {...props}
     />
   );
 }
 
-// One line from sm. Below it a long label may wrap rather than push the page sideways.
+// One line from sm. Below it a long label may wrap rather than push the page sideways, and the
+// pills are 44px tall for touch.
 function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        'rounded-full bg-zurich-white px-4 py-2.5 text-left text-base font-medium sm:px-5 text-zurich-blue transition-colors data-[state=inactive]:hover:bg-dove data-[state=inactive]:hover:text-dark-blue data-active:bg-dark-blue data-active:text-white data-active:shadow-sm sm:whitespace-nowrap',
+        'rounded-full bg-zurich-white px-4 py-3 text-left text-sm font-medium text-zurich-blue transition-colors sm:py-2 data-[state=inactive]:hover:bg-dove data-[state=inactive]:hover:text-dark-blue data-active:bg-dark-blue data-active:text-white data-active:shadow-sm sm:whitespace-nowrap',
         className,
       )}
       {...props}
