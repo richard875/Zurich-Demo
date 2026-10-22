@@ -18,6 +18,7 @@ interface CoverTab {
 const educationHub = 'https://direct.zurich.com.au/info/education-hub';
 
 // Zurich Direct's four tabs, word for word: tab 1 from the saved page, tabs 2 to 4 from the screenshots.
+// The lead-ins sit on their own line, so they drop their trailing colon.
 const tabs: CoverTab[] = [
   {
     value: 'life-or-income',
@@ -30,19 +31,19 @@ const tabs: CoverTab[] = [
     ),
     points: [
       [
-        'Life Cover Insurance:',
+        'Life Cover Insurance',
         'Pays a lump sum to your loved ones if you pass away or are diagnosed with a terminal illness. It can cover debts, living costs, and education. Premiums depend on your age, lifestyle, job, and cover amount.',
       ],
       [
-        'Income Protection Insurance:',
-        "Replaces up to 70% of your income if you can't work due to illness or injury, helping cover everyday expenses-even for non-work-related conditions.",
+        'Income Protection Insurance',
+        "Replaces up to 70% of your income if you can't work due to illness or injury, helping cover everyday expenses - even for non-work-related conditions.",
       ],
       [
         'Why Consider Both?',
-        'Together, these policies provide broader protection-especially during major life changes like marriage or starting a family. Consider your financial responsibilities and how each policy could support your loved ones if times get tough.',
+        'Together, these policies provide broader protection - especially during major life changes like marriage or starting a family. Consider your financial responsibilities and how each policy could support your loved ones if times get tough.',
       ],
       [
-        "Anton's Story:",
+        "Anton's Story",
         'Anton, a 45-year-old engineer, had both covers. After an accident left him unable to work for 18 months, income protection paid 70% of his salary, keeping his family secure.',
       ],
     ],
@@ -61,23 +62,23 @@ const tabs: CoverTab[] = [
     ),
     points: [
       [
-        'Value of Unpaid Work:',
+        'Value of Unpaid Work',
         'Childcare and housework are vital but often undervalued economically.',
       ],
       [
-        'Gender Gap in Unpaid Work:',
+        'Gender Gap in Unpaid Work',
         'Primary caregivers, usually women, see a big rise in unpaid work after the first child.',
       ],
       [
-        'Economic Impact:',
+        'Economic Impact',
         'In Australia, unpaid work is valued at $565 billion, or 33.9% of GDP, with women doing most of it.',
       ],
       [
-        'Need for Dual Coverage:',
+        'Need for Dual Coverage',
         "Both partners need life insurance for financial security. It covers mortgage payments, home maintenance, debts, and children's education.",
       ],
       [
-        'Benefits of Joint Life Insurance:',
+        'Benefits of Joint Life Insurance',
         'Joint policies offer simpler applications, potential discounts, and convenience. This results in cheaper premiums and comprehensive cover.',
       ],
     ],
@@ -95,23 +96,23 @@ const tabs: CoverTab[] = [
     ),
     points: [
       [
-        'Young and Single:',
+        'Young and Single',
         "Income protection covers bills if you're unable to work due to illness or injury. Buying life insurance early means lower premiums.",
       ],
       [
-        'Getting Married:',
+        'Getting Married',
         'Ensure financial security for your partner with life insurance and income protection.',
       ],
       [
-        'Having Children:',
+        'Having Children',
         "Protect your family with life insurance and income protection for financial support if you can't work.",
       ],
       [
-        'Buying a House:',
+        'Buying a House',
         'Reassess coverage to ensure your family can pay off the mortgage in case of illness, injury, or death.',
       ],
       [
-        'Starting Over:',
+        'Starting Over',
         'Update insurance and beneficiaries after major life changes like losing a spouse, divorce, remarrying, or starting a new family.',
       ],
     ],
@@ -128,23 +129,23 @@ const tabs: CoverTab[] = [
     ),
     points: [
       [
-        'Application Process:',
+        'Application Process',
         'Answer questions honestly. You may need a medical exam or records to avoid future claim issues.',
       ],
       [
-        'Risk Assessment:',
+        'Risk Assessment',
         'Underwriters estimate the likelihood of claims to decide if you can be insured and on what terms.',
       ],
       [
-        'Factors Considered:',
+        'Factors Considered',
         'Health, age, and occupation are key. Smokers and those with risky hobbies or jobs may face higher premiums. Accurate information ensures better pricing.',
       ],
       [
-        'High-Risk Assessments:',
+        'High-Risk Assessments',
         'High-risk individuals may face higher premiums, exclusions, or be declined. Check the Product Disclosure Statement for details.',
       ],
       [
-        'Policy Reviews:',
+        'Policy Reviews',
         'Life changes like new jobs or quitting smoking can prompt policy reviews. Annual reviews and life events may allow cover adjustments. Always check your Product Disclosure Statement.',
       ],
     ],
@@ -153,6 +154,10 @@ const tabs: CoverTab[] = [
   },
 ];
 
+// zurich.com.au's pill tabs. Each panel has its photo on the left from md (the lime band above has its
+// photo on the right) and the text beside it; below md the photo is left out, as on Zurich Direct.
+// From lg the photo centres against its own panel's text (each panel is only as tall as its text).
+// At md the text runs much longer than the smaller photo, so the photo stays at the top.
 export function CoverTabs() {
   return (
     <section aria-labelledby="cover-tabs-heading">
@@ -166,31 +171,50 @@ export function CoverTabs() {
               </TabsTrigger>
             ))}
           </TabsList>
-          {tabs.map((tab) => (
-            <TabsContent
-              key={tab.value}
-              value={tab.value}
-              className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,350px)] md:gap-12"
-            >
-              <div className="grid gap-6 [&_strong]:font-semibold">
-                <p className="text-b-20">{tab.lead}</p>
-                <ol className="grid list-decimal gap-4 pl-6 text-b-18">
-                  {tab.points.map(([lead, text]) => (
-                    <li key={lead}>
-                      <strong>{lead}</strong> {text}
-                    </li>
-                  ))}
-                </ol>
-                <IconLink href={tab.learnMore} external>
-                  Learn more
-                </IconLink>
-              </div>
-              <Photo
-                photo={tab.photo}
-                className="aspect-[350/437] w-full max-w-[350px] rounded-card object-cover"
-              />
-            </TabsContent>
-          ))}
+          <div className="mt-8 grid md:mt-10">
+            {tabs.map((tab) => (
+              <TabsContent
+                key={tab.value}
+                value={tab.value}
+                className="md:grid md:grid-cols-[224px_1fr] md:items-start md:gap-10 md:self-start lg:grid-cols-[350px_1fr] lg:items-center lg:gap-16"
+              >
+                <Photo
+                  photo={tab.photo}
+                  className="hidden aspect-[350/437] w-full rounded-promo object-cover md:block"
+                />
+                <div className="max-w-160">
+                  <p className="text-b-20 font-light md:text-2xl md:leading-normal [&_strong]:font-medium">
+                    {tab.lead}
+                  </p>
+                  <ol className="mt-6 grid gap-4">
+                    {tab.points.map(([lead, text], index) => (
+                      <li
+                        key={lead}
+                        className="grid grid-cols-[2rem_1fr] gap-x-3 text-b-18 md:gap-x-4"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="-mt-0.5 flex size-8 items-center justify-center rounded-full bg-zurich-blue text-base font-semibold text-white"
+                        >
+                          {index + 1}
+                        </span>
+                        <strong className="font-semibold">{lead}</strong>
+                        {/* Below md the text runs the full width under its number. */}
+                        <p className="col-span-2 mt-1 md:col-span-1 md:col-start-2 md:mt-0">
+                          {text}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-6">
+                    <IconLink href={tab.learnMore} external>
+                      Learn more
+                    </IconLink>
+                  </p>
+                </div>
+              </TabsContent>
+            ))}
+          </div>
         </Tabs>
       </Container>
     </section>
