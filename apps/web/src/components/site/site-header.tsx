@@ -71,7 +71,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white">
       <div className="hidden bg-zurich-white lg:block">
-        <Container className="flex h-10 items-center justify-end gap-6 text-sm">
+        <Container className="max-w-344! flex h-10 items-center justify-end gap-6 text-sm">
           {utilityLinks.map((link) => (
             <a
               key={link.href}
@@ -87,7 +87,7 @@ export function SiteHeader() {
         </Container>
       </div>
       <div className="border-b border-dove">
-        <Container className="flex h-16 items-center gap-5">
+        <Container className="max-w-344! flex h-16 items-center gap-5">
           <Link to="/" className="flex rounded-sm" aria-label="Zurich Direct, home">
             <div z-logo="" inline="" role="presentation" />
           </Link>
