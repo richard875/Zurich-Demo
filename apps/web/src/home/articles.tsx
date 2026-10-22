@@ -28,7 +28,7 @@ const articles = [
     tag: 'Protection',
     date: '22 February 2023',
     dateTime: '2023-02-22',
-    title: 'Do I need life cover, income protection – or both?',
+    title: 'Do I need life cover, income protection - or both?',
     href: `${zurichLinks.educationHub}/life-cover-income-protection-or-both`,
   },
 ];

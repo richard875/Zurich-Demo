@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
 
 const GENERAL_ADVICE_WARNING =
-  'This is general information only and doesn’t consider your objectives, financial situation or needs.';
+  "This is general information only and doesn't consider your objectives, financial situation or needs.";
 
 export function QuoteSummary({
   quote,
@@ -40,7 +40,7 @@ export function QuoteSummary({
 
       <section aria-labelledby="breakdown-heading">
         <h2 id="breakdown-heading" className="text-xl font-medium">
-          What’s included
+          What's included
         </h2>
         <dl className="mt-4 divide-y border-y">
           <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-4">

@@ -16,9 +16,9 @@ export default function ApplicationReceivedPage() {
       <h1 className="mt-4">Application received</h1>
       {referred ? (
         <>
-          <p className="mt-6 text-2xl font-light">We’ll be in touch</p>
+          <p className="mt-6 text-2xl font-light">We'll be in touch</p>
           <p className="mt-3 text-lg">
-            Your answers mean someone from our team needs to look at your application. We’ll contact
+            Your answers mean someone from our team needs to look at your application. We'll contact
             you within 2 business days.
           </p>
           <Button asChild variant="ghost" className="mt-8 -ml-6">
@@ -28,7 +28,7 @@ export default function ApplicationReceivedPage() {
       ) : (
         <>
           <p className="mt-6 text-lg">
-            We’re setting up your policy now. It’s usually ready in a few seconds.
+            We're setting up your policy now. It's usually ready in a few seconds.
           </p>
           <Button asChild className="mt-8">
             <Link to="/policies">

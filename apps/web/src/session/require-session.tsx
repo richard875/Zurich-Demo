@@ -10,7 +10,7 @@ export function RequireSession({ reason, children }: { reason: string; children:
   const requestSignIn = useSignInDialog((state) => state.request);
   const location = useLocation();
 
-  if (!session.data) return <p className="text-muted-foreground">Checking you’re signed in…</p>;
+  if (!session.data) return <p className="text-muted-foreground">Checking you're signed in…</p>;
   if (session.data.signedIn) return children;
 
   return (

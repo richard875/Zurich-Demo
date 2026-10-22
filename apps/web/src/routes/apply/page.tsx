@@ -39,7 +39,7 @@ function Apply() {
   return (
     <div className="grid gap-10">
       <p className="rounded-lg bg-zurich-white p-4">
-        You’re applying for {cover}, at {formatCents(quote.monthlyPremiumCents)} a month.
+        You're applying for {cover}, at {formatCents(quote.monthlyPremiumCents)} a month.
       </p>
       <ApplicationForm
         pending={application.isPending}
@@ -69,7 +69,7 @@ export default function ApplyPage() {
         <title>Apply | Zurich Direct (demo)</title>
       </Helmet>
       <h1>Apply for cover</h1>
-      <p className="mt-4 text-lg">A few more details, then we’ll set up your policy.</p>
+      <p className="mt-4 text-lg">A few more details, then we'll set up your policy.</p>
       <div className="mt-10">
         <RequireSession reason="Sign in to apply. It takes one click in this demo.">
           <Apply />

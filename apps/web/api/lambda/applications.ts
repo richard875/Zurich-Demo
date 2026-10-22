@@ -36,7 +36,7 @@ export const post = Api(Post('/applications'), Data(applicationRequestSchema), a
     if (!underwriting.ok) {
       return errorResponse(
         502,
-        'We couldn’t send your application just now. Please try again in a moment.',
+        "We couldn't send your application just now. Please try again in a moment.",
       );
     }
 
@@ -59,6 +59,6 @@ export const post = Api(Post('/applications'), Data(applicationRequestSchema), a
     return result;
   } catch (error) {
     log.error({ err: error }, 'saving application failed');
-    return errorResponse(500, 'We couldn’t save your application just now. Please try again.');
+    return errorResponse(500, "We couldn't save your application just now. Please try again.");
   }
 });
