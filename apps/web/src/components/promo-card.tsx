@@ -19,7 +19,7 @@ export function PromoCard({
   return (
     <div className="grid overflow-hidden rounded-promo md:grid-cols-2">
       {/* Square from md, like zurich.com.au's, but free to grow if the copy needs more room. */}
-      <div className={cn('flex flex-col p-6 md:aspect-square md:p-12', tones[tone])}>
+      <div className={cn('flex flex-col p-6 pb-5 md:aspect-square md:p-12', tones[tone])}>
         <div className="grid gap-4 text-b-20 [&_a]:underline [&_a]:underline-offset-4">
           {children}
         </div>
