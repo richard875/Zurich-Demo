@@ -1,7 +1,7 @@
 import { Link, useLocation } from '@modern-js/runtime/router';
 import { NavigationMenu } from 'radix-ui';
 import { Container } from '@/components/container';
-import { ExternalLink } from '@/components/external-link';
+import { newTab, NewTabText } from '@/components/external-link';
 import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
 import { cn } from '@/lib/cn';
@@ -21,10 +21,11 @@ function MainNav() {
       <NavigationMenu.List className="flex items-center">
         {productNav.map((link) => (
           <NavigationMenu.Item key={link.href}>
-            <NavigationMenu.Link asChild>
-              <ExternalLink href={link.href} className={navItem}>
+            <NavigationMenu.Link asChild className="px-2.5">
+              <a href={link.href} {...newTab} className={navItem}>
                 {link.label}
-              </ExternalLink>
+                <NewTabText />
+              </a>
             </NavigationMenu.Link>
           </NavigationMenu.Item>
         ))}
@@ -45,12 +46,14 @@ function MainNav() {
                   {group.links.map((link) => (
                     <li key={link.href}>
                       <NavigationMenu.Link asChild>
-                        <ExternalLink
+                        <a
                           href={link.href}
-                          className="inline-flex items-center gap-1 text-zurich-blue underline-offset-4 hover:underline"
+                          {...newTab}
+                          className="text-zurich-blue underline-offset-4 hover:underline"
                         >
                           {link.label}
-                        </ExternalLink>
+                          <NewTabText />
+                        </a>
                       </NavigationMenu.Link>
                     </li>
                   ))}
@@ -59,13 +62,13 @@ function MainNav() {
             ))}
           </NavigationMenu.Content>
         </NavigationMenu.Item>
-        <NavigationMenu.Item>
+        {/* <NavigationMenu.Item>
           <NavigationMenu.Link asChild active={pathname.startsWith('/policies')}>
             <Link to="/policies" className={navItem}>
               My policies
             </Link>
           </NavigationMenu.Link>
-        </NavigationMenu.Item>
+        </NavigationMenu.Item> */}
       </NavigationMenu.List>
     </NavigationMenu.Root>
   );
@@ -77,19 +80,21 @@ export function SiteHeader() {
       <div className="hidden bg-zurich-white lg:block">
         <Container className="flex h-10 items-center justify-end gap-6 text-sm">
           {utilityLinks.map((link) => (
-            <ExternalLink
+            <a
               key={link.href}
               href={link.href}
-              className="inline-flex items-center gap-1 text-zurich-blue underline-offset-4 hover:underline"
+              {...newTab}
+              className="text-zurich-blue underline-offset-4 hover:underline"
             >
               {link.label}
-            </ExternalLink>
+              <NewTabText />
+            </a>
           ))}
           <SessionControl />
         </Container>
       </div>
       <div className="border-b border-dove">
-        <Container className="flex h-16 items-center gap-6">
+        <Container className="flex h-16 items-center gap-5">
           <Link to="/" className="flex rounded-sm" aria-label="Zurich Direct, home">
             <div z-logo="" inline="" role="presentation" />
           </Link>
