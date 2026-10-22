@@ -46,7 +46,7 @@ export function QuoteChooser({ children }: { children: ReactNode }) {
         <SheetTitle className="text-h-24 font-medium">
           Need life insurance only or both life insurance and income protection?
         </SheetTitle>
-        <ul className="mt-6 grid gap-4">
+        <ul className="mt-8 grid gap-4">
           {choices.map(({ label, incomeProtection, description, badge }, index) => (
             <li
               key={label}

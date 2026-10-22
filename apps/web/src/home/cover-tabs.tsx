@@ -168,7 +168,7 @@ export function CoverTabs() {
         <Tabs defaultValue={tabs[0].value} className="mt-10">
           <TabsList aria-label="Help choosing your cover">
             {tabs.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
+              <TabsTrigger className="cursor-pointer" key={tab.value} value={tab.value}>
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -182,7 +182,7 @@ export function CoverTabs() {
               >
                 <Photo
                   photo={tab.photo}
-                  className="hidden aspect-[350/437] w-full rounded-promo object-cover md:block"
+                  className="hidden aspect-350/437 w-full rounded-promo object-cover md:block"
                 />
                 <div className="max-w-160">
                   <p className="text-b-20 font-light md:text-2xl md:leading-normal [&_strong]:font-medium">
