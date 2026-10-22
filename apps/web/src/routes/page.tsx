@@ -16,7 +16,7 @@ export default function Index() {
         <title>Get life insurance & income protection with Ezicover | Zurich Direct (demo)</title>
       </Helmet>
       <Hero />
-      {/* grid-cols-1 caps the column at the page width, so the tab row scrolls instead of widening it. */}
+      {/* grid-cols-1 caps the column at the page width, so no section can widen the page. */}
       <div className="grid grid-cols-1 gap-10 py-10 md:gap-16 md:py-16">
         <IntroStatement />
         <Products />
