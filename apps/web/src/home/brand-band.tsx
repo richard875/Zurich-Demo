@@ -22,7 +22,7 @@ export function BrandBand() {
   return (
     <section aria-labelledby="brand-heading" className="bg-lime py-10 md:py-16">
       <Container className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
-        <div className="grid max-w-155 gap-5">
+        <div className="grid max-w-155 gap-6">
           <Headline id="brand-heading">
             Zurich Ezicover. You've got <em>this.</em>
           </Headline>

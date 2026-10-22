@@ -158,8 +158,8 @@ const tabs: CoverTab[] = [
 // zurich.com.au's pill tabs. Each panel has its photo on the left from md (the lime band above has its
 // photo on the right) and the text beside it; below md the photo is left out, as on Zurich Direct.
 // The gaps follow the rest of the page: 40px under the heading and between blocks, 64px between
-// photo and text as in the lime band, and 32px before the panel's button, as before a promo's buttons.
-// Learn more is styled like the product cards' "Get an online quote" button.
+// photo and text as in the lime band, 24px before the button and 8px under each lead-in, as in the
+// product cards. Learn more is styled like the product cards' "Get an online quote" button.
 export function CoverTabs() {
   return (
     <section aria-labelledby="cover-tabs-heading">
@@ -202,11 +202,11 @@ export function CoverTabs() {
                         </span>
                         <strong className="font-semibold">{lead}</strong>
                         {/* Below md the text runs the full width under its number. */}
-                        <p className="col-span-2 mt-1 md:col-span-1 md:col-start-2">{text}</p>
+                        <p className="col-span-2 mt-2 md:col-span-1 md:col-start-2">{text}</p>
                       </li>
                     ))}
                   </ol>
-                  <div className="mt-8">
+                  <div className="mt-6">
                     <Button asChild>
                       <ExternalLink href={tab.learnMore} className="h-11!">
                         Learn more

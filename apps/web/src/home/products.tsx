@@ -30,7 +30,7 @@ export function Products() {
     <section aria-labelledby="products-heading">
       <Container>
         <Headline id="products-heading">Choose the product that suits your needs</Headline>
-        <div className="mt-10 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           <ProductCard
             photo={photos.productLife}
             teaser="Help care for the people who depend on you - even if you're not around with..."

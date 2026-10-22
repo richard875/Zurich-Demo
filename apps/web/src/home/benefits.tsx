@@ -39,13 +39,13 @@ export function Benefits() {
         <Headline id="benefits-heading">
           Get <em>more</em> out of your life and income insurance
         </Headline>
-        <ul className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+        <ul className="mt-10 grid gap-10 md:grid-cols-3 md:gap-6">
           {benefits.map((benefit) => (
             <li key={benefit.title}>
               <span className="flex size-12 items-center justify-center rounded-full bg-zurich-blue text-white">
                 <ZurichIcon name={benefit.icon} className="text-2xl" />
               </span>
-              <h3 className="mt-4 text-b-20 font-semibold">{benefit.title}</h3>
+              <h3 className="mt-6 text-b-20 font-semibold">{benefit.title}</h3>
               <p className="mt-2 text-b-18">{benefit.body}</p>
             </li>
           ))}
