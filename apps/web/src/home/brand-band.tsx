@@ -21,8 +21,8 @@ export function IntroStatement() {
 export function BrandBand() {
   return (
     <section aria-labelledby="brand-heading" className="bg-lime py-10 md:py-16">
-      <Container className="grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
-        <div className="grid max-w-155 gap-4">
+      <Container className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
+        <div className="grid max-w-155 gap-5">
           <Headline id="brand-heading">
             Zurich Ezicover. You've got <em>this.</em>
           </Headline>
@@ -31,14 +31,13 @@ export function BrandBand() {
             for and easy to claim - giving you peace of mind throughout the whole insurance journey.
           </p>
         </div>
-        <div className="relative justify-self-center md:mr-8">
+        {/* zurich.com.au's band uses one image of a round photo with shapes beside it. This is its
+            frame: the shapes fill it and the photo sits over them, full height and flush right. */}
+        <div className="relative aspect-675/469 w-86 max-w-full justify-self-center lg:w-104">
+          <Shapes arrangement="band" className="absolute inset-0" />
           <Photo
             photo={photos.limeBandHands}
-            className="size-60 rounded-full object-cover md:size-72"
-          />
-          <Shapes
-            arrangement="band"
-            className="absolute -bottom-1 -left-14 h-20 w-28 md:-left-24 md:h-28 md:w-40"
+            className="absolute top-0 right-0 aspect-square h-full w-auto rounded-full object-cover"
           />
         </div>
       </Container>

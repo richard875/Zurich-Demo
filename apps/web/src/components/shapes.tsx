@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 
-// Decorative shapes that sit on their bottom edge, so they can rest on a band's edge or a photo's
-// corner. The hero's is zurich.com.au's stage shape; the band's is drawn for this demo.
+// zurich.com.au's decorative shapes. They sit on their bottom edge, so they can rest on a band's
+// edge or beside a photo's base.
 const arrangements = {
   // zurich.com.au's stage shape (267 × 144), on Zurich Blue: two half discs cut on the diagonal
   // and two circles.
@@ -19,12 +19,16 @@ const arrangements = {
       <circle cx="17.4915" cy="126.508" r="17.4915" className="fill-sky-blue" />
     </svg>
   ),
-  // Beside the lime band's round photo.
+  // The lime band's shapes, measured from zurich.com.au's claims image, which bakes them in beside
+  // a round photo. This is that image's frame (675 × 469 without its empty right margin): the photo
+  // is the full-height circle at the right, laid over these. A half disc cut on its diameter (r is
+  // written a hair short, so the arc is exactly a semicircle), then two circles that touch that
+  // diameter; the navy one also touches the photo.
   band: (
-    <svg viewBox="0 0 180 120" className="h-full w-full">
-      <path d="M0 120 A84 84 0 0 1 84 36 V120 Z" className="fill-light-blue" />
-      <circle cx="122" cy="84" r="36" className="fill-dark-blue" />
-      <circle cx="74" cy="104" r="14" className="fill-sky-blue" />
+    <svg viewBox="0 0 675 469" className="h-full w-full">
+      <path d="M219.2 309.1A123.4 123.4 0 0 0 30.6 468.5Z" className="fill-mid-blue" />
+      <circle cx="199.4" cy="407" r="61.7" className="fill-dark-blue" />
+      <circle cx="113.3" cy="438.7" r="30.3" className="fill-sky-blue" />
     </svg>
   ),
 };
