@@ -90,7 +90,7 @@ export function SiteHeader() {
       </div>
       <div className="border-b border-dove">
         <Container className="flex h-16 items-center gap-6">
-          <Link to="/" className="rounded-sm" aria-label="Zurich Direct, home">
+          <Link to="/" className="flex rounded-sm" aria-label="Zurich Direct, home">
             <div z-logo="" inline="" role="presentation" />
           </Link>
           <MainNav />
