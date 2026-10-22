@@ -12,7 +12,7 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
 }) => {
   await page.goto('/');
   await expect(page.getByRole('note')).toContainText(
-    'Design concept, not the live Zurich Direct site.',
+    'This is a Demo site and not the live Zurich Direct site.',
   );
   await expectNoSeriousAxeViolations(page);
 
@@ -29,7 +29,7 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
 
   await page.getByRole('link', { name: 'View my policies' }).click();
   await expect(heading(page, 'My policies')).toBeVisible();
-  await expect(page.getByText(/^Demo customer · device [0-9a-f]{4}$/)).toBeVisible();
+  await expect(page.getByText(/^Customer [0-9a-f]{4}$/)).toBeVisible();
   const newest = page.getByRole('main').getByRole('listitem').first();
   await expect(newest.getByTestId('policy-status')).toHaveText('Processing');
   await expectNoSeriousAxeViolations(page);
