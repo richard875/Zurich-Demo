@@ -17,9 +17,36 @@
   --color-moss: #3a8367;
   --color-lemon: #f9e547;
   --color-peach: #fd7c6d;
+  /* zurich.com.au's section colours. */
+  --color-lime: #e1ee92;
+  --color-mint: #a6e9ab;
+  --color-powder-pink: #ffc5ea;
 
   --font-sans: ZurichSans, system-ui, sans-serif;
   --font-display: Ogg, Georgia, serif;
+
+  /* Named corners, so the shadcn --radius scale (and the flow's cards) stays as it is. */
+  --radius-input: 0.5rem;
+  --radius-card: 1rem;
+  --radius-promo: 1.5rem;
+
+  /* zurich.com.au's type scale: h-* for headings, b-* for body copy. */
+  --text-h-60: 3.75rem;
+  --text-h-60--line-height: 1.16;
+  --text-h-48: 3rem;
+  --text-h-48--line-height: 1.16;
+  --text-h-44: 2.75rem;
+  --text-h-44--line-height: 1.16;
+  --text-h-36: 2.25rem;
+  --text-h-36--line-height: 1.16;
+  --text-h-32: 2rem;
+  --text-h-32--line-height: 1.16;
+  --text-h-24: 1.5rem;
+  --text-h-24--line-height: 1.25;
+  --text-b-20: 1.25rem;
+  --text-b-20--line-height: 1.875rem;
+  --text-b-18: 1.125rem;
+  --text-b-18--line-height: 1.5;
 }
 
 @theme inline {
@@ -83,6 +110,11 @@
   :focus-visible {
     outline: 3px solid var(--color-dark-blue);
     outline-offset: 2px;
+  }
+
+  /* Dark Blue disappears on Zurich Blue, so blue sections use a white focus ring. */
+  .on-blue :focus-visible {
+    outline-color: var(--color-white);
   }
 
   h1 {

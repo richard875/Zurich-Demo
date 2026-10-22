@@ -1,7 +1,7 @@
 // shadcn/ui RadioGroup (radix-nova style), sized for touch.
 import * as React from 'react';
-import { cn } from 'cn';
 import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
+import { cn } from '@/lib/cn';
 
 function RadioGroup({
   className,
