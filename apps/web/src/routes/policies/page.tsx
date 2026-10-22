@@ -3,6 +3,11 @@ import { Helmet } from '@modern-js/runtime/head';
 import { Link } from '@modern-js/runtime/router';
 import { useQuery } from '@tanstack/react-query';
 import type { Policy } from '@shared/application';
+import { Headline } from '@/components/headline';
+import { ErrorAlert, LoadingPanel, MessagePanel } from '@/components/message-panel';
+import { FlowLayout, PageBand } from '@/components/page-band';
+import { phones } from '@/components/site/links';
+import { TalkCard } from '@/components/site/talk-card';
 import { Button } from '@/components/ui/button';
 import { fetchPolicies, policiesQueryKey } from '@/policies/fetch-policies';
 import { PolicyCard } from '@/policies/policy-card';
@@ -39,18 +44,20 @@ function Policies() {
         {announcement}
       </p>
       {policies.isPending ? (
-        <p className="text-muted-foreground">Loading your policies…</p>
+        <LoadingPanel label="Loading your policies…" blocks={2} />
       ) : policies.isError ? (
-        <p role="alert" className="border-l-4 border-peach py-1 pl-4 font-medium">
-          {policies.error.message}
-        </p>
+        <ErrorAlert>{policies.error.message}</ErrorAlert>
       ) : policies.data.length === 0 ? (
-        <div className="grid justify-items-start gap-4">
-          <p className="text-lg">You haven't applied for cover yet.</p>
-          <Button asChild>
-            <Link to="/quote">Get a quote</Link>
-          </Button>
-        </div>
+        <MessagePanel
+          icon="document-contract:line"
+          action={
+            <Button asChild size="md">
+              <Link to="/quote">Get a quote</Link>
+            </Button>
+          }
+        >
+          You haven't applied for cover yet.
+        </MessagePanel>
       ) : (
         <ul className="grid gap-6">
           {policies.data.map((policy) => (
@@ -64,16 +71,27 @@ function Policies() {
 
 export default function PoliciesPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 md:py-16">
+    <>
       <Helmet>
         <title>My policies | Zurich Direct (demo)</title>
       </Helmet>
-      <h1>My policies</h1>
-      <div className="mt-10">
+      <PageBand>
+        <Headline as="h1" size="page">
+          My <em>policies</em>
+        </Headline>
+        <p className="mt-6 text-b-20">Everything you've applied for, and where it's up to.</p>
+      </PageBand>
+      <FlowLayout
+        aside={
+          <TalkCard phone={phones.customerCare}>
+            Existing customers can call our Customer Care team.
+          </TalkCard>
+        }
+      >
         <RequireSession reason="Sign in to see your policies.">
           <Policies />
         </RequireSession>
-      </div>
-    </div>
+      </FlowLayout>
+    </>
   );
 }

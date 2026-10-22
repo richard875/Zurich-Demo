@@ -1,4 +1,5 @@
-// shadcn/ui Dialog (radix-nova style) with the Zurich close icon and a Dark Blue overlay.
+// shadcn/ui Dialog (radix-nova style) with the Zurich close icon and a Dark Blue overlay. Its 24px
+// corners and padding match the promo cards, and its title the sheets'.
 import * as React from 'react';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 import { Button } from '@/components/ui/button';
@@ -22,19 +23,23 @@ function DialogContent({
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
         data-slot="dialog-overlay"
-        className="fixed inset-0 z-50 bg-dark-blue/40 duration-100 motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0"
+        className="fixed inset-0 z-50 bg-dark-blue/40 duration-200 motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0"
       />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          'fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-6 text-popover-foreground shadow-lg duration-100 sm:max-w-md motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-open:zoom-in-95 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0 motion-safe:data-closed:zoom-out-95',
+          'fixed top-1/2 left-1/2 z-50 grid max-h-[calc(100%-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 overflow-y-auto rounded-promo bg-popover p-6 text-popover-foreground shadow-lg duration-200 sm:max-w-120 sm:p-10 motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-open:zoom-in-95 motion-safe:data-open:ease-sheet-in motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0 motion-safe:data-closed:zoom-out-95 motion-safe:data-closed:ease-sheet-out',
           className,
         )}
         {...props}
       >
         {children}
         <DialogPrimitive.Close asChild>
-          <Button variant="ghost" size="sm" className="absolute top-3 right-3 px-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-3 right-3 px-2 sm:top-6 sm:right-6"
+          >
             <ZurichIcon name="close:line" />
             <span className="sr-only">Close</span>
           </Button>
@@ -48,7 +53,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn('mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:items-center', className)}
+      className={cn('grid gap-4 sm:grid-cols-2', className)}
       {...props}
     />
   );
@@ -58,7 +63,7 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn('pr-10 text-2xl leading-tight font-light', className)}
+      className={cn('pr-10 text-h-24 font-medium', className)}
       {...props}
     />
   );
@@ -71,7 +76,7 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn('text-base', className)}
+      className={cn('text-b-18', className)}
       {...props}
     />
   );

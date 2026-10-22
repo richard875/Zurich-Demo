@@ -26,13 +26,13 @@ function Slider({ className, value, onValueChange, thumbProps, ...props }: Slide
     >
       <SliderPrimitive.Track
         data-slot="slider-track"
-        className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-zurich-white"
+        className="relative h-2 w-full grow overflow-hidden rounded-full bg-dove"
       >
         <SliderPrimitive.Range data-slot="slider-range" className="absolute h-full bg-primary" />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb
         data-slot="slider-thumb"
-        className="block size-7 rounded-full border-2 border-primary bg-background shadow-sm"
+        className="block size-7 cursor-grab rounded-full border-2 border-primary bg-white shadow-md transition-transform active:cursor-grabbing motion-safe:hover:scale-110"
         {...thumbProps}
       />
     </SliderPrimitive.Root>
