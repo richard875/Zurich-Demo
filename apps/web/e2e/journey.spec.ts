@@ -18,7 +18,8 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
 
   await getQuoteWithDemoDetails(page, { checkAxe: true });
   await expect(heading(page, 'Your quote')).toBeVisible();
-  await expect(page.getByText('$112.60')).toBeVisible();
+  await expect(page.getByText('$115.80')).toBeVisible();
+  await expect(page.getByText('Your first month is free.')).toBeVisible();
   await expect(page.getByText('This is general information only')).toBeVisible();
   await expectNoSeriousAxeViolations(page);
 

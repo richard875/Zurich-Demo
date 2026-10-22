@@ -19,10 +19,13 @@ export function PolicyCard({ policy }: { policy: Policy }) {
     <li className="grid gap-4 rounded-xl p-6 ring-1 ring-dove">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl font-medium">{formatWholeDollars(policy.lifeCover)} life cover</h2>
+          <h2 className="text-xl font-medium">
+            {formatWholeDollars(policy.lifeCover)} Ezicover Life Insurance
+          </h2>
           {policy.incomeProtection !== null && (
             <p className="text-muted-foreground">
-              with {formatWholeDollars(policy.incomeProtection)} a month income protection
+              with Ezicover Income Protection of {formatWholeDollars(policy.incomeProtection)} a
+              month
             </p>
           )}
         </div>

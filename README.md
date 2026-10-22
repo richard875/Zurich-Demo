@@ -1,6 +1,6 @@
-# Zurich Life Direct (demo)
+# Zurich Direct (demo)
 
-Demo only, not a real Zurich product. Fake data, mock sign-in.
+Zurich Direct, redesigned in zurich.com.au's design language. A design concept with fake data and a mock sign-in.
 
 ![Architecture](docs/architecture.png)
 

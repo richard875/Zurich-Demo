@@ -77,7 +77,9 @@ test('the Income Protection card starts a quote with income protection on', asyn
   await expect(heading(page, 'About you')).toBeVisible();
   await page.getByRole('button', { name: 'Use demo details' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await expect(page.getByRole('checkbox', { name: /Add income protection/ })).toBeChecked();
+  await expect(
+    page.getByRole('checkbox', { name: /Add Ezicover Income Protection/ }),
+  ).toBeChecked();
 });
 
 test('photos reserve their space, and only the hero loads eagerly', async ({ page }) => {

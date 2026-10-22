@@ -1,9 +1,10 @@
 - Modern.js BFF, not a separate Hono service: one deployable, and it runs on Hono anyway.
 - FingerprintJS mock sign-in: no identity provider to set up for a demo. Not real auth.
-- ECS Fargate, not EKS: no cluster to run for a four-day demo.
-- Own AWS account: closing it removes everything.
-- Mock MuleSoft lives in the app but is only reached over HTTP, like an external system.
-- Inline events locally and in CI: the Lambda's code runs in-process, so nothing needs AWS.
+- ECS Fargate in its own AWS account: no cluster to run, and closing the account removes everything.
+- Mock MuleSoft is in the app but reached only over HTTP. Inline events mean local and CI runs need no AWS.
 - No NAT gateway: tasks get public IPs, and only the load balancer can reach them.
 - Public URL, no IP allowlist: every page says it is a demo, and nothing is indexed.
-- The Trivy image scan skips unfixed CVEs: the Debian base packages have no fix to apply.
+- Real Zurich Direct copy and photos; the site stays public, labelled as a demo on every page.
+- Only the home page is rebuilt; other links go to the real site.
+- Pill buttons and rounder corners everywhere, to match zurich.com.au.
+- 5% bundle discount, to match Zurich Direct's copy.
