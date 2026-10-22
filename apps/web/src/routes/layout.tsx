@@ -11,6 +11,8 @@ import { SignInDialog } from '@/session/sign-in-dialog';
 import '@zurich/design-tokens/EmbeddedFonts.css';
 import '@zurich/design-tokens/Brand.css';
 import '@zurich/design-tokens/icons/action/line.css';
+import '@zurich/design-tokens/icons/communication/line.css';
+import '@zurich/design-tokens/icons/device/line.css';
 import '@zurich/design-tokens/icons/health/line.css';
 import '@zurich/design-tokens/icons/people/line.css';
 import '@zurich/css-components/Logo.css';

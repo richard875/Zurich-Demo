@@ -1,8 +1,8 @@
 // shadcn/ui Slider (radix-nova style), narrowed to one thumb so labels and
 // aria-valuetext can go on the thumb, which is the element screen readers focus.
 import * as React from 'react';
-import { cn } from 'cn';
 import { Slider as SliderPrimitive } from 'radix-ui';
+import { cn } from '@/lib/cn';
 
 type SliderProps = Omit<
   React.ComponentProps<typeof SliderPrimitive.Root>,

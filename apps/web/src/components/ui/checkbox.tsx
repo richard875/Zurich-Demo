@@ -1,8 +1,8 @@
 // shadcn/ui Checkbox (radix-nova style) with the Zurich check icon.
 import * as React from 'react';
-import { cn } from 'cn';
 import { Checkbox as CheckboxPrimitive } from 'radix-ui';
 import { ZurichIcon } from '@/components/zurich-icon';
+import { cn } from '@/lib/cn';
 
 function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
   return (

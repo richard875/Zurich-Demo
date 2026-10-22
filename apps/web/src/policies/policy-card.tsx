@@ -1,6 +1,6 @@
-import { cn } from 'cn';
 import { formatCents, formatWholeDollars } from '@shared/money';
 import type { Policy } from '@shared/application';
+import { cn } from '@/lib/cn';
 
 const STATUS = {
   PROCESSING: {

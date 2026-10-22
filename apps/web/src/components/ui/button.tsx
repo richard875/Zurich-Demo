@@ -1,22 +1,27 @@
-// shadcn/ui Button (radix-nova style), resized to Zurich's larger touch targets.
+// shadcn/ui Button (radix-nova style), reshaped into zurich.com.au's pills.
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'cn';
 import { Slot } from 'radix-ui';
+import { cn } from '@/lib/cn';
 
 const buttonVariants = cva(
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-transparent text-base font-medium whitespace-nowrap transition-colors select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_i]:text-[1.25em]',
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-full border-2 border-transparent text-lg font-normal whitespace-nowrap transition-[color,background-color,box-shadow] select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_i]:text-[1.25em]',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-dark-blue',
-        outline: 'border-primary bg-background text-primary hover:bg-muted',
+        default: 'bg-primary text-primary-foreground shadow-sm hover:bg-dark-blue hover:shadow-md',
+        // For Zurich Blue backgrounds.
+        inverse: 'bg-white text-primary shadow-sm hover:bg-zurich-white hover:shadow-md',
+        outline:
+          'border-primary bg-background text-primary shadow-sm hover:bg-muted hover:shadow-md',
         ghost: 'text-primary hover:bg-muted',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-12 px-6',
-        sm: 'h-10 px-4 text-sm',
+        sm: 'h-10 px-4 text-base',
+        // Full-width choices, as in the quote chooser. Long labels wrap rather than overflow on phones.
+        lg: 'min-h-14 w-full px-6 py-3 text-center whitespace-normal',
       },
     },
     defaultVariants: {

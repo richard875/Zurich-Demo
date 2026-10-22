@@ -1,9 +1,9 @@
 // shadcn/ui Dialog (radix-nova style) with the Zurich close icon and a Dark Blue overlay.
 import * as React from 'react';
-import { cn } from 'cn';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
+import { cn } from '@/lib/cn';
 
 function Dialog(props: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;

@@ -1,4 +1,4 @@
-import { cn } from 'cn';
+import { cn } from '@/lib/cn';
 
 const STEP_LABELS = ['About you', 'Choose cover', 'Your quote'] as const;
 
