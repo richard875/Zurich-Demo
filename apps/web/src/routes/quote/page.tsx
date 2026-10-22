@@ -27,7 +27,8 @@ export default function QuotePage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const loaded = useJourneyLoaded();
-  const { aboutYou, cover, quote, saveAboutYou, saveQuote } = useQuoteJourney();
+  const { aboutYou, cover, quote, incomeProtectionPreset, saveAboutYou, saveQuote } =
+    useQuoteJourney();
   const quoteRequest = useMutation({ mutationFn: requestQuote });
   const session = useSession();
   const requestSignIn = useSignInDialog((state) => state.request);
@@ -57,7 +58,7 @@ export default function QuotePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
       <Helmet>
-        <title>{`${STEPS[step].title} | Get a quote | Zurich Life Direct (demo)`}</title>
+        <title>{`${STEPS[step].title} | Get a quote | Zurich Direct (demo)`}</title>
       </Helmet>
       <QuoteProgress step={step} />
       <p className="mt-10 text-sm font-semibold tracking-wider text-zurich-blue uppercase">
@@ -82,6 +83,7 @@ export default function QuotePage() {
         ) : step === 2 && aboutYou ? (
           <CoverForm
             defaultValues={cover}
+            incomeProtectionPreset={incomeProtectionPreset}
             pending={quoteRequest.isPending}
             error={quoteRequest.error?.message ?? null}
             onBack={() => goTo(1)}

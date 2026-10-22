@@ -8,10 +8,10 @@ export default defineConfig({
     ssr: true,
   },
   html: {
-    title: 'Zurich Life Direct (demo)',
+    title: 'Zurich Direct (demo)',
     meta: {
       robots: 'noindex,nofollow',
-      description: 'Demo only. Not a real Zurich product.',
+      description: 'Design concept, not the live Zurich Direct site. Fake data, mock sign-in.',
     },
   },
 });
