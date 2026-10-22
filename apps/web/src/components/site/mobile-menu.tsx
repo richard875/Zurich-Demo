@@ -59,7 +59,8 @@ export function MobileMenu() {
             </ul>
           </div>
         ))}
-        <div className="grid gap-4 text-base">
+        {/* justify-items-start keeps the Sign in button its own width rather than the menu's. */}
+        <div className="grid justify-items-start gap-4 text-base">
           {utilityLinks.map((link) => (
             <ExternalLink
               key={link.href}
@@ -69,7 +70,7 @@ export function MobileMenu() {
               {link.label}
             </ExternalLink>
           ))}
-          <SessionControl beforeSignIn={() => setOpen(false)} />
+          <SessionControl button beforeSignIn={() => setOpen(false)} />
         </div>
       </SheetContent>
     </Sheet>
