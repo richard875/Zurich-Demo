@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
 import { Outlet } from '@modern-js/runtime/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import favicon from '@/assets/zurich-favicon.png';
 import { DemoBanner } from '@/components/site/demo-banner';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
@@ -25,7 +26,7 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
         <Helmet htmlAttributes={{ lang: 'en-AU' }}>
-          <link rel="icon" href="data:," />
+          <link rel="icon" type="image/png" href={favicon} />
         </Helmet>
         <DemoBanner />
         <SiteHeader />
