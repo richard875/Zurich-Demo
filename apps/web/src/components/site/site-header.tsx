@@ -15,7 +15,6 @@ const navItem =
   'inline-flex h-16 items-center gap-1 px-3 text-dark-blue decoration-zurich-blue decoration-2 underline-offset-8 hover:underline data-active:underline data-[state=open]:underline [&_i]:text-zurich-blue';
 
 function MainNav() {
-  const { pathname } = useLocation();
   return (
     <NavigationMenu.Root aria-label="Main" className="hidden lg:block">
       <NavigationMenu.List className="flex items-center">
@@ -38,7 +37,7 @@ function MainNav() {
             />
           </NavigationMenu.Trigger>
           {/* Without a Viewport, Radix renders the panel here, under its trigger. */}
-          <NavigationMenu.Content className="absolute top-full right-0 z-50 grid w-[34rem] grid-cols-2 gap-8 rounded-card bg-white p-8 shadow-lg ring-1 ring-dove">
+          <NavigationMenu.Content className="absolute top-full right-0 z-50 grid w-136 grid-cols-2 gap-8 rounded-card bg-white p-8 shadow-lg ring-1 ring-dove">
             {helpMenu.map((group) => (
               <div key={group.title}>
                 <h2 className="text-sm font-semibold">{group.title}</h2>
@@ -62,19 +61,13 @@ function MainNav() {
             ))}
           </NavigationMenu.Content>
         </NavigationMenu.Item>
-        {/* <NavigationMenu.Item>
-          <NavigationMenu.Link asChild active={pathname.startsWith('/policies')}>
-            <Link to="/policies" className={navItem}>
-              My policies
-            </Link>
-          </NavigationMenu.Link>
-        </NavigationMenu.Item> */}
       </NavigationMenu.List>
     </NavigationMenu.Root>
   );
 }
 
 export function SiteHeader() {
+  const onPolicies = useLocation().pathname.startsWith('/policies');
   return (
     <header className="sticky top-0 z-40 bg-white">
       <div className="hidden bg-zurich-white lg:block">
@@ -100,8 +93,17 @@ export function SiteHeader() {
           </Link>
           <MainNav />
           <div className="ml-auto flex items-center gap-2">
+            {/* The mobile menu has its own My policies row. */}
+            <Link
+              to="/policies"
+              data-active={onPolicies ? '' : undefined}
+              aria-current={onPolicies ? 'page' : undefined}
+              className={cn(navItem, 'hidden lg:inline-flex')}
+            >
+              My policies
+            </Link>
             <QuoteChooser>
-              <Button size="sm" className="lg:h-12 lg:px-6 lg:text-lg">
+              <Button size="sm" className="lg:h-10 lg:px-5 lg:text-base cursor-pointer">
                 Get a quote
               </Button>
             </QuoteChooser>
