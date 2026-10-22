@@ -10,7 +10,7 @@ test('every section is there, in order', async ({ page }) => {
   const sections = page.getByRole('main').getByRole('heading', { level: 2 });
   await expect(sections).toHaveText([
     'Choose the product that suits your needs',
-    'Zurich Ezicover. You’ve got this.',
+    "Zurich Ezicover. You've got this.",
     'Help choosing your cover',
     'Get more out of your life and income insurance',
     'Want to talk to us?',

@@ -15,10 +15,10 @@ type Step = 1 | 2 | 3;
 const STEPS: Record<Step, { title: string; lead: string }> = {
   1: {
     title: 'About you',
-    lead: 'A few details to work out your price. You don’t need to sign in.',
+    lead: "A few details to work out your price. You don't need to sign in.",
   },
   2: { title: 'Choose your cover', lead: 'Pick how much cover you want. You can change it later.' },
-  3: { title: 'Your quote', lead: 'Here’s your price, based on what you’ve told us.' },
+  3: { title: 'Your quote', lead: "Here's your price, based on what you've told us." },
 };
 
 const parseStep = (value: string | null): Step => (value === '3' ? 3 : value === '2' ? 2 : 1);

@@ -75,10 +75,10 @@ describe('CoverForm', () => {
   });
 
   it('shows a pending state and a friendly error', () => {
-    renderForm({ pending: true, error: 'We couldn’t work out your price just now.' });
+    renderForm({ pending: true, error: "We couldn't work out your price just now." });
     expect(screen.getByRole('button', { name: 'Working out your price…' })).toBeDisabled();
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'We couldn’t work out your price just now.',
+      "We couldn't work out your price just now.",
     );
   });
 });

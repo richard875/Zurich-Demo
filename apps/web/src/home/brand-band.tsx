@@ -8,9 +8,9 @@ import { photos } from './photos';
 export function IntroStatement() {
   return (
     <Container>
-      <p className="mx-auto max-w-[900px] text-center text-b-20 md:text-2xl md:leading-[1.4]">
+      <p className="mx-auto max-w-225 text-center text-b-20 md:text-2xl md:leading-normal">
         At Zurich, we believe it should be easy to take care of your loved ones and your financial
-        security. That’s why we’ve created Ezicover – it’s DIY insurance for people who want to take
+        security. That's why we've created Ezicover - it's DIY insurance for people who want to take
         their future into their own hands.
       </p>
     </Container>
@@ -22,13 +22,13 @@ export function BrandBand() {
   return (
     <section aria-labelledby="brand-heading" className="bg-lime py-10 md:py-16">
       <Container className="grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
-        <div className="grid max-w-[620px] gap-4">
+        <div className="grid max-w-155 gap-4">
           <Headline id="brand-heading">
-            Zurich Ezicover. You’ve got <em>this.</em>
+            Zurich Ezicover. You've got <em>this.</em>
           </Headline>
           <p className="text-b-20">
-            With Ezicover, you’ll enjoy insurance options that are easy to understand, easy to apply
-            for and easy to claim – giving you peace of mind throughout the whole insurance journey.
+            With Ezicover, you'll enjoy insurance options that are easy to understand, easy to apply
+            for and easy to claim - giving you peace of mind throughout the whole insurance journey.
           </p>
         </div>
         <div className="relative justify-self-center md:mr-8">

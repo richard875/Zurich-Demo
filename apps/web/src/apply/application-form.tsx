@@ -50,7 +50,7 @@ export function ApplicationForm({
             Health and lifestyle
           </h2>
           <p className="mt-1 text-muted-foreground">
-            Four questions. Answering yes means we’ll review your application by hand.
+            Four questions. Answering yes means we'll review your application by hand.
           </p>
         </div>
         {HEALTH_QUESTIONS.map((question, index) => {

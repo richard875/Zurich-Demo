@@ -24,7 +24,7 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
   await expectNoSeriousAxeViolations(page);
 
   await signInAndApply(page, { checkAxe: true });
-  await expect(page.getByText('We’re setting up your policy now.')).toBeVisible();
+  await expect(page.getByText("We're setting up your policy now.")).toBeVisible();
   await expectNoSeriousAxeViolations(page);
 
   await page.getByRole('link', { name: 'View my policies' }).click();
@@ -42,7 +42,7 @@ test('a yes to a health question is referred for review', async ({ page }) => {
   await getQuoteWithDemoDetails(page);
   await expect(heading(page, 'Your quote')).toBeVisible();
   await signInAndApply(page, { answerYes: true });
-  await expect(page.getByText('We’ll be in touch')).toBeVisible();
+  await expect(page.getByText("We'll be in touch")).toBeVisible();
   await expect(page.getByRole('link', { name: 'View my policies' })).toHaveCount(0);
 });
 
@@ -52,7 +52,7 @@ test.describe('when mock MuleSoft is down', () => {
   test('the quote step shows a friendly error', async ({ page }) => {
     await getQuoteWithDemoDetails(page);
     await expect(page.getByRole('alert')).toHaveText(
-      'We couldn’t work out your price just now. Please try again in a moment.',
+      "We couldn't work out your price just now. Please try again in a moment.",
     );
     await expect(heading(page, 'Choose your cover')).toBeVisible();
     await expectNoSeriousAxeViolations(page);

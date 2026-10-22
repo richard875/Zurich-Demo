@@ -38,7 +38,7 @@ export function OfferTerms() {
             <p>
               The Zurich Loving Life App and the underlying offers and discounts are provided for
               Zurich by Entertainment Publications of Australia Pty Ltd, ABN 85 065 011 903 of 53-55
-              Herbert Street, Artarmon NSW 2064 (‘Entertainment’). Click{' '}
+              Herbert Street, Artarmon NSW 2064 ('Entertainment'). Click{' '}
               <ExternalLink
                 href="https://app.frequentvalues.com.au/zurich/legals/zurich_legals.html"
                 className={here}
@@ -49,7 +49,7 @@ export function OfferTerms() {
             </p>
             <p>
               The promoter of the free online legal Will and Zurich Loving Life is Zurich Australia
-              Limited, ABN 92 000 010 195 (‘Zurich’) of 118 Mount Street, North Sydney, NSW 2060.
+              Limited, ABN 92 000 010 195 ('Zurich') of 118 Mount Street, North Sydney, NSW 2060.
             </p>
             <p>
               Zurich makes no warranty and accepts no liability in relation to the quality,
@@ -67,7 +67,7 @@ export function OfferTerms() {
               >
                 here
               </ExternalLink>{' '}
-              to view Zurich’s privacy policy.
+              to view Zurich's privacy policy.
             </p>
           </AccordionContent>
         </AccordionItem>

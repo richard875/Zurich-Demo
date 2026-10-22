@@ -13,6 +13,6 @@ export const get = Api(Get('/policies'), async () => {
     return { policies: await listApplications(customerId) };
   } catch (error) {
     c.get('logger').error({ err: error }, 'listing policies failed');
-    return errorResponse(500, 'We couldn’t load your policies just now. Please try again.');
+    return errorResponse(500, "We couldn't load your policies just now. Please try again.");
   }
 });

@@ -27,7 +27,7 @@ export const post = Api(Post('/quotes'), Data(quoteRequestSchema), async ({ data
   if (!rating.ok) {
     return errorResponse(
       502,
-      'We couldn’t work out your price just now. Please try again in a moment.',
+      "We couldn't work out your price just now. Please try again in a moment.",
     );
   }
 
@@ -51,7 +51,7 @@ export const post = Api(Post('/quotes'), Data(quoteRequestSchema), async ({ data
     await saveQuote(quote, data);
   } catch (error) {
     log.error({ err: error }, 'saving quote failed');
-    return errorResponse(500, 'We couldn’t save your quote just now. Please try again.');
+    return errorResponse(500, "We couldn't save your quote just now. Please try again.");
   }
 
   log.info(

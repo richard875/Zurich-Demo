@@ -46,7 +46,7 @@ function Policies() {
         </p>
       ) : policies.data.length === 0 ? (
         <div className="grid justify-items-start gap-4">
-          <p className="text-lg">You haven’t applied for cover yet.</p>
+          <p className="text-lg">You haven't applied for cover yet.</p>
           <Button asChild>
             <Link to="/quote">Get a quote</Link>
           </Button>

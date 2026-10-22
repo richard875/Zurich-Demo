@@ -8,7 +8,7 @@ export const HEALTH_QUESTIONS = [
   },
   {
     id: 'undiagnosedSymptoms',
-    text: 'Do you have any symptoms you haven’t seen a doctor about yet?',
+    text: "Do you have any symptoms you haven't seen a doctor about yet?",
   },
   {
     id: 'hazardousWork',

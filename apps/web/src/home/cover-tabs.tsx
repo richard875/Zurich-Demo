@@ -35,14 +35,14 @@ const tabs: CoverTab[] = [
       ],
       [
         'Income Protection Insurance:',
-        'Replaces up to 70% of your income if you can’t work due to illness or injury, helping cover everyday expenses—even for non-work-related conditions.',
+        "Replaces up to 70% of your income if you can't work due to illness or injury, helping cover everyday expenses-even for non-work-related conditions.",
       ],
       [
         'Why Consider Both?',
-        'Together, these policies provide broader protection—especially during major life changes like marriage or starting a family. Consider your financial responsibilities and how each policy could support your loved ones if times get tough.',
+        'Together, these policies provide broader protection-especially during major life changes like marriage or starting a family. Consider your financial responsibilities and how each policy could support your loved ones if times get tough.',
       ],
       [
-        'Anton’s Story:',
+        "Anton's Story:",
         'Anton, a 45-year-old engineer, had both covers. After an accident left him unable to work for 18 months, income protection paid 70% of his salary, keeping his family secure.',
       ],
     ],
@@ -74,7 +74,7 @@ const tabs: CoverTab[] = [
       ],
       [
         'Need for Dual Coverage:',
-        'Both partners need life insurance for financial security. It covers mortgage payments, home maintenance, debts, and children’s education.',
+        "Both partners need life insurance for financial security. It covers mortgage payments, home maintenance, debts, and children's education.",
       ],
       [
         'Benefits of Joint Life Insurance:',
@@ -96,7 +96,7 @@ const tabs: CoverTab[] = [
     points: [
       [
         'Young and Single:',
-        'Income protection covers bills if you’re unable to work due to illness or injury. Buying life insurance early means lower premiums.',
+        "Income protection covers bills if you're unable to work due to illness or injury. Buying life insurance early means lower premiums.",
       ],
       [
         'Getting Married:',
@@ -104,7 +104,7 @@ const tabs: CoverTab[] = [
       ],
       [
         'Having Children:',
-        'Protect your family with life insurance and income protection for financial support if you can’t work.',
+        "Protect your family with life insurance and income protection for financial support if you can't work.",
       ],
       [
         'Buying a House:',
