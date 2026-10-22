@@ -1,0 +1,71 @@
+import { useState } from 'react';
+import { Link } from '@modern-js/runtime/router';
+import { ExternalLink } from '@/components/external-link';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ZurichIcon } from '@/components/zurich-icon';
+import { helpMenu, productNav, utilityLinks } from './links';
+import { SessionControl } from './session-control';
+
+const rowLink =
+  'flex items-center justify-between gap-4 border-b border-dove py-4 text-b-18 underline-offset-4 hover:underline';
+
+// Below 1024px the header's nav, Help & information menu, utility links and sign-in move in here.
+export function MobileMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="sm" className="px-2 lg:hidden">
+          <ZurichIcon name="menu:line" />
+          <span className="sr-only">Menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="gap-10">
+        <SheetTitle className="text-h-24 font-medium">Menu</SheetTitle>
+        <nav aria-label="Main">
+          <ul>
+            {productNav.map((link) => (
+              <li key={link.href}>
+                <ExternalLink href={link.href} className={rowLink}>
+                  {link.label}
+                </ExternalLink>
+              </li>
+            ))}
+            <li>
+              <Link to="/policies" className={rowLink} onClick={() => setOpen(false)}>
+                My policies
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        {helpMenu.map((group) => (
+          <div key={group.title}>
+            <h2 className="text-sm font-semibold">{group.title}</h2>
+            <ul className="mt-2">
+              {group.links.map((link) => (
+                <li key={link.href}>
+                  <ExternalLink href={link.href} className={rowLink}>
+                    {link.label}
+                  </ExternalLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <div className="grid gap-4 text-base">
+          {utilityLinks.map((link) => (
+            <ExternalLink
+              key={link.href}
+              href={link.href}
+              className="inline-flex items-center gap-1 text-zurich-blue underline-offset-4 hover:underline"
+            >
+              {link.label}
+            </ExternalLink>
+          ))}
+          <SessionControl beforeSignIn={() => setOpen(false)} />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}

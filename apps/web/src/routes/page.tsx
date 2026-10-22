@@ -28,20 +28,15 @@ export default function Index() {
   return (
     <>
       <Helmet>
-        <title>Life and income protection | Zurich Life Direct (demo)</title>
+        <title>Life and income protection | Zurich Direct (demo)</title>
       </Helmet>
 
       <section className="bg-zurich-white">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 md:py-24">
-          <p className="text-sm font-semibold tracking-wider text-zurich-blue uppercase">
-            For Harbour Bank customers
-          </p>
-          <h1 className="mt-4 max-w-2xl font-display font-normal">
-            Cover for the life you’re building
-          </h1>
+          <h1 className="max-w-2xl font-display font-normal">Cover for the life you’re building</h1>
           <p className="mt-6 max-w-xl text-lg">
-            Life and income protection from Zurich, offered through Harbour Bank. See your price in
-            three short steps. You only sign in when you apply.
+            Life and income protection from Zurich. See your price in three short steps. You only
+            sign in when you apply.
           </p>
           <Button asChild className="mt-8">
             <Link to="/quote">

@@ -66,7 +66,7 @@ export default function ApplyPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
       <Helmet>
-        <title>Apply | Zurich Life Direct (demo)</title>
+        <title>Apply | Zurich Direct (demo)</title>
       </Helmet>
       <h1>Apply for cover</h1>
       <p className="mt-4 text-lg">A few more details, then we’ll set up your policy.</p>

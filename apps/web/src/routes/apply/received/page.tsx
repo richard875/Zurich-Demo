@@ -10,7 +10,7 @@ export default function ApplicationReceivedPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
       <Helmet>
-        <title>Application received | Zurich Life Direct (demo)</title>
+        <title>Application received | Zurich Direct (demo)</title>
       </Helmet>
       <ZurichIcon name="check:line" className="text-5xl text-moss" />
       <h1 className="mt-4">Application received</h1>

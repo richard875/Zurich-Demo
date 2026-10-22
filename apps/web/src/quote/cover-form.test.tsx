@@ -55,6 +55,23 @@ describe('CoverForm', () => {
     expect(onSubmit).toHaveBeenCalledWith({ lifeCover: 500_000, incomeProtection: 4_000 });
   });
 
+  it('starts with income protection on when the quote chooser asked for it', () => {
+    renderForm({ incomeProtectionPreset: true });
+    expect(screen.getByRole('checkbox', { name: /Add income protection/ })).toBeChecked();
+  });
+
+  it('lets the chooser switch off income protection from an earlier quote', () => {
+    renderForm({
+      defaultValues: { lifeCover: 750_000, incomeProtection: 3_000 },
+      incomeProtectionPreset: false,
+    });
+    expect(screen.getByRole('checkbox', { name: /Add income protection/ })).not.toBeChecked();
+    expect(screen.getByRole('slider', { name: 'Amount of cover' })).toHaveAttribute(
+      'aria-valuetext',
+      '$750,000',
+    );
+  });
+
   it('shows a pending state and a friendly error', () => {
     renderForm({ pending: true, error: 'We couldn’t work out your price just now.' });
     expect(screen.getByRole('button', { name: 'Working out your price…' })).toBeDisabled();

@@ -1,8 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
+
+// While a Radix NavigationMenu panel is open, Radix adds an aria-hidden, focusable "focus proxy" span
+// after its trigger. It only passes focus into or out of the panel (focus never rests on it), but axe
+// flags it as aria-hidden-focus, so that one element is left out.
+const RADIX_FOCUS_PROXY = 'nav[aria-label="Main"] span[aria-hidden="true"][tabindex="0"]';
 
 export async function expectNoSeriousAxeViolations(page: Page) {
-  const { violations } = await new AxeBuilder({ page }).analyze();
+  const { violations } = await new AxeBuilder({ page }).exclude(RADIX_FOCUS_PROXY).analyze();
   const serious = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(
     serious.map((v) => `${v.id}: ${v.help} (${v.nodes.map((n) => n.target.join(' ')).join(', ')})`),
@@ -10,6 +15,13 @@ export async function expectNoSeriousAxeViolations(page: Page) {
 }
 
 export const heading = (page: Page, name: string) => page.getByRole('heading', { level: 1, name });
+
+// Let fades and slides finish, or axe measures contrast on half-transparent text.
+export async function animationsDone(locator: Locator) {
+  await locator.evaluate((el) =>
+    Promise.all(el.getAnimations({ subtree: true }).map((animation) => animation.finished)),
+  );
+}
 
 export async function getQuoteWithDemoDetails(page: Page, { checkAxe = false } = {}) {
   await page.goto('/quote');
@@ -29,10 +41,7 @@ export async function signInAndApply(page: Page, { answerYes = false, checkAxe =
   await page.getByRole('button', { name: 'Apply now' }).click();
   const dialog = page.getByRole('dialog', { name: 'Sign in to apply (demo)' });
   await expect(dialog).toBeVisible();
-  // Let the fade-in finish, or axe measures contrast on half-transparent text.
-  await dialog.evaluate((el) =>
-    Promise.all(el.getAnimations({ subtree: true }).map((animation) => animation.finished)),
-  );
+  await animationsDone(dialog);
   if (checkAxe) await expectNoSeriousAxeViolations(page);
   await dialog.getByRole('button', { name: 'Continue' }).click();
 

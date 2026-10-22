@@ -11,7 +11,9 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
   page,
 }) => {
   await page.goto('/');
-  await expect(page.getByText('Demo only — not a real Zurich product.')).toBeVisible();
+  await expect(page.getByRole('note')).toContainText(
+    'Design concept, not the live Zurich Direct site.',
+  );
   await expectNoSeriousAxeViolations(page);
 
   await getQuoteWithDemoDetails(page, { checkAxe: true });

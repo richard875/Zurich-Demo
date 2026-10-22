@@ -66,12 +66,14 @@ function AmountSlider({
 
 export function CoverForm({
   defaultValues,
+  incomeProtectionPreset = null,
   pending,
   error,
   onBack,
   onSubmit,
 }: {
   defaultValues: Cover | null;
+  incomeProtectionPreset?: boolean | null;
   pending: boolean;
   error: string | null;
   onBack: () => void;
@@ -85,7 +87,8 @@ export function CoverForm({
     resolver: zodResolver(coverFormSchema),
     defaultValues: {
       lifeCover: defaultValues?.lifeCover ?? DEFAULT_LIFE_COVER,
-      includeIncomeProtection: defaultValues ? defaultValues.incomeProtection !== null : false,
+      includeIncomeProtection:
+        incomeProtectionPreset ?? (defaultValues ? defaultValues.incomeProtection !== null : false),
       incomeProtection: defaultValues?.incomeProtection ?? DEFAULT_MONTHLY_BENEFIT,
     },
   });
