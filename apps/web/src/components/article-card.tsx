@@ -22,12 +22,13 @@ export function ArticleCard({
     <article className="group relative">
       <div className="relative">
         <Photo photo={photo} className="aspect-3/2 w-full rounded-card object-cover" />
-        <Tag className="absolute top-3 left-3">{tag}</Tag>
+        <Tag className="absolute top-4 left-4">{tag}</Tag>
       </div>
-      <time dateTime={dateTime} className="mt-4 block text-sm font-medium">
+      {/* As the product cards: 24px from the photo, 8px from the date to the title. */}
+      <time dateTime={dateTime} className="mt-6 block text-sm font-medium">
         {date}
       </time>
-      <h3 className="mt-1 text-b-18 font-semibold">
+      <h3 className="mt-2 text-b-18 font-semibold">
         <a
           href={href}
           {...newTab}

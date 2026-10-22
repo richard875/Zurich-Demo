@@ -15,7 +15,10 @@ export function OfferTerms() {
     <Container>
       <Accordion type="single" collapsible>
         <AccordionItem value="offer-terms">
-          <AccordionTrigger level="h2">* Offer terms and important information</AccordionTrigger>
+          {/* 24px above and below the title, as under the terms when open. */}
+          <AccordionTrigger level="h2" className="py-6">
+            * Offer terms and important information
+          </AccordionTrigger>
           <AccordionContent className="grid gap-4 md:pl-10">
             <p>
               *This offer is available to any Policyholder who has purchased, or purchases, an
