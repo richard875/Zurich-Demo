@@ -11,7 +11,7 @@ export default defineConfig({
     title: 'Zurich Direct (demo)',
     meta: {
       robots: 'noindex,nofollow',
-      description: 'Design concept, not the live Zurich Direct site. Fake data, mock sign-in.',
+      description: 'This is a Demo site and not the live Zurich Direct site.',
     },
   },
 });
