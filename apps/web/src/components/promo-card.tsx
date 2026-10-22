@@ -18,9 +18,11 @@ export function PromoCard({
 }) {
   return (
     <div className="grid overflow-hidden rounded-promo md:grid-cols-2">
-      {/* Square from md, like zurich.com.au's, but free to grow if the copy needs more room. */}
-      <div className={cn('flex flex-col p-6 md:aspect-square md:p-12 md:pb-10', tones[tone])}>
-        <div className="grid gap-4 text-b-20 [&_a]:underline [&_a]:underline-offset-4">
+      {/* Square from md, like zurich.com.au's, but free to grow if the copy needs more room. The
+          same padding on every side: 24px, 40px from md. 24px from the heading to the copy, as in
+          the lime band. */}
+      <div className={cn('flex flex-col p-6 md:aspect-square md:p-10', tones[tone])}>
+        <div className="grid gap-6 text-b-20 [&_a]:underline [&_a]:underline-offset-4">
           {children}
         </div>
         <div className="mt-auto flex flex-wrap gap-4 pt-6">{actions}</div>

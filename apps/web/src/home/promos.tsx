@@ -36,10 +36,16 @@ export function TalkToUs() {
           <Headline id="talk-heading">
             Want to <em>talk</em> to us?
           </Headline>
+          {/* A number never breaks across lines. */}
           <p>
-            Call <a href={phones.sales.href}>{phones.sales.number}</a> to get a quote and apply, or
-            existing customers call our Customer Care team on{' '}
-            <a href={phones.customerCare.href}>{phones.customerCare.number}</a>
+            Call{' '}
+            <a href={phones.sales.href} className="whitespace-nowrap">
+              {phones.sales.number}
+            </a>{' '}
+            to get a quote and apply, or existing customers call our Customer Care team on{' '}
+            <a href={phones.customerCare.href} className="whitespace-nowrap">
+              {phones.customerCare.number}
+            </a>
           </p>
         </PromoCard>
       </Container>
