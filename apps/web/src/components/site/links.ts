@@ -55,9 +55,13 @@ export const helpMenu: { title: string; links: SiteLink[] }[] = [
   },
 ];
 
+// The mobile menu lists it beside My policies.
+export const makeClaim: SiteLink = { label: 'Make a claim', href: zurichLinks.claims };
+
+// The header's top bar.
 export const utilityLinks: SiteLink[] = [
   { label: 'Contact us', href: zurichLinks.contact },
-  { label: 'Make a claim', href: zurichLinks.claims },
+  makeClaim,
 ];
 
 export const footerGroups: { title: string; links: SiteLink[] }[] = [
