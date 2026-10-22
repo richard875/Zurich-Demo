@@ -3,7 +3,8 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { formatWholeDollars } from '@shared/money';
 import { coverSchema, INCOME_PROTECTION, LIFE_COVER, type Cover } from '@shared/quote';
-import { FieldError } from '@/components/form-field';
+import { FieldError, FormSection } from '@/components/form-field';
+import { ErrorAlert } from '@/components/message-panel';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -39,13 +40,14 @@ function AmountSlider({
 }) {
   const valueText = `${formatWholeDollars(value)}${suffix}`;
   return (
-    <div className="grid gap-3">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <span id={`${id}-label`} className="font-medium">
           {label}
         </span>
-        <span className="text-2xl font-light" aria-hidden="true">
-          {valueText}
+        <span aria-hidden="true">
+          <span className="text-h-32 font-light">{formatWholeDollars(value)}</span>
+          {suffix && <span className="text-b-18">{suffix}</span>}
         </span>
       </div>
       <Slider
@@ -102,22 +104,12 @@ export function CoverForm({
   );
 
   return (
-    <form noValidate onSubmit={submit} className="grid gap-8">
-      <section
-        aria-labelledby="life-heading"
-        className="grid gap-5 rounded-xl p-6 ring-1 ring-dove"
+    <form noValidate onSubmit={submit} className="grid gap-10">
+      <FormSection
+        icon="family:line"
+        title="Ezicover Life Insurance"
+        description="A lump sum if you die or are diagnosed with a terminal illness."
       >
-        <div className="flex items-start gap-4">
-          <ZurichIcon name="family:line" className="text-3xl text-zurich-blue" />
-          <div>
-            <h2 id="life-heading" className="text-xl font-medium">
-              Ezicover Life Insurance
-            </h2>
-            <p className="mt-1 text-muted-foreground">
-              A lump sum if you die or are diagnosed with a terminal illness.
-            </p>
-          </div>
-        </div>
         <Controller
           name="lifeCover"
           control={control}
@@ -132,35 +124,36 @@ export function CoverForm({
           )}
         />
         <FieldError id="life-cover-error" message={errors.lifeCover?.message} />
-      </section>
+      </FormSection>
 
-      <section
-        aria-labelledby="income-heading"
-        className="grid gap-5 rounded-xl p-6 ring-1 ring-dove"
+      {/* Outlined in Zurich Blue once it's added, like a hovered quote chooser card. */}
+      <FormSection
+        icon="financial-health:line"
+        title={
+          <>
+            Ezicover Income Protection{' '}
+            <span className="font-normal text-muted-foreground">(optional)</span>
+          </>
+        }
+        description="A monthly benefit if illness or injury stops you working for more than 30 days."
+        badge={<span className="rounded-full bg-lime px-3 py-1 text-sm font-medium">Save 5%</span>}
+        className={includeIncomeProtection ? 'ring-2 ring-zurich-blue' : undefined}
       >
-        <div className="flex items-start gap-4">
-          <ZurichIcon name="financial-health:line" className="text-3xl text-zurich-blue" />
-          <div>
-            <h2 id="income-heading" className="text-xl font-medium">
-              Ezicover Income Protection{' '}
-              <span className="font-normal text-muted-foreground">(optional)</span>
-            </h2>
-            <p className="mt-1 text-muted-foreground">
-              A monthly benefit if illness or injury stops you working for more than 30 days.
-            </p>
-          </div>
-        </div>
         <Controller
           name="includeIncomeProtection"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-input bg-zurich-white px-4">
               <Checkbox
                 id="include-income-protection"
                 checked={field.value}
                 onCheckedChange={(checked) => field.onChange(checked === true)}
               />
-              <Label htmlFor="include-income-protection" className="font-normal">
+              {/* The label fills the row, so the whole row ticks the box. */}
+              <Label
+                htmlFor="include-income-protection"
+                className="flex-1 cursor-pointer py-4 font-normal"
+              >
                 Add Ezicover Income Protection and save 5% on it
               </Label>
             </div>
@@ -183,20 +176,17 @@ export function CoverForm({
           />
         )}
         <FieldError id="monthly-benefit-error" message={errors.incomeProtection?.message} />
-      </section>
+      </FormSection>
 
-      {error && (
-        <div role="alert" className="border-l-4 border-peach py-1 pl-4">
-          <p className="font-medium">{error}</p>
-        </div>
-      )}
+      {error && <ErrorAlert>{error}</ErrorAlert>}
 
-      <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" disabled={pending}>
+      {/* The main action first; on phones the two stack, full width. */}
+      <div className="grid gap-4 sm:flex sm:flex-wrap">
+        <Button type="submit" size="md" disabled={pending}>
           {pending ? 'Working out your price…' : 'See my price'}
           {!pending && <ZurichIcon name="arrow-right:line" />}
         </Button>
-        <Button type="button" variant="ghost" onClick={onBack}>
+        <Button type="button" variant="outline" size="md" onClick={onBack}>
           <ZurichIcon name="arrow-left:line" />
           Back
         </Button>

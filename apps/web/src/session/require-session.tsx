@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import { useLocation } from '@modern-js/runtime/router';
+import { LoadingPanel, MessagePanel } from '@/components/message-panel';
 import { Button } from '@/components/ui/button';
+import { ZurichIcon } from '@/components/zurich-icon';
+import { useHydrated } from '@/lib/use-hydrated';
 import { useSession, useSignInDialog } from './session';
 
 // Shows the page only to a signed-in customer; otherwise offers the mock sign-in,
@@ -9,16 +12,22 @@ export function RequireSession({ reason, children }: { reason: string; children:
   const session = useSession();
   const requestSignIn = useSignInDialog((state) => state.request);
   const location = useLocation();
+  const hydrated = useHydrated();
 
-  if (!session.data) return <p className="text-muted-foreground">Checking you're signed in…</p>;
+  if (!hydrated || !session.data) return <LoadingPanel label="Checking you're signed in…" />;
   if (session.data.signedIn) return children;
 
   return (
-    <div className="grid justify-items-start gap-4 rounded-xl p-6 ring-1 ring-dove">
-      <p className="text-lg">{reason}</p>
-      <Button onClick={() => requestSignIn(`${location.pathname}${location.search}`)}>
-        Sign in
-      </Button>
-    </div>
+    <MessagePanel
+      icon="lock-closed:line"
+      action={
+        <Button size="md" onClick={() => requestSignIn(`${location.pathname}${location.search}`)}>
+          <ZurichIcon name="login:line" />
+          Sign in
+        </Button>
+      }
+    >
+      {reason}
+    </MessagePanel>
   );
 }

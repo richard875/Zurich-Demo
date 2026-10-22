@@ -4,6 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatCents, formatWholeDollars } from '@shared/money';
 import { ApplicationForm } from '@/apply/application-form';
 import { submitApplication } from '@/apply/submit-application';
+import { Headline } from '@/components/headline';
+import { IconCircle } from '@/components/icon-circle';
+import { LoadingPanel, MessagePanel } from '@/components/message-panel';
+import { FlowLayout, PageBand } from '@/components/page-band';
+import { phones } from '@/components/site/links';
+import { TalkCard } from '@/components/site/talk-card';
 import { Button } from '@/components/ui/button';
 import { policiesQueryKey } from '@/policies/fetch-policies';
 import { useJourneyLoaded, useQuoteJourney } from '@/quote/journey-store';
@@ -16,15 +22,19 @@ function Apply() {
   const queryClient = useQueryClient();
   const application = useMutation({ mutationFn: submitApplication });
 
-  if (!loaded) return <p className="text-muted-foreground">Loading your quote…</p>;
+  if (!loaded) return <LoadingPanel label="Loading your quote…" blocks={2} />;
   if (!quote) {
     return (
-      <div className="grid justify-items-start gap-4">
-        <p className="text-lg">You need a quote before you can apply.</p>
-        <Button asChild>
-          <Link to="/quote">Get a quote</Link>
-        </Button>
-      </div>
+      <MessagePanel
+        icon="document-contract:line"
+        action={
+          <Button asChild size="md">
+            <Link to="/quote">Get a quote</Link>
+          </Button>
+        }
+      >
+        You need a quote before you can apply.
+      </MessagePanel>
     );
   }
 
@@ -38,8 +48,13 @@ function Apply() {
 
   return (
     <div className="grid gap-10">
-      <p className="rounded-lg bg-zurich-white p-4">
-        You're applying for {cover}, at {formatCents(quote.monthlyPremiumCents)} a month.
+      <p className="flex items-center gap-4 rounded-card bg-zurich-white p-6 text-b-18">
+        <IconCircle name="document-contract:line" />
+        <span>
+          You're applying for {cover}, at{' '}
+          <strong className="font-semibold">{formatCents(quote.monthlyPremiumCents)}</strong> a
+          month.
+        </span>
       </p>
       <ApplicationForm
         pending={application.isPending}
@@ -64,17 +79,27 @@ function Apply() {
 
 export default function ApplyPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
+    <>
       <Helmet>
         <title>Apply | Zurich Direct (demo)</title>
       </Helmet>
-      <h1>Apply for cover</h1>
-      <p className="mt-4 text-lg">A few more details, then we'll set up your policy.</p>
-      <div className="mt-10">
+      <PageBand>
+        <Headline as="h1" size="page">
+          Apply for <em>cover</em>
+        </Headline>
+        <p className="mt-6 text-b-20">A few more details, then we'll set up your policy.</p>
+      </PageBand>
+      <FlowLayout
+        aside={
+          <TalkCard phone={phones.sales}>
+            Prefer to apply over the phone? Our team can take you through it.
+          </TalkCard>
+        }
+      >
         <RequireSession reason="Sign in to apply. It takes one click in this demo.">
           <Apply />
         </RequireSession>
-      </div>
-    </div>
+      </FlowLayout>
+    </>
   );
 }

@@ -1,43 +1,66 @@
 import { Helmet } from '@modern-js/runtime/head';
 import { Link, useSearchParams } from '@modern-js/runtime/router';
+import { Container } from '@/components/container';
+import { Headline } from '@/components/headline';
+import { IconCircle } from '@/components/icon-circle';
+import { PromoCard } from '@/components/promo-card';
 import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
+import { photos } from '@/home/photos';
 
+// The outcome in the home page's split promo card: mint while the policy is set up, lime while it
+// waits for a person to review it.
 export default function ApplicationReceivedPage() {
   const [searchParams] = useSearchParams();
   const referred = searchParams.get('outcome') === 'referred';
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 md:py-16">
+    <Container className="py-10 md:py-16">
       <Helmet>
         <title>Application received | Zurich Direct (demo)</title>
       </Helmet>
-      <ZurichIcon name="check:line" className="text-5xl text-moss" />
-      <h1 className="mt-4">Application received</h1>
       {referred ? (
-        <>
-          <p className="mt-6 text-2xl font-light">We'll be in touch</p>
-          <p className="mt-3 text-lg">
-            Your answers mean someone from our team needs to look at your application. We'll contact
-            you within 2 business days.
-          </p>
-          <Button asChild variant="ghost" className="mt-8 -ml-6">
-            <Link to="/">Back to home</Link>
-          </Button>
-        </>
+        <PromoCard
+          tone="lime"
+          photo={photos.talkToUs}
+          actions={
+            <Button asChild size="md">
+              <Link to="/">Back to home</Link>
+            </Button>
+          }
+        >
+          <IconCircle name="clock:line" tone="white" />
+          <Headline as="h1">
+            Application <em>received</em>
+          </Headline>
+          <div className="grid gap-2">
+            <h2 className="text-h-24 font-medium">We'll be in touch</h2>
+            <p>
+              Your answers mean someone from our team needs to look at your application. We'll
+              contact you within 2 business days.
+            </p>
+          </div>
+        </PromoCard>
       ) : (
-        <>
-          <p className="mt-6 text-lg">
-            We're setting up your policy now. It's usually ready in a few seconds.
-          </p>
-          <Button asChild className="mt-8">
-            <Link to="/policies">
-              View my policies
-              <ZurichIcon name="arrow-right:line" />
-            </Link>
-          </Button>
-        </>
+        <PromoCard
+          tone="mint"
+          photo={photos.hero}
+          actions={
+            <Button asChild size="md">
+              <Link to="/policies">
+                View my policies
+                <ZurichIcon name="arrow-right:line" />
+              </Link>
+            </Button>
+          }
+        >
+          <IconCircle name="check:line" tone="white" />
+          <Headline as="h1">
+            Application <em>received</em>
+          </Headline>
+          <p>We're setting up your policy now. It's usually ready in a few seconds.</p>
+        </PromoCard>
       )}
-    </div>
+    </Container>
   );
 }

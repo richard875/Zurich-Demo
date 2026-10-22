@@ -25,8 +25,9 @@
   --font-sans: ZurichSans, system-ui, sans-serif;
   --font-display: Ogg, Georgia, serif;
 
-  /* Named corners, so the shadcn --radius scale (and the flow's cards) stays as it is. */
-  --radius-input: 0.5rem;
+  /* Named corners, so the shadcn --radius scale stays as it is. Inputs and inner panels are 12px,
+     cards 16px and promo panels 24px. */
+  --radius-input: 0.75rem;
   --radius-card: 1rem;
   --radius-promo: 1.5rem;
 

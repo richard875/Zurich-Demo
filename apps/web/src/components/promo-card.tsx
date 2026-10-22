@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Photo, type PhotoSource } from '@/components/photo';
 import { cn } from '@/lib/cn';
 
-const tones = { mint: 'bg-mint', pink: 'bg-powder-pink' };
+const tones = { mint: 'bg-mint', pink: 'bg-powder-pink', lime: 'bg-lime' };
 
 // zurich.com.au's split card: a colour panel beside a photo from md, the panel above the photo below it.
 export function PromoCard({
