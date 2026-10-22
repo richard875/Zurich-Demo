@@ -104,7 +104,10 @@ export function SiteFooter() {
               and Torres Strait Islander peoples today.
             </p>
             <p>Always was, always will be Aboriginal land.</p>
-            <p>© 2026 Zurich Australia · Design concept, not the live Zurich Direct site.</p>
+            <p>
+              © 2026 Zurich Australia · Design concept, not the live Zurich Direct site · A Richard
+              Everley's Production
+            </p>
           </div>
         </div>
       </Container>
