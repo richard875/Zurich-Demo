@@ -21,7 +21,7 @@ export function ArticleCard({
   return (
     <article className="group relative">
       <div className="relative">
-        <Photo photo={photo} className="aspect-[3/2] w-full rounded-card object-cover" />
+        <Photo photo={photo} className="aspect-3/2 w-full rounded-card object-cover" />
         <Tag className="absolute top-3 left-3">{tag}</Tag>
       </div>
       <time dateTime={dateTime} className="mt-4 block text-sm font-medium">
