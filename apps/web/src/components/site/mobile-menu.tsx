@@ -16,7 +16,7 @@ export function MobileMenu() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="sm" className="px-2 lg:hidden">
+        <Button variant="ghost" size="sm" className="h-11 w-10 cursor-pointer px-0 lg:hidden">
           <ZurichIcon name="menu:line" />
           <span className="sr-only">Menu</span>
         </Button>
