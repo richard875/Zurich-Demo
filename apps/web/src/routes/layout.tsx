@@ -29,7 +29,9 @@ export default function Layout() {
         </Helmet>
         <DemoBanner />
         <SiteHeader />
-        <main className="flex-1">
+        {/* Modern.js streams each page in after the layout. A screen-tall main keeps the footer below
+            the fold until the page arrives, so nothing jumps when it does. */}
+        <main className="min-h-svh flex-1">
           <Outlet />
         </main>
         <SiteFooter />
