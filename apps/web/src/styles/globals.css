@@ -48,6 +48,11 @@
   --text-b-18: 1.125rem;
   --text-b-18--line-height: 1.5;
 
+  /* The side sheets' slide: in fast and settling softly, as iOS sheets do; out with a gathering
+     pace, so it leaves cleanly. */
+  --ease-sheet-in: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-sheet-out: cubic-bezier(0.32, 0, 0.67, 0);
+
   /* zurich.com.au's hero shape entrance: it fades in while sliding 72px from the left. */
   --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s cubic-bezier(0, 0, 0, 1) 0.1s both;
 
