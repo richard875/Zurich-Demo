@@ -8,3 +8,5 @@
 - Only the home page is rebuilt; other links go to the real site.
 - Pill buttons and rounder corners everywhere, to match zurich.com.au.
 - 5% bundle discount, to match Zurich Direct's copy.
+- Motion for the quote steps, CSS for everything else, reveals included; no GSAP, because there are no timelines or scroll scenes to justify it.
+- Animation timing and easing come from zurich.com.au; reduced motion turns movement off, and no content waits on JavaScript.

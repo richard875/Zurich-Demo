@@ -24,7 +24,9 @@ interface RevealProps {
 }
 
 // One observer for every reveal, on zurich.com.au's trigger: 10% of it on screen, ignoring the bottom
-// tenth of the screen. Each element is watched until it first comes into view.
+// tenth of the screen. Each element is watched until it first comes into view. The area reaches far
+// above the screen, so a block already scrolled past (on a slow phone, before it was watched, or in
+// one jump) counts as reached too, rather than waiting until it's scrolled back to.
 const onEnter = new WeakMap<Element, () => void>();
 let observer: IntersectionObserver | undefined;
 
@@ -37,7 +39,7 @@ function watch(element: Element, callback: () => void) {
         onEnter.get(entry.target)?.();
       }
     },
-    { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
+    { threshold: 0.1, rootMargin: '100000px 0px -10% 0px' },
   );
   onEnter.set(element, callback);
   observer.observe(element);

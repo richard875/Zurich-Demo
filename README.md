@@ -33,5 +33,6 @@ Add the DNS records Terraform outputs, then set the repository variables.
 ## Where things are
 
 - apps/web: Modern.js app (pages, BFF, mock MuleSoft)
+- apps/web/src/motion: animation tokens and building blocks
 - functions/policy-issuer: Lambda that activates policies
 - infra: Terraform
