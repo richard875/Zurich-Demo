@@ -6,6 +6,7 @@ import favicon from '@/assets/zurich-favicon.png';
 import { DemoBanner } from '@/components/site/demo-banner';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
+import { MotionProvider } from '@/motion/motion-provider';
 import { SignInDialog } from '@/session/sign-in-dialog';
 // Zurich Sans and Ogg, the logo masks, and only the icon sets this app uses. These are imported
 // here, not in globals.css, because the packages don't export CSS under Tailwind's "style" condition.
@@ -24,21 +25,23 @@ export default function Layout() {
   const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <Helmet htmlAttributes={{ lang: 'en-AU' }}>
-          <link rel="icon" type="image/png" href={favicon} />
-        </Helmet>
-        <DemoBanner />
-        <SiteHeader />
-        {/* As tall as the page, so the footer follows it after the page's own bottom spacing, the
-            same as its top. Only a page shorter than the screen is stretched, to keep the footer at
-            the bottom. The footer stays hidden until the page is in place (globals.css). */}
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-      </div>
-      <SignInDialog />
+      <MotionProvider>
+        <div className="flex min-h-screen flex-col">
+          <Helmet htmlAttributes={{ lang: 'en-AU' }}>
+            <link rel="icon" type="image/png" href={favicon} />
+          </Helmet>
+          <DemoBanner />
+          <SiteHeader />
+          {/* As tall as the page, so the footer follows it after the page's own bottom spacing, the
+              same as its top. Only a page shorter than the screen is stretched, to keep the footer
+              at the bottom. The footer stays hidden until the page is in place (globals.css). */}
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+        </div>
+        <SignInDialog />
+      </MotionProvider>
     </QueryClientProvider>
   );
 }
