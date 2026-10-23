@@ -4,6 +4,7 @@ import { ExternalLink } from '@/components/external-link';
 import { Headline } from '@/components/headline';
 import { zurichLinks } from '@/components/site/links';
 import { Button } from '@/components/ui/button';
+import { RevealGroup, RevealItem } from '@/motion/reveal';
 import { photos } from './photos';
 
 const articles = [
@@ -33,24 +34,28 @@ const articles = [
   },
 ];
 
+// The heading, then each article 120ms after the one before, and the Education hub button with the
+// last of them.
 export function Articles() {
   return (
-    <section aria-labelledby="articles-heading">
+    <RevealGroup as="section" aria-labelledby="articles-heading">
       <Container>
-        <Headline id="articles-heading" size="list">
-          Protect those who <em>matter</em> most
-        </Headline>
+        <RevealItem index={0}>
+          <Headline id="articles-heading" size="list">
+            Protect those who <em>matter</em> most
+          </Headline>
+        </RevealItem>
         <div className="mt-10 grid gap-x-6 gap-y-10 md:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard key={article.href} {...article} />
+          {articles.map((article, index) => (
+            <ArticleCard key={article.href} revealIndex={index + 1} {...article} />
           ))}
         </div>
-        <div className="mt-10 flex justify-center">
+        <RevealItem index={articles.length} className="mt-10 flex justify-center">
           <Button asChild size="md">
             <ExternalLink href={zurichLinks.educationHub}>Education hub</ExternalLink>
           </Button>
-        </div>
+        </RevealItem>
       </Container>
-    </section>
+    </RevealGroup>
   );
 }

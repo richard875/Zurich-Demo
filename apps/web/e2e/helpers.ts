@@ -6,7 +6,11 @@ import { expect, type Locator, type Page } from '@playwright/test';
 // flags it as aria-hidden-focus, so that one element is left out.
 const RADIX_FOCUS_PROXY = 'nav[aria-label="Main"] span[aria-hidden="true"][tabindex="0"]';
 
+// Every reveal on the page runs first, and every animation finishes, so axe checks the page as people
+// see it once it has settled.
 export async function expectNoSeriousAxeViolations(page: Page) {
+  await revealAll(page);
+  await animationsDone(page.locator('body'));
   const { violations } = await new AxeBuilder({ page }).exclude(RADIX_FOCUS_PROXY).analyze();
   const serious = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(
@@ -16,11 +20,40 @@ export async function expectNoSeriousAxeViolations(page: Page) {
 
 export const heading = (page: Page, name: string) => page.getByRole('heading', { level: 1, name });
 
-// Let fades and slides finish, or axe measures contrast on half-transparent text.
+// Let fades, slides and reveals finish, or axe measures contrast on half-transparent text. Looping
+// animations (the loading and Processing pulses) never finish, so they're left out. Reveals count as
+// done once every one in view says "shown"; the bottom tenth of the screen doesn't trigger them.
 export async function animationsDone(locator: Locator) {
   await locator.evaluate((el) =>
-    Promise.all(el.getAnimations({ subtree: true }).map((animation) => animation.finished)),
+    Promise.all(
+      el
+        .getAnimations({ subtree: true })
+        .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+        .map((animation) => animation.finished.catch(() => undefined)),
+    ),
   );
+  await locator.page().waitForFunction(() =>
+    Array.from(document.querySelectorAll('[data-reveal="hidden"]')).every((el) => {
+      const { top, bottom } = el.getBoundingClientRect();
+      return bottom <= 0 || top >= innerHeight * 0.9;
+    }),
+  );
+}
+
+// Scrolls through a page with reveals waiting, so each one runs, then back to where it was. Skipped
+// while a dialog is open: the page behind it can't scroll, and reveals still waiting are fully
+// transparent, which axe leaves out.
+export async function revealAll(page: Page) {
+  await page.evaluate(async () => {
+    if (!document.querySelector('[data-reveal="hidden"]')) return;
+    if (document.querySelector('[role="dialog"]')) return;
+    const start = scrollY;
+    for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight / 2) {
+      scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    scrollTo(0, start);
+  });
 }
 
 export async function getQuoteWithDemoDetails(page: Page, { checkAxe = false } = {}) {

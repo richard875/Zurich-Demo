@@ -72,28 +72,6 @@
   /* A tick or icon pops in, overshooting by 8%, after --pop-delay if it waits for something. */
   --animate-pop: pop var(--motion-confirm) var(--ease-entrance) var(--pop-delay, 0s) both;
 
-  @keyframes stage-rise {
-    from {
-      opacity: var(--stage-opacity, 0);
-      transform: translateY(var(--stage-rise, var(--motion-rise)));
-    }
-  }
-
-  @keyframes stage-media-settle {
-    from {
-      transform: scale(1.06);
-    }
-  }
-
-  @keyframes pop {
-    from {
-      transform: scale(0.6);
-    }
-    60% {
-      transform: scale(1.08);
-    }
-  }
-
   /* zurich.com.au's hero shape entrance: it fades in while sliding 72px from the left. */
   --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s cubic-bezier(0, 0, 0, 1) 0.1s both;
 
@@ -242,6 +220,83 @@
     [data-switched] [data-slot='tabs-content'][data-state='active'] [data-slot='tab-text'] {
       animation: tab-text-rise var(--motion-switch-in) var(--ease-entrance);
     }
+  }
+
+  /* Reveals (motion/reveal.tsx decides when). A block waiting below the screen is transparent and
+     32px low; when it comes into view it fades and rises in, a group's items 120ms apart. On phones
+     it fades in place. Sections take 500ms, a group's items 600ms. With `parts`, only its
+     [data-reveal-part] children move; photos marked [data-settle] settle from 1.06 and band shapes
+     [data-reveal-shapes] slide in as the hero's do. Nothing waits with reduced motion or in print. */
+  [data-reveal] {
+    --reveal-rise: 0px;
+    --reveal-duration: var(--motion-enter);
+
+    @media (width >= 48rem) {
+      --reveal-rise: var(--motion-rise);
+    }
+  }
+
+  [data-reveal-item] {
+    --reveal-duration: var(--motion-settle);
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) {
+    [data-reveal='hidden']:not([data-reveal-parts]),
+    [data-reveal='hidden'] [data-reveal-part] {
+      opacity: 0;
+      transform: translateY(var(--reveal-rise));
+    }
+
+    [data-reveal='hidden'] [data-settle] {
+      transform: scale(1.06);
+    }
+
+    [data-reveal='hidden'] [data-reveal-shapes] {
+      opacity: 0;
+    }
+
+    [data-revealing]:not([data-reveal-parts]),
+    [data-revealing] [data-reveal-part] {
+      animation: reveal var(--reveal-duration) var(--ease-entrance)
+        calc(var(--reveal-index, 0) * var(--motion-stagger)) both;
+    }
+
+    [data-revealing] [data-settle] {
+      animation: var(--animate-stage-media-settle);
+    }
+
+    [data-revealing] [data-reveal-shapes] {
+      animation: var(--animate-stage-shape-slide-in);
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-rise));
+  }
+}
+
+@keyframes stage-rise {
+  from {
+    opacity: var(--stage-opacity, 0);
+    transform: translateY(var(--stage-rise, var(--motion-rise)));
+  }
+}
+
+@keyframes stage-media-settle {
+  from {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.08);
   }
 }
 

@@ -4,6 +4,7 @@ import { ExternalLink } from '@/components/external-link';
 import { Headline } from '@/components/headline';
 import { zurichLinks } from '@/components/site/links';
 import { ZurichIcon, type ZurichIconName } from '@/components/zurich-icon';
+import { RevealGroup, RevealItem } from '@/motion/reveal';
 
 const benefits: { icon: ZurichIconName; title: string; body: ReactNode }[] = [
   {
@@ -32,25 +33,32 @@ const benefits: { icon: ZurichIconName; title: string; body: ReactNode }[] = [
   },
 ];
 
+// The heading, then each benefit 120ms after the one before; the Zurich White band stays put.
 export function Benefits() {
   return (
-    <section aria-labelledby="benefits-heading" className="bg-zurich-white py-10 md:py-16">
+    <RevealGroup
+      as="section"
+      aria-labelledby="benefits-heading"
+      className="bg-zurich-white py-10 md:py-16"
+    >
       <Container>
-        <Headline id="benefits-heading">
-          Get <em>more</em> out of your life and income insurance
-        </Headline>
+        <RevealItem index={0}>
+          <Headline id="benefits-heading">
+            Get <em>more</em> out of your life and income insurance
+          </Headline>
+        </RevealItem>
         <ul className="mt-10 grid gap-10 md:grid-cols-3 md:gap-6">
-          {benefits.map((benefit) => (
-            <li key={benefit.title}>
+          {benefits.map((benefit, index) => (
+            <RevealItem as="li" key={benefit.title} index={index + 1}>
               <span className="flex size-12 items-center justify-center rounded-full bg-zurich-blue text-white">
                 <ZurichIcon name={benefit.icon} className="text-2xl" />
               </span>
               <h3 className="mt-6 text-b-20 font-semibold">{benefit.title}</h3>
               <p className="mt-2 text-b-18">{benefit.body}</p>
-            </li>
+            </RevealItem>
           ))}
         </ul>
       </Container>
-    </section>
+    </RevealGroup>
   );
 }

@@ -1,11 +1,12 @@
-// shadcn/ui Button (radix-nova style), reshaped into zurich.com.au's pills.
+// shadcn/ui Button (radix-nova style), reshaped into zurich.com.au's pills. Pressed, it dips to 98%;
+// an arrow inside it nudges 4px its way on hover (press and nudge, in globals.css).
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 import { cn } from '@/lib/cn';
 
 const buttonVariants = cva(
-  'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-transparent text-lg font-normal whitespace-nowrap transition-[color,background-color,box-shadow] select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_i]:text-[1.25em]',
+  'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-transparent text-lg font-normal whitespace-nowrap press nudge select-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_i]:text-[1.25em]',
   {
     variants: {
       variant: {
