@@ -3,6 +3,7 @@ import type { Policy } from '@shared/application';
 import { IconCircle } from '@/components/icon-circle';
 import { ZurichIcon, type ZurichIconName } from '@/components/zurich-icon';
 import { cn } from '@/lib/cn';
+import { Reveal } from '@/motion/reveal';
 
 // Each status is a coloured pill with its own icon, so it never relies on colour alone.
 const STATUS: Record<Policy['status'], { label: string; pill: string; icon?: ZurichIconName }> = {
@@ -14,13 +15,26 @@ const STATUS: Record<Policy['status'], { label: string; pill: string; icon?: Zur
 const appliedOn = new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium' });
 
 // The cover step's card: the product's icon and name, its status pill, and the details in a Zurich
-// White panel inside. When the policy has just turned active while the page is open, the pill fades
-// from Lemon to Mint (a Lemon layer fading out over it) and its tick pops; the label swaps at once.
-// With reduced motion, all of it swaps at once.
-export function PolicyCard({ policy, justActivated }: { policy: Policy; justActivated: boolean }) {
+// White panel inside. The cards that arrive on screen with the list fade and rise in one after
+// another, as the home page's do; the rest reveal as they're scrolled to. When the policy has just
+// turned active while the page is open, the pill fades from Lemon to Mint (a Lemon layer fading out
+// over it) and its tick pops; the label swaps at once. With reduced motion, all of it is still.
+export function PolicyCard({
+  policy,
+  revealIndex,
+  justActivated,
+}: {
+  policy: Policy;
+  revealIndex: number;
+  justActivated: boolean;
+}) {
   const status = STATUS[policy.status];
   return (
-    <li className="grid gap-6 rounded-card bg-white p-6 ring-1 ring-dove md:p-10">
+    <Reveal
+      as="li"
+      entrance={revealIndex}
+      className="grid gap-6 rounded-card bg-white p-6 ring-1 ring-dove md:p-10"
+    >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-4">
           <IconCircle name="family:line" />
@@ -80,6 +94,6 @@ export function PolicyCard({ policy, justActivated }: { policy: Policy; justActi
           </dd>
         </div>
       </dl>
-    </li>
+    </Reveal>
   );
 }

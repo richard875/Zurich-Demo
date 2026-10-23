@@ -12,7 +12,8 @@ import {
 import { useHydrated } from '@/lib/use-hydrated';
 
 // Reveals run on CSS (the [data-reveal] rules in globals.css). This file only decides when: what
-// starts below the screen waits, hidden, and plays once it comes into view.
+// starts below the screen waits, hidden, and plays once it comes into view; an entrance that arrives
+// on screen with content that has just loaded plays as it arrives.
 
 interface RevealProps {
   // The element itself takes part, so a card in a grid gets no extra box around it.
@@ -73,8 +74,12 @@ function useWide(): boolean {
   return useSyncExternalStore(wide.subscribe, wide.matches, () => false);
 }
 
-// "still" is the server's HTML, and stays that way unless it starts below the screen.
-type Phase = 'still' | 'hidden' | 'revealing' | 'shown';
+// "still" is the server's HTML, and stays that way unless it starts below the screen. "entering" is
+// an entrance revealing as it arrives, in line with the others.
+type Phase = 'still' | 'hidden' | 'entering' | 'revealing' | 'shown';
+
+// An entrance waits at most three places behind the first, so the last is done inside a second.
+const MAX_PLACE = 3;
 
 function RevealElement({
   as = 'div',
@@ -82,6 +87,7 @@ function RevealElement({
   item = false,
   groupTriggered,
   index,
+  entrance,
   children,
   ...props
 }: RevealProps & {
@@ -90,21 +96,28 @@ function RevealElement({
   // Set when a group decides when it shows (from md); otherwise it waits for its own trigger.
   groupTriggered?: boolean;
   index?: number;
+  // Its place in line when it arrives on screen with content that has just loaded.
+  entrance?: number;
 }) {
   // Typed as a div for the ref: every tag allowed here is a plain block element.
   const Tag = as as 'div';
   const ref = useRef<HTMLDivElement>(null);
   const hydrated = useHydrated();
   const reduce = useReducedMotion();
+  const wide = useWide();
   const [phase, setPhase] = useState<Phase>('still');
   const decided = useRef(false);
+  // An entrance mounted after hydration is content the server never rendered: nobody has seen it yet.
+  const arrives = useRef(entrance !== undefined && hydrated);
 
   // Nothing changes on the server, during hydration or with reduced motion. After hydration it is
-  // hidden only if it is entirely below the screen, so nothing on screen ever flickers.
+  // hidden only if it is entirely below the screen, so nothing on screen ever flickers. An entrance
+  // that arrives on screen plays at once, before its first paint.
   useLayoutEffect(() => {
     if (!hydrated || reduce || decided.current || !ref.current) return;
     decided.current = true;
     if (ref.current.getBoundingClientRect().top >= window.innerHeight) setPhase('hidden');
+    else if (arrives.current) setPhase('entering');
   }, [hydrated, reduce]);
 
   const ownTrigger = groupTriggered === undefined;
@@ -114,7 +127,16 @@ function RevealElement({
   }, [phase, ownTrigger]);
 
   // Once its animations (its own and its parts') have finished, it counts as shown.
-  const revealing = phase === 'revealing' || (phase === 'hidden' && groupTriggered === true);
+  const revealing =
+    phase === 'entering' ||
+    phase === 'revealing' ||
+    (phase === 'hidden' && groupTriggered === true);
+  // A group's item waits its index; an entrance waits its place in line, from md.
+  const stagger = ownTrigger
+    ? phase === 'entering' && wide
+      ? Math.min(entrance ?? 0, MAX_PLACE)
+      : 0
+    : index;
   useEffect(() => {
     if (!revealing || !ref.current) return;
     let current = true;
@@ -134,20 +156,16 @@ function RevealElement({
       ref={ref}
       {...props}
       // "hidden" until the reveal has finished, so tests never check half-transparent text.
-      data-reveal={phase === 'hidden' || phase === 'revealing' ? 'hidden' : 'shown'}
+      data-reveal={phase === 'hidden' || revealing ? 'hidden' : 'shown'}
       data-revealing={revealing ? '' : undefined}
       data-reveal-parts={parts ? '' : undefined}
       data-reveal-item={item ? '' : undefined}
-      style={
-        revealing && !ownTrigger && index
-          ? ({ '--reveal-index': index } as CSSProperties)
-          : undefined
-      }
+      style={revealing && stagger ? ({ '--reveal-index': stagger } as CSSProperties) : undefined}
       // Anything inside that takes keyboard focus while it waits or reveals shows at once, so focus never
       // rests on something faint or moving. Focus from a click (not :focus-visible) leaves it be, so
       // nothing jumps from under the pointer between press and release.
       onFocus={
-        phase === 'hidden' || phase === 'revealing'
+        phase === 'hidden' || revealing
           ? (event) => {
               if (event.target.matches(':focus-visible')) setPhase('shown');
             }
@@ -161,8 +179,10 @@ function RevealElement({
 
 // A section or block that fades in and rises 32px over 500ms the first time it comes into view (on
 // phones it fades in place). With `parts`, only its [data-reveal-part] children fade and rise, so a
-// coloured band can stay put while its text comes in.
-export function Reveal(props: RevealProps & { parts?: boolean }) {
+// coloured band can stay put while its text comes in. With `entrance`, a block that arrives on screen
+// with content that has just loaded (a list of cards) plays as it arrives, instead of just being
+// there: `entrance` is its place in line, 120ms apart from md.
+export function Reveal(props: RevealProps & { parts?: boolean; entrance?: number }) {
   return <RevealElement {...props} />;
 }
 

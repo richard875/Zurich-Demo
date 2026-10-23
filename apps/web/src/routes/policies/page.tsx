@@ -54,11 +54,23 @@ function Policies() {
       </p>
       {policies.isPending ? (
         <LoadingPanel label="Loading your policies…" blocks={2} />
+      ) : policies.isSuccess && policies.data.length > 0 ? (
+        // The cards bring themselves in (PolicyCard).
+        <ul className="grid gap-6">
+          {policies.data.map((policy, index) => (
+            <PolicyCard
+              key={policy.applicationId}
+              policy={policy}
+              revealIndex={index}
+              justActivated={activated.includes(policy.applicationId)}
+            />
+          ))}
+        </ul>
       ) : (
         <Loaded fade={wasLoading}>
           {policies.isError ? (
             <ErrorAlert>{policies.error.message}</ErrorAlert>
-          ) : policies.data.length === 0 ? (
+          ) : (
             <MessagePanel
               icon="document-contract:line"
               action={
@@ -69,16 +81,6 @@ function Policies() {
             >
               You haven't applied for cover yet.
             </MessagePanel>
-          ) : (
-            <ul className="grid gap-6">
-              {policies.data.map((policy) => (
-                <PolicyCard
-                  key={policy.applicationId}
-                  policy={policy}
-                  justActivated={activated.includes(policy.applicationId)}
-                />
-              ))}
-            </ul>
           )}
         </Loaded>
       )}
