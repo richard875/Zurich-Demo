@@ -1,0 +1,100 @@
+{
+  "label": "step2",
+  "base": "http://localhost:8090",
+  "measuredAt": "2026-10-23T03:06:07.019Z",
+  "javascript": {
+    "firstLoadKB": 271.57,
+    "afterLoadKB": 0,
+    "scripts": [
+      {
+        "file": "/static/js/lib-router.d6e80f81f5.js",
+        "afterLoad": false,
+        "gzipKB": 30.63
+      },
+      {
+        "file": "/static/js/lib-react.2903d87dd9.js",
+        "afterLoad": false,
+        "gzipKB": 67.15
+      },
+      {
+        "file": "/static/js/lib-polyfill.9e72e087c2.js",
+        "afterLoad": false,
+        "gzipKB": 47.07
+      },
+      {
+        "file": "/static/js/index.69d480b71c.js",
+        "afterLoad": false,
+        "gzipKB": 11.1
+      },
+      {
+        "file": "/static/js/1.6df5cb71a4.js",
+        "afterLoad": false,
+        "gzipKB": 102.17
+      },
+      {
+        "file": "/static/js/async/page.b8fc6a1f71.js",
+        "afterLoad": false,
+        "gzipKB": 8.33
+      },
+      {
+        "file": "/static/js/async/7.ca5610d76b.js",
+        "afterLoad": false,
+        "gzipKB": 5.12
+      }
+    ]
+  },
+  "mobile": {
+    "median": {
+      "lcpMs": 6322,
+      "cls": 0.003,
+      "tbtMs": 347
+    },
+    "runs": [
+      {
+        "lcpMs": 6322,
+        "cls": 0.003,
+        "tbtMs": 424,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      },
+      {
+        "lcpMs": 6395,
+        "cls": 0.003,
+        "tbtMs": 347,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      },
+      {
+        "lcpMs": 6320,
+        "cls": 0.003,
+        "tbtMs": 325,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      }
+    ]
+  },
+  "desktop": {
+    "median": {
+      "lcpMs": 1381,
+      "cls": 0.002,
+      "tbtMs": 9
+    },
+    "runs": [
+      {
+        "lcpMs": 1381,
+        "cls": 0.002,
+        "tbtMs": 7,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      },
+      {
+        "lcpMs": 1402,
+        "cls": 0.002,
+        "tbtMs": 9,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      },
+      {
+        "lcpMs": 1348,
+        "cls": 0.002,
+        "tbtMs": 9,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+      }
+    ]
+  }
+}
