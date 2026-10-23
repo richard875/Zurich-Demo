@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
 import { Link, useSearchParams } from '@modern-js/runtime/router';
 import { Container } from '@/components/container';
@@ -16,6 +17,12 @@ const iconPop = '[--pop-delay:700ms] motion-safe:animate-pop';
 export default function ApplicationReceivedPage() {
   const [searchParams] = useSearchParams();
   const referred = searchParams.get('outcome') === 'referred';
+
+  // Start at the top, as the Apply page does, rather than where "Submit your application" was.
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as cleanup.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   return (
     <Container className="py-10 md:py-16">
