@@ -99,6 +99,65 @@ test('a block coming into view fades, rises and settles in, rather than appearin
   await expect(talk).toHaveAttribute('data-reveal', 'shown');
 });
 
+// Five made-up policies, so the list runs past the screen.
+const policies = Array.from({ length: 5 }, (_, i) => ({
+  applicationId: `00000000-0000-4000-8000-00000000000${i}`,
+  createdAt: new Date(Date.UTC(2026, 9, 20 - i)).toISOString(),
+  status: 'ACTIVE',
+  policyNumber: `ZLD-1234567${i}`,
+  lifeCover: 500_000 + i * 100_000,
+  incomeProtection: i % 2 ? null : 4000,
+  monthlyPremiumCents: 4250 + i * 300,
+}));
+
+test('policy cards on screen come in one after another as the list arrives, the rest as they are scrolled to', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.route('**/api/session', (route) =>
+    route.fulfill({ json: { signedIn: true, customerId: 'motion', deviceLabel: 'Customer m0t1' } }),
+  );
+  await page.route('**/api/policies', (route) => route.fulfill({ json: { policies } }));
+  // Notes each card's reveal as it starts: which card, and how long it waits.
+  await page.addInitScript(() => {
+    const scope = window as unknown as { cardReveals: { card: number; delay: unknown }[] };
+    scope.cardReveals = [];
+    new MutationObserver((records) => {
+      for (const { target } of records) {
+        if (!(target instanceof HTMLLIElement) || !target.hasAttribute('data-revealing')) continue;
+        scope.cardReveals.push({
+          card: Array.from(target.parentElement?.children ?? []).indexOf(target),
+          delay: target.getAnimations()[0]?.effect?.getTiming().delay,
+        });
+      }
+    }).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-revealing'] });
+  });
+  const cardReveals = () =>
+    page.evaluate(
+      () => (window as unknown as { cardReveals: { card: number; delay: unknown }[] }).cardReveals,
+    );
+
+  await page.goto('/policies');
+  const cards = page.getByRole('main').getByRole('listitem');
+  await expect(cards).toHaveCount(5);
+  // The two on screen play at once, 120ms apart; the last waits below the screen.
+  expect(await cardReveals()).toEqual([
+    { card: 0, delay: 0 },
+    { card: 1, delay: 120 },
+  ]);
+  await expect(cards.last()).toHaveAttribute('data-reveal', 'hidden');
+
+  await scrollThrough(page);
+  await expect(page.locator('[data-reveal="hidden"]')).toHaveCount(0);
+  expect((await cardReveals()).slice(2)).toEqual([
+    { card: 2, delay: 0 },
+    { card: 3, delay: 0 },
+    { card: 4, delay: 0 },
+  ]);
+  await animationsDone(page.getByRole('main'));
+  expect(await faint(page)).toEqual([]);
+});
+
 test('with reduced motion, the hero is in place at once and nothing waits', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   // Notes any reveal that is ever hidden, from the first moment the page exists.
