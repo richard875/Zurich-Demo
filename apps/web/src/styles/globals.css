@@ -54,6 +54,46 @@
   --ease-sheet-in: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-sheet-out: cubic-bezier(0.32, 0, 0.67, 0);
 
+  /* zurich.com.au's curve for every entrance and reveal: fast at first, then a long, soft settle.
+     Hover, colour and state changes use Zurich's design system's ease-in-out, and every transition
+     without its own timing runs on it. The durations are motion tokens, in :root below. */
+  --ease-entrance: cubic-bezier(0, 0, 0, 1);
+  --ease-state: ease-in-out;
+  --default-transition-duration: var(--motion-state);
+  --default-transition-timing-function: var(--ease-state);
+
+  /* The stage entrance: text rises into place from 0.2s (zurich.com.au waits 0.4s). Each element
+     sets how far it rises (--stage-rise) and how faint it starts (--stage-opacity). */
+  --animate-stage-rise: stage-rise var(--motion-enter) var(--ease-entrance) var(--stage-delay, 0.2s)
+    both;
+  /* A photo settles into its frame. Its opacity never changes: the hero photo is the page's
+     largest paint. */
+  --animate-stage-media-settle: stage-media-settle var(--motion-settle) var(--ease-entrance) both;
+  /* A tick or icon pops in, overshooting by 8%, after --pop-delay if it waits for something. */
+  --animate-pop: pop var(--motion-confirm) var(--ease-entrance) var(--pop-delay, 0s) both;
+
+  @keyframes stage-rise {
+    from {
+      opacity: var(--stage-opacity, 0);
+      transform: translateY(var(--stage-rise, var(--motion-rise)));
+    }
+  }
+
+  @keyframes stage-media-settle {
+    from {
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      transform: scale(0.6);
+    }
+    60% {
+      transform: scale(1.08);
+    }
+  }
+
   /* zurich.com.au's hero shape entrance: it fades in while sliding 72px from the left. */
   --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s cubic-bezier(0, 0, 0, 1) 0.1s both;
 
@@ -118,6 +158,20 @@
   --ring: var(--color-zurich-blue);
 }
 
+/* Motion tokens. motion/tokens.ts mirrors them for Motion, and a test keeps the two in step. */
+:root {
+  --motion-press: 100ms;
+  --motion-state: 200ms;
+  --motion-switch-in: 250ms;
+  --motion-switch-out: 150ms;
+  --motion-enter: 500ms;
+  --motion-settle: 600ms;
+  --motion-confirm: 300ms;
+  --motion-stagger: 120ms;
+  --motion-rise: 32px;
+  --motion-nudge: 4px;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -171,6 +225,67 @@
 
   div[z-logo] {
     --z-logo--fill: var(--color-zurich-blue);
+  }
+
+  /* A tab panel just switched to fades in, its text rising 8px; the panel it replaces goes at once.
+     Only once the tabs carry data-switched, so the first panel doesn't fade in on load. With
+     reduced motion it only fades, over 150ms. */
+  [data-switched] [data-slot='tabs-content'][data-state='active'] {
+    animation: switch-fade var(--motion-switch-in) var(--ease-entrance);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: var(--motion-switch-out);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-switched] [data-slot='tabs-content'][data-state='active'] [data-slot='tab-text'] {
+      animation: tab-text-rise var(--motion-switch-in) var(--ease-entrance);
+    }
+  }
+}
+
+@keyframes switch-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tab-text-rise {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+/* A pressed button dips to 98%, quicker than its colours change. */
+@utility press {
+  transition-property: color, background-color, box-shadow, scale;
+  transition-duration:
+    var(--motion-state), var(--motion-state), var(--motion-state), var(--motion-press);
+  transition-timing-function: var(--ease-state);
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:active {
+      scale: 0.98;
+    }
+  }
+}
+
+/* An arrow inside it nudges 4px its way on hover: right for onward, left for back. */
+@utility nudge {
+  & i[icon='arrow-right:line'],
+  & i[icon='arrow-left:line'] {
+    transition: translate var(--motion-state) var(--ease-state);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &:hover i[icon='arrow-right:line'] {
+      translate: var(--motion-nudge) 0;
+    }
+
+    &:hover i[icon='arrow-left:line'] {
+      translate: calc(var(--motion-nudge) * -1) 0;
+    }
   }
 }
 

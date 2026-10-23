@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Photo, type PhotoSource } from '@/components/photo';
 import { cn } from '@/lib/cn';
+import { Settle } from '@/motion/reveal';
 
 const tones = { mint: 'bg-mint', pink: 'bg-powder-pink', lime: 'bg-lime' };
 
@@ -27,8 +28,11 @@ export function PromoCard({
         </div>
         <div className="mt-auto flex flex-wrap gap-4 pt-6">{actions}</div>
       </div>
-      <div className="relative aspect-square md:aspect-auto">
-        <Photo photo={photo} className="absolute inset-0 size-full object-cover" />
+      {/* Inside a Reveal, the photo settles into its half as the card comes into view. */}
+      <div className="relative aspect-square overflow-hidden md:aspect-auto">
+        <Settle className="absolute inset-0">
+          <Photo photo={photo} className="size-full object-cover" />
+        </Settle>
       </div>
     </div>
   );
