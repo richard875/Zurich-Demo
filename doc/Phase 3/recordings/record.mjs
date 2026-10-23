@@ -84,7 +84,61 @@ const lab = {
   },
 };
 
-const scenes = { 1: [{ ...lab, reduced: [false, true] }] };
+// Holds a press on the target for a moment and lets go. The click it makes is cancelled before the
+// page sees it, so nothing is followed.
+async function press(page, locator) {
+  await page.evaluate(() =>
+    document.addEventListener(
+      'click',
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      { capture: true, once: true },
+    ),
+  );
+  const box = await locator.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await pause(page, 400);
+  await page.mouse.down();
+  await pause(page, 400);
+  await page.mouse.up();
+  await pause(page, 300);
+}
+
+const home = {
+  name: 'home',
+  path: '/',
+  async play(page, { width }) {
+    await pause(page, 1500);
+    for (const id of ['products-heading', 'brand-heading', 'cover-tabs-heading']) {
+      await scrollTo(page, `#${id}`);
+      await pause(page, 1200);
+      if (id === 'products-heading') {
+        await press(page, page.getByRole('link', { name: 'Get an online quote' }).first());
+      }
+    }
+    for (const id of ['benefits-heading', 'talk-heading', 'articles-heading']) {
+      await scrollTo(page, `#${id}`);
+      await pause(page, 1200);
+    }
+    if (width > 768) {
+      await page.locator('article.group').first().hover();
+      await pause(page, 1200);
+      await page.mouse.move(10, 10);
+      await pause(page, 800);
+    }
+    await scrollTo(page, '#home-loan-heading');
+    await pause(page, 1200);
+    await scrollTo(page);
+    await pause(page, 1000);
+  },
+};
+
+const scenes = {
+  1: [{ ...lab, reduced: [false, true] }],
+  2: [{ ...home, reduced: [false, true] }],
+};
 
 const ffmpeg = spawnSync('ffmpeg', ['-version']).status === 0;
 mkdirSync(shots, { recursive: true });
