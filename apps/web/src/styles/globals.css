@@ -54,8 +54,24 @@
   --ease-sheet-in: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-sheet-out: cubic-bezier(0.32, 0, 0.67, 0);
 
+  /* zurich.com.au's curve for reveals and most entrances: fast at first, then a long, soft settle.
+     What plays as a page opens (the stage entrance) eases out more gently: from a finite speed, so
+     nothing jumps on the first frame, and nearly settled halfway, so nothing drifts at the end.
+     Hover, colour and state changes use Zurich's design system's ease-in-out, and every transition
+     without its own timing runs on it. The durations are motion tokens, in :root below. */
+  --ease-entrance: cubic-bezier(0, 0, 0, 1);
+  --ease-stage: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-state: ease-in-out;
+  --default-transition-duration: var(--motion-state);
+  --default-transition-timing-function: var(--ease-state);
+
+  /* A photo settles into its frame. Its opacity never changes: the hero photo is the page's
+     largest paint. (The stage rise and the pop are utilities below, as each element sets their
+     variables.) */
+  --animate-stage-media-settle: stage-media-settle var(--motion-settle) var(--ease-stage) both;
+
   /* zurich.com.au's hero shape entrance: it fades in while sliding 72px from the left. */
-  --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s cubic-bezier(0, 0, 0, 1) 0.1s both;
+  --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s var(--ease-stage) 0.1s both;
 
   @keyframes stage-shape-slide-in {
     from {
@@ -118,6 +134,20 @@
   --ring: var(--color-zurich-blue);
 }
 
+/* Motion tokens. motion/tokens.ts mirrors the ones Motion needs, and a test keeps them in step. */
+:root {
+  --motion-press: 100ms;
+  --motion-state: 200ms;
+  --motion-switch-in: 250ms;
+  --motion-switch-out: 150ms;
+  --motion-enter: 500ms;
+  --motion-settle: 600ms;
+  --motion-confirm: 300ms;
+  --motion-stagger: 120ms;
+  --motion-rise: 32px;
+  --motion-nudge: 4px;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -171,6 +201,159 @@
 
   div[z-logo] {
     --z-logo--fill: var(--color-zurich-blue);
+  }
+
+  /* A tab panel just switched to fades in, its text rising 8px; the panel it replaces goes at once.
+     Only once the tabs carry data-switched, so the first panel doesn't fade in on load. With
+     reduced motion it only fades, over 150ms. */
+  [data-switched] [data-slot='tabs-content'][data-state='active'] {
+    animation: switch-fade var(--motion-switch-in) var(--ease-entrance);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: var(--motion-switch-out);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-switched] [data-slot='tabs-content'][data-state='active'] [data-slot='tab-text'] {
+      animation: tab-text-rise var(--motion-switch-in) var(--ease-entrance);
+    }
+  }
+
+  /* Reveals (motion/reveal.tsx decides when). A block waiting below the screen is transparent and
+     32px low; when it comes into view it fades and rises in, a group's items 120ms apart. On phones
+     it fades in place. Sections take 500ms, a group's items 600ms. With `parts`, only its
+     [data-reveal-part] children move; photos marked [data-settle] settle from 1.06 and band shapes
+     [data-reveal-shapes] slide in as the hero's do. Nothing waits with reduced motion or in print.
+     The waiting styles come off as it starts revealing: an animation runs to the element's own
+     values, so left on, they would make it play invisibly and then appear all at once. */
+  [data-reveal] {
+    --reveal-rise: 0px;
+    --reveal-duration: var(--motion-enter);
+
+    @media (width >= 48rem) {
+      --reveal-rise: var(--motion-rise);
+    }
+  }
+
+  [data-reveal-item] {
+    --reveal-duration: var(--motion-settle);
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) {
+    [data-reveal='hidden']:not([data-revealing]):not([data-reveal-parts]),
+    [data-reveal='hidden']:not([data-revealing]) [data-reveal-part] {
+      opacity: 0;
+      transform: translateY(var(--reveal-rise));
+    }
+
+    [data-reveal='hidden']:not([data-revealing]) [data-settle] {
+      transform: scale(1.06);
+    }
+
+    [data-reveal='hidden']:not([data-revealing]) [data-reveal-shapes] {
+      opacity: 0;
+    }
+
+    [data-revealing]:not([data-reveal-parts]),
+    [data-revealing] [data-reveal-part] {
+      animation: reveal var(--reveal-duration) var(--ease-entrance)
+        calc(var(--reveal-index, 0) * var(--motion-stagger)) both;
+    }
+
+    [data-revealing] [data-settle] {
+      animation: stage-media-settle var(--motion-settle) var(--ease-entrance) both;
+    }
+
+    [data-revealing] [data-reveal-shapes] {
+      animation: stage-shape-slide-in 0.5s var(--ease-entrance) 0.1s both;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-rise));
+  }
+}
+
+@keyframes stage-rise {
+  from {
+    opacity: var(--stage-opacity, 0);
+    transform: translateY(var(--stage-rise, var(--motion-rise)));
+  }
+}
+
+@keyframes stage-media-settle {
+  from {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes switch-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tab-text-rise {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+/* The stage entrance: text rises into place from 0.2s (zurich.com.au waits 0.4s). Each element sets
+   how far it rises (--stage-rise), how faint it starts (--stage-opacity) and when it starts
+   (--stage-delay: the hero's lines follow one another; a card that is the whole page starts at once).
+   Utilities rather than theme values, so the variables are read on each element. */
+@utility animate-stage-rise {
+  animation: stage-rise var(--motion-enter) var(--ease-stage) var(--stage-delay, 0.2s) both;
+}
+
+/* A tick or icon pops in, overshooting by 8%, after --pop-delay if it waits for something. */
+@utility animate-pop {
+  animation: pop var(--motion-confirm) var(--ease-entrance) var(--pop-delay, 0s) both;
+}
+
+/* A pressed button dips to 98%, quicker than its colours change. */
+@utility press {
+  transition-property: color, background-color, box-shadow, scale;
+  transition-duration:
+    var(--motion-state), var(--motion-state), var(--motion-state), var(--motion-press);
+  transition-timing-function: var(--ease-state);
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:active {
+      scale: 0.98;
+    }
+  }
+}
+
+/* An arrow inside it nudges 4px its way on hover: right for onward, left for back. */
+@utility nudge {
+  & i[icon='arrow-right:line'],
+  & i[icon='arrow-left:line'] {
+    transition: translate var(--motion-state) var(--ease-state);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &:hover i[icon='arrow-right:line'] {
+      translate: var(--motion-nudge) 0;
+    }
+
+    &:hover i[icon='arrow-left:line'] {
+      translate: calc(var(--motion-nudge) * -1) 0;
+    }
   }
 }
 

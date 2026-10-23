@@ -2,8 +2,10 @@ import type { ReactNode } from 'react';
 import { Headline } from '@/components/headline';
 import { newTab, NewTabText } from '@/components/external-link';
 import { Photo, type PhotoSource } from '@/components/photo';
+import { RevealItem } from '@/motion/reveal';
 
-// zurich.com.au's product card: no outline, a rounded photo, then copy, a link and one button.
+// zurich.com.au's product card: no outline, a rounded photo, then copy, a link and one button. In a
+// RevealGroup, revealIndex is its place in the row's stagger, after the heading.
 export function ProductCard({
   photo,
   teaser,
@@ -11,6 +13,7 @@ export function ProductCard({
   description,
   learnMore,
   action,
+  revealIndex,
 }: {
   photo: PhotoSource;
   teaser: string;
@@ -18,9 +21,10 @@ export function ProductCard({
   description: string;
   learnMore: { href: string; label: string };
   action: ReactNode;
+  revealIndex?: number;
 }) {
   return (
-    <article className="flex flex-col">
+    <RevealItem as="article" index={revealIndex} className="flex flex-col">
       <Photo photo={photo} className="aspect-3/2 w-full rounded-card object-cover" />
       <p className="mt-6 text-sm font-semibold h-10">{teaser}</p>
       <Headline as="h3" size="card" className="mt-2">
@@ -37,6 +41,6 @@ export function ProductCard({
       </a>
       {/* Pinned to the bottom so the buttons line up across a row of cards. */}
       <div className="mt-auto pt-6">{action}</div>
-    </article>
+    </RevealItem>
   );
 }

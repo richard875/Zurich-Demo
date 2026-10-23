@@ -1,8 +1,11 @@
 import { newTab, NewTabText } from '@/components/external-link';
 import { Photo, type PhotoSource } from '@/components/photo';
 import { Tag } from '@/components/tag';
+import { RevealItem } from '@/motion/reveal';
 
 // One link per card, named by the title; its ::after stretches over the card so all of it is clickable.
+// On hover the photo eases to 1.04 inside its frame; the tag stays put on top. In a RevealGroup,
+// revealIndex is its place in the row's stagger, after the heading.
 export function ArticleCard({
   photo,
   tag,
@@ -10,6 +13,7 @@ export function ArticleCard({
   dateTime,
   title,
   href,
+  revealIndex,
 }: {
   photo: PhotoSource;
   tag: string;
@@ -17,11 +21,15 @@ export function ArticleCard({
   dateTime: string;
   title: string;
   href: string;
+  revealIndex?: number;
 }) {
   return (
-    <article className="group relative">
-      <div className="relative">
-        <Photo photo={photo} className="aspect-3/2 w-full rounded-card object-cover" />
+    <RevealItem as="article" index={revealIndex} className="group relative">
+      <div className="relative isolate overflow-hidden rounded-card">
+        <Photo
+          photo={photo}
+          className="aspect-3/2 w-full object-cover transition-[scale] duration-(--motion-settle) ease-entrance motion-safe:group-hover:scale-104"
+        />
         <Tag className="absolute top-4 left-4">{tag}</Tag>
       </div>
       {/* As the product cards: 24px from the photo, 8px from the date to the title. */}
@@ -38,6 +46,6 @@ export function ArticleCard({
           <NewTabText />
         </a>
       </h3>
-    </article>
+    </RevealItem>
   );
 }

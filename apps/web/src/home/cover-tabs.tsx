@@ -5,6 +5,7 @@ import { Headline } from '@/components/headline';
 import { Photo, type PhotoSource } from '@/components/photo';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Reveal } from '@/motion/reveal';
 import { photos } from './photos';
 
 interface CoverTab {
@@ -162,7 +163,7 @@ const tabs: CoverTab[] = [
 // product cards. Learn more is styled like the product cards' "Get an online quote" button.
 export function CoverTabs() {
   return (
-    <section aria-labelledby="cover-tabs-heading">
+    <Reveal as="section" aria-labelledby="cover-tabs-heading">
       <Container>
         <Headline id="cover-tabs-heading">Help choosing your cover</Headline>
         <Tabs defaultValue={tabs[0].value} className="mt-10">
@@ -184,7 +185,8 @@ export function CoverTabs() {
                   photo={tab.photo}
                   className="hidden aspect-350/437 w-full rounded-promo object-cover md:block"
                 />
-                <div className="max-w-160">
+                {/* As a panel is switched to, this text rises 8px while the panel fades in. */}
+                <div data-slot="tab-text" className="max-w-160">
                   <p className="text-b-20 font-light md:text-2xl md:leading-normal [&_strong]:font-medium">
                     {tab.lead}
                   </p>
@@ -217,6 +219,6 @@ export function CoverTabs() {
           </div>
         </Tabs>
       </Container>
-    </section>
+    </Reveal>
   );
 }

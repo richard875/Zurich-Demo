@@ -36,8 +36,10 @@ function MainNav() {
               className="icon-bold transition-transform group-data-[state=open]:rotate-180"
             />
           </NavigationMenu.Trigger>
-          {/* Without a Viewport, Radix renders the panel here, under its trigger. */}
-          <NavigationMenu.Content className="absolute top-full right-0 z-50 grid w-136 grid-cols-2 gap-8 rounded-card bg-white p-8 shadow-lg ring-1 ring-dove">
+          {/* Without a Viewport, Radix renders the panel here, under its trigger. It fades in while
+              dropping 8px over 200ms, and fades out over 150ms; with reduced motion it only fades,
+              over 150ms. */}
+          <NavigationMenu.Content className="absolute top-full right-0 z-50 grid w-136 grid-cols-2 gap-8 rounded-card bg-white p-8 shadow-lg ring-1 ring-dove data-open:animate-in data-open:fade-in data-open:ease-entrance motion-safe:data-open:slide-in-from-top-2 motion-safe:data-open:duration-(--motion-state) motion-reduce:data-open:duration-(--motion-switch-out) data-closed:animate-out data-closed:fade-out data-closed:duration-(--motion-switch-out) data-closed:ease-state">
             {helpMenu.map((group) => (
               <div key={group.title}>
                 <h2 className="text-sm font-semibold">{group.title}</h2>

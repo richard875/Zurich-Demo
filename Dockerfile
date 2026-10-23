@@ -11,6 +11,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json apps/web/
 COPY functions/policy-issuer/package.json functions/policy-issuer/
 COPY infra/package.json infra/
+COPY patches patches/
 RUN pnpm install --frozen-lockfile
 
 COPY . .

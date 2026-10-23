@@ -5,7 +5,14 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['doc/', '**/dist/', '**/.output/', '**/.terraform/', '**/node_modules/']),
+  globalIgnores([
+    'docs/phases/',
+    'docs/reference/',
+    '**/dist/',
+    '**/.output/',
+    '**/.terraform/',
+    '**/node_modules/',
+  ]),
   js.configs.recommended,
   tseslint.configs.strict,
   {

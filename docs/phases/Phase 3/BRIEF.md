@@ -1,25 +1,25 @@
 # Build brief: Phase 3, motion
 
-You're adding a small set of animations to the demo app in this repo. `doc/Phase 3/PLAN.md` says **what** moves and why, with `motion-map.png` beside it. This brief (`doc/Phase 3/BRIEF.md`) says **how**. If the two disagree, this brief wins.
+You're adding a small set of animations to the demo app in this repo. `docs/phases/Phase 3/PLAN.md` says **what** moves and why, with `motion-map.png` beside it. This brief (`docs/phases/Phase 3/BRIEF.md`) says **how**. If the two disagree, this brief wins.
 
-The working rules from `doc/Phase 1/BRIEF.md` and `doc/Phase 2/BRIEF.md` still apply (stop points, ask before touching AWS or GitHub, check installed library versions, short docs, focused diffs) unless this brief changes them.
+The working rules from `docs/phases/Phase 1/BRIEF.md` and `docs/phases/Phase 2/BRIEF.md` still apply (stop points, ask before touching AWS or GitHub, check installed library versions, short docs, focused diffs) unless this brief changes them.
 
 **The one rule above all others: don't overdo it.** If something isn't in the catalogue below, it doesn't move. When in doubt, leave it still and ask me.
 
 ## Files
 
 - The repo root is the folder you're running in. `doc/` is gitignored and must stay that way.
-- Don't edit, move or delete anything in `doc/`. The exceptions are `doc/Phase 3/recordings/` and `doc/Phase 3/screenshots/`, where you save your review recordings and screenshots.
+- Don't edit, move or delete anything in `doc/`. The exceptions are `docs/phases/Phase 3/recordings/` and `docs/phases/Phase 3/screenshots/`, where you save your review recordings and screenshots.
 - Reference material, read-only:
 
 | Path | What it is |
 | --- | --- |
-| `doc/Phase 3/PLAN.md` | The Phase 3 plan, with `motion-map.png` beside it |
-| `doc/Zurich Australia/Zurich Australia_files/818c46e31f6e4240.css` | zurich.com.au's stylesheet. Search for `stage` to see its hero keyframes and their timings |
-| `doc/Zurich Australia/Zurich Australia_files/182-01a4ac0de0fb5e11.js` | zurich.com.au's main script. Search for `0px 0px -10% 0px` to see how its card rows reveal |
-| `doc/Zurich Australia/Zurich Australia Page.png` and `Zurich Australia Mobile Page.png` | The pages those timings belong to |
-| `doc/Phase 2/BRIEF.md` | The design rules this phase must not break |
-| `doc/Phase 1/` | Phase 1 plan and brief |
+| `docs/phases/Phase 3/PLAN.md` | The Phase 3 plan, with `motion-map.png` beside it |
+| `docs/reference/Zurich Australia/Zurich Australia_files/818c46e31f6e4240.css` | zurich.com.au's stylesheet. Search for `stage` to see its hero keyframes and their timings |
+| `docs/reference/Zurich Australia/Zurich Australia_files/182-01a4ac0de0fb5e11.js` | zurich.com.au's main script. Search for `0px 0px -10% 0px` to see how its card rows reveal |
+| `docs/reference/Zurich Australia/Zurich Australia Page.png` and `Zurich Australia Mobile Page.png` | The pages those timings belong to |
+| `docs/phases/Phase 2/BRIEF.md` | The design rules this phase must not break |
+| `docs/phases/Phase 1/` | Phase 1 plan and brief |
 
 ## Context
 
@@ -29,7 +29,7 @@ The working rules from `doc/Phase 1/BRIEF.md` and `doc/Phase 2/BRIEF.md` still a
 
 ## Before you start
 
-Read `doc/Phase 3/PLAN.md`, this brief, and the code under `apps/web/src`. Start with `routes/layout.tsx`, `routes/page.tsx`, `styles/globals.css`, `lib/use-hydrated.ts`, everything in `home/`, `components/page-band.tsx`, `components/promo-card.tsx`, `components/ui/`, `routes/quote/page.tsx`, `quote/quote-progress.tsx`, `policies/policy-card.tsx` and `e2e/helpers.ts`. Then reply with:
+Read `docs/phases/Phase 3/PLAN.md`, this brief, and the code under `apps/web/src`. Start with `routes/layout.tsx`, `routes/page.tsx`, `styles/globals.css`, `lib/use-hydrated.ts`, everything in `home/`, `components/page-band.tsx`, `components/promo-card.tsx`, `components/ui/`, `routes/quote/page.tsx`, `quote/quote-progress.tsx`, `policies/policy-card.tsx` and `e2e/helpers.ts`. Then reply with:
 
 1. Your plan for Step 1, including the exact `motion` version you'll install.
 2. A short sketch of how a reveal renders on the server and during hydration (see "Server rendering" below).
@@ -43,10 +43,10 @@ Then wait for "go". Don't install anything or write code before that.
 - Screenshots can't show motion, so after each step record it (Playwright, Chromium, `recordVideo`):
   - each changed page, scrolled top to bottom at a steady pace, at 1440×900 and 375×812
   - from Step 2 on, the home page once more with reduced motion on
-  - named `step<N>-<page>-<width>.webm`, e.g. `step2-home-1440.webm`, in `doc/Phase 3/recordings/`
+  - named `step<N>-<page>-<width>.webm`, e.g. `step2-home-1440.webm`, in `docs/phases/Phase 3/recordings/`
   - if `ffmpeg` is installed, an `.mp4` of each as well (QuickTime can't play `.webm`)
-  - a screenshot of each page's final state in `doc/Phase 3/screenshots/`, named the same way
-  - keep the recording script out of the app: `doc/Phase 3/recordings/record.mjs` is fine
+  - a screenshot of each page's final state in `docs/phases/Phase 3/screenshots/`, named the same way
+  - keep the recording script out of the app: `docs/phases/Phase 3/recordings/record.mjs` is fine
 - Ask before you:
   - deploy, run `terraform apply`, or push
   - add any dependency other than `motion`
@@ -237,4 +237,4 @@ The header, footer and demo strip; form fields, labels, hints and error messages
 - [ ] axe finds no serious or critical issues, checked after animations finish
 - [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm e2e` pass locally and in CI
 - [ ] README and `docs/decisions.md` are updated, and each still fits on one screen
-- [ ] The lab page is gone, and the recordings for each step are in `doc/Phase 3/recordings/`
+- [ ] The lab page is gone, and the recordings for each step are in `docs/phases/Phase 3/recordings/`
