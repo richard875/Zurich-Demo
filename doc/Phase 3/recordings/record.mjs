@@ -135,9 +135,92 @@ const home = {
   },
 };
 
+const heading = (page, name) => page.getByRole('heading', { level: 1, name }).waitFor();
+
+// The app keeps the scroll position when it moves to another page (only the quote steps scroll to
+// the top), so the recording jumps to the top as each page opens, to show its entrance.
+async function opened(page, name) {
+  await heading(page, name);
+  await page.evaluate(() => scrollTo(0, 0));
+}
+
+// One full run: home (a tab switch and, on desktop, the Help menu), the quote chooser, quote steps 1
+// to 3 with a step back, sign in, apply, received, and My policies until the policy turns active.
+const journey = {
+  name: 'journey',
+  path: '/',
+  crossesPages: true,
+  async play(page, { width, shot }) {
+    await pause(page, 1500);
+    await scrollTo(page, '#cover-tabs-heading');
+    await pause(page, 900);
+    const tabs = page.getByRole('tablist', { name: 'Help choosing your cover' }).getByRole('tab');
+    for (const index of [1, 2]) {
+      await tabs.nth(index).click();
+      await pause(page, 1000);
+    }
+    await shot('home');
+    if (width >= 1024) {
+      await page.getByRole('button', { name: 'Help & information' }).click();
+      await pause(page, 1200);
+      await page.keyboard.press('Escape');
+      await pause(page, 600);
+    }
+    await page.getByRole('banner').getByRole('button', { name: 'Get a quote' }).click();
+    await pause(page, 1000);
+    await page.getByRole('link', { name: 'Get life insurance and income protection' }).click();
+    await heading(page, 'About you');
+    await pause(page, 1500);
+    await page.getByRole('button', { name: 'Use demo details' }).click();
+    await pause(page, 600);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await heading(page, 'Choose your cover');
+    await pause(page, 1200);
+    await page.getByRole('button', { name: 'Back' }).click();
+    await heading(page, 'About you');
+    await pause(page, 1000);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await heading(page, 'Choose your cover');
+    await pause(page, 1000);
+    await page.getByRole('button', { name: 'See my price' }).click();
+    await heading(page, 'Your quote');
+    await pause(page, 1500);
+    await shot('quote');
+    await page.getByRole('button', { name: 'Apply now' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Sign in to apply (demo)' });
+    await dialog.waitFor();
+    await pause(page, 1000);
+    await dialog.getByRole('button', { name: 'Continue' }).click();
+    await opened(page, 'Apply for cover');
+    await pause(page, 1500);
+    for (const question of await page.getByRole('group', { name: /^\d\. / }).all()) {
+      await question.getByRole('radio', { name: 'No' }).check();
+    }
+    await page.getByRole('checkbox', { name: /My answers are true/ }).check();
+    await pause(page, 600);
+    await shot('apply');
+    await page.getByRole('button', { name: 'Submit application' }).click();
+    await opened(page, 'Application received');
+    await pause(page, 2000);
+    await shot('received');
+    await page.getByRole('link', { name: 'View my policies' }).click();
+    await opened(page, 'My policies');
+    await page
+      .getByRole('main')
+      .getByRole('listitem')
+      .first()
+      .getByTestId('policy-status')
+      .filter({ hasText: 'Active' })
+      .waitFor({ timeout: 20_000 });
+    await pause(page, 2000);
+    await shot('policies');
+  },
+};
+
 const scenes = {
   1: [{ ...lab, reduced: [false, true] }],
   2: [{ ...home, reduced: [false, true] }],
+  3: [{ ...journey, reduced: [false, true] }],
 };
 
 const ffmpeg = spawnSync('ffmpeg', ['-version']).status === 0;
@@ -154,21 +237,30 @@ for (const scene of scenes[step] ?? []) {
       });
       const page = await context.newPage();
       await page.goto(`${base}${scene.path}`);
-      await scene.play(page, viewport);
+      // A scene that crosses pages takes a screenshot of each as it goes, at the size of the screen
+      // (a full-page screenshot would resize the recording).
+      const shot = (label) =>
+        page.screenshot({
+          path: join(shots, `step${step}-${label}-${viewport.width}${reduced ? '-reduced' : ''}.png`),
+        });
+      await scene.play(page, { ...viewport, shot });
       await page.waitForFunction(() => !document.querySelector('[data-reveal="hidden"]'));
       const video = page.video();
       await context.close();
-      // The screenshot comes from a page that isn't recorded, scrolled through so every reveal has run.
-      const still = await browser.newPage({
-        viewport,
-        reducedMotion: reduced ? 'reduce' : 'no-preference',
-      });
-      await still.goto(`${base}${scene.path}`, { waitUntil: 'networkidle' });
-      await scrollTo(still);
-      await still.waitForFunction(() => !document.querySelector('[data-reveal="hidden"]'));
-      await pause(still, 1000);
-      await still.screenshot({ path: join(shots, `${name}.png`), fullPage: true });
-      await still.close();
+      // Otherwise the screenshot comes from a page that isn't recorded, scrolled through so every
+      // reveal has run.
+      if (!scene.crossesPages) {
+        const still = await browser.newPage({
+          viewport,
+          reducedMotion: reduced ? 'reduce' : 'no-preference',
+        });
+        await still.goto(`${base}${scene.path}`, { waitUntil: 'networkidle' });
+        await scrollTo(still);
+        await still.waitForFunction(() => !document.querySelector('[data-reveal="hidden"]'));
+        await pause(still, 1000);
+        await still.screenshot({ path: join(shots, `${name}.png`), fullPage: true });
+        await still.close();
+      }
       // Playwright encodes near-lossless; with ffmpeg, a VP9 re-encode keeps the look at a quarter of
       // the size (these files are committed), and an .mp4 is made for QuickTime.
       const raw = join(here, `${name}.raw.webm`);
