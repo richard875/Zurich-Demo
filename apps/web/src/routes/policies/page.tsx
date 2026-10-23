@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
-import { Link } from '@modern-js/runtime/router';
+import { Link, useLocation } from '@modern-js/runtime/router';
 import { useQuery } from '@tanstack/react-query';
 import type { Policy } from '@shared/application';
 import { Headline } from '@/components/headline';
@@ -89,6 +89,14 @@ function Policies() {
 }
 
 export default function PoliciesPage() {
+  // Start at the top on every visit, "My policies" in the header included, even from this page:
+  // each navigation gets a new key, though the URL doesn't change.
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as cleanup.
+  const { key } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [key]);
+
   return (
     <>
       <Helmet>
