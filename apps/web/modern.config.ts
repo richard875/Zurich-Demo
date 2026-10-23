@@ -7,6 +7,10 @@ export default defineConfig({
   server: {
     ssr: true,
   },
+  output: {
+    // Don't emit application source maps into the public static directory.
+    sourceMap: process.env.NODE_ENV === 'development',
+  },
   html: {
     title: 'Zurich Direct (demo)',
     meta: {

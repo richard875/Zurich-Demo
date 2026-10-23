@@ -4,6 +4,7 @@ import { z } from 'zod';
 // Production (NODE_ENV=production) gets no defaults and must set every variable.
 const localDefaults = {
   PORT: '8080',
+  APP_ORIGIN: 'http://localhost:8080',
   AWS_REGION: 'ap-southeast-2',
   DYNAMODB_TABLE: 'zurich-demo',
   DYNAMODB_ENDPOINT: 'http://localhost:8000',
@@ -18,6 +19,25 @@ const blankAsUndefined = (value: unknown) => (value === '' ? undefined : value);
 const envSchema = z
   .object({
     PORT: z.coerce.number().int().positive(),
+    APP_ORIGIN: z
+      .string()
+      .url()
+      .refine((value) => {
+        try {
+          const url = new URL(value);
+          return (
+            ['http:', 'https:'].includes(url.protocol) &&
+            !url.username &&
+            !url.password &&
+            url.pathname === '/' &&
+            !url.search &&
+            !url.hash
+          );
+        } catch {
+          return false;
+        }
+      }, 'must be an HTTP(S) origin without a path')
+      .transform((value) => new URL(value).origin),
     AWS_REGION: z.string().min(1),
     DYNAMODB_TABLE: z.string().min(1),
     DYNAMODB_ENDPOINT: z.preprocess(blankAsUndefined, z.string().url().optional()),

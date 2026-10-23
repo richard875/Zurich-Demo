@@ -4,7 +4,16 @@ doc
 **/.output
 **/dist
 **/.env
+**/.env.*
 **/.terraform
+**/*.tfstate*
+**/*.tfplan
+**/*.pem
+**/.aws
+**/.ssh
+**/coverage
+**/*.log
+.claude
 **/test-results
 **/playwright-report
 infra/*.tfvars

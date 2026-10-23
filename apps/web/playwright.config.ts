@@ -5,6 +5,7 @@ import { defineConfig, devices } from '@playwright/test';
 const serverEnv = (port: number, overrides: Record<string, string> = {}) => ({
   NODE_ENV: 'production',
   PORT: String(port),
+  APP_ORIGIN: `http://localhost:${port}`,
   AWS_REGION: 'ap-southeast-2',
   DYNAMODB_TABLE: 'zurich-demo',
   DYNAMODB_ENDPOINT: process.env.DYNAMODB_ENDPOINT ?? 'http://localhost:8000',

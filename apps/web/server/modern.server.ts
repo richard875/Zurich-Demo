@@ -3,6 +3,13 @@ import { defineServerConfig, getCookie, type MiddlewareHandler } from '@modern-j
 import { getEnv } from '../api/lambda/_lib/env';
 import { logger } from '../api/lambda/_lib/logger';
 import { SESSION_COOKIE, verifySession } from '../api/lambda/_lib/session';
+import {
+  apiRateLimit,
+  internalMulesoft,
+  requestSize,
+  responseSecurity,
+  sameOrigin,
+} from './security';
 
 const safeCorrelationId = /^[\w-]{8,64}$/;
 
@@ -19,7 +26,14 @@ const correlation: MiddlewareHandler = async (c, next) => {
   await next();
   c.header('x-correlation-id', correlationId);
 
-  if (c.req.path.startsWith('/api/') && c.req.path !== '/api/health') {
+  const quietRead =
+    c.req.method === 'GET' && ['/api/session', '/api/policies'].includes(c.req.path) && c.res.ok;
+  if (
+    c.req.path.startsWith('/api/') &&
+    c.req.path !== '/api/health' &&
+    !quietRead &&
+    c.res.status !== 429
+  ) {
     log.info(
       {
         method: c.req.method,
@@ -36,35 +50,6 @@ const correlation: MiddlewareHandler = async (c, next) => {
 const noIndex: MiddlewareHandler = async (c, next) => {
   await next();
   c.header('X-Robots-Tag', 'noindex, nofollow');
-};
-
-const unsafeMethods = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
-
-function hostOf(origin: string): string | null {
-  try {
-    return new URL(origin).host;
-  } catch {
-    return null;
-  }
-}
-
-// A simple CSRF check: browsers always send Origin on these methods, so it must be our own host.
-// Mock MuleSoft is skipped because it stands in for an external system the BFF calls
-// server-to-server, without a browser Origin.
-const sameOrigin: MiddlewareHandler = async (c, next) => {
-  const { method, path } = c.req;
-  if (
-    unsafeMethods.has(method) &&
-    path.startsWith('/api/') &&
-    !path.startsWith('/api/mock-mulesoft/')
-  ) {
-    const origin = c.req.header('origin');
-    if (!origin || hostOf(origin) !== c.req.header('host')) {
-      c.get('logger').warn({ method, path }, 'blocked cross-origin request');
-      return c.json({ message: 'This request was blocked.' }, 403);
-    }
-  }
-  await next();
 };
 
 const protectedPaths = ['/api/applications', '/api/policies'];
@@ -88,9 +73,14 @@ logger.info({ eventsMode: env.EVENTS_MODE }, 'server config loaded');
 
 export default defineServerConfig({
   middlewares: [
+    // Static serving can finish before ordinary middleware; this must wrap it too.
+    { name: 'response-security', order: 'pre', handler: responseSecurity },
     { name: 'correlation', handler: correlation },
     { name: 'no-index', handler: noIndex },
+    { name: 'internal-mulesoft', handler: internalMulesoft },
     { name: 'same-origin', handler: sameOrigin },
+    { name: 'api-rate-limit', handler: apiRateLimit },
+    { name: 'request-size', handler: requestSize },
     { name: 'session', handler: session },
   ],
 });

@@ -18,6 +18,8 @@ Push to main. GitHub Actions tests, scans and deploys to ECS.
 
 ## First deploy
 
+Copy the backend and tfvars examples first. Set the demo account ID, domain and image tag.
+
 ```bash
 infra/bootstrap.sh <account-id> <alert-email> 20
 terraform -chdir=infra init -backend-config=backend.hcl

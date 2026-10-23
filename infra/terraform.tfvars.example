@@ -1,2 +1,4 @@
 # Copy to terraform.tfvars (gitignored). CI sets the same values as TF_VAR_* repository variables.
-domain_name   = "zurich.example.com"
+domain_name    = "zurich.example.com"
+aws_account_id = "<account-id>"
+image_tag      = "<commit-sha>"

@@ -7,6 +7,12 @@ resource "aws_dynamodb_table" "main" {
   range_key                   = "SK"
   deletion_protection_enabled = false
 
+  # Ceilings, not provisioned capacity: excess traffic is throttled without buying more capacity.
+  on_demand_throughput {
+    max_read_request_units  = 25
+    max_write_request_units = 10
+  }
+
   attribute {
     name = "PK"
     type = "S"

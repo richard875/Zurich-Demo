@@ -34,6 +34,8 @@ describe('postToMulesoft', () => {
     const [url, init] = fetchImpl.mock.calls[0] ?? [];
     expect(url).toBe('http://mulesoft.test/underwriting');
     expect(init?.headers).toMatchObject({ 'x-correlation-id': 'corr-12345678' });
+    expect(init?.headers).toHaveProperty('x-mulesoft-token');
+    expect(init?.redirect).toBe('error');
     expect(init?.body).toBe(JSON.stringify({ answers: [] }));
   });
 
