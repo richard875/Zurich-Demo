@@ -1,11 +1,12 @@
 - Modern.js BFF, not a separate Hono service: one deployable, and it runs on Hono anyway.
 - FingerprintJS mock sign-in: no identity provider to set up for a demo. Not real auth.
 - ECS Fargate in its own AWS account: no cluster to run, and closing the account removes everything.
-- Mock MuleSoft is in the app but reached only over HTTP. Inline events mean local and CI runs need no AWS.
+- Mock MuleSoft is in the app but reached only over HTTP, behind an HMAC token. Inline events mean local and CI runs need no AWS.
 - No NAT gateway: tasks get public IPs, and only the load balancer can reach them.
-- Public URL, no IP allowlist: every page says it is a demo, and nothing is indexed.
-- Real Zurich Direct copy and photos; the site stays public, labelled as a demo on every page.
-- Only the home page is rebuilt; other links go to the real site.
+- Public URL, no WAF or IP allowlist: every page says it is a demo, and nothing is indexed.
+- The app guards itself instead: per-visitor rate limits in memory (one task, so no Redis), a 16 KB body cap and capped DynamoDB throughput.
+- No real names: the apply form shows a made-up one, and the BFF rejects any request carrying a name.
+- Real Zurich Direct copy and photos; only the home page and the quote flow are built, and other links go to the real site.
 - Pill buttons and rounder corners everywhere, to match zurich.com.au.
 - 5% bundle discount, to match Zurich Direct's copy.
 - Motion for the quote steps, CSS for everything else, reveals included; no GSAP, because there are no timelines or scroll scenes to justify it.
