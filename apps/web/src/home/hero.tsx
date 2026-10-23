@@ -8,8 +8,8 @@ import { photos } from './photos';
 
 // zurich.com.au's hero: on desktop the photo hangs 64px below the Zurich Blue band; on phones it sits
 // directly under the band, edge to edge. Its stage entrance plays from the stylesheet alone: the photo
-// settles inside its frame at once, never fading (it's the page's largest paint); from 0.2s the
-// headline rises 64px from 10% opacity, the bullets 30px and the button 24px.
+// settles inside its frame at once, never fading (it's the page's largest paint), and the shapes slide
+// in from 0.1s as the headline fades up; the bullets and the button follow it, 120ms apart.
 export function Hero() {
   return (
     <section className="on-blue bg-zurich-blue text-white md:mb-16">
@@ -21,11 +21,11 @@ export function Hero() {
             <Headline
               as="h1"
               size="hero"
-              className="[--stage-opacity:0.1] [--stage-rise:64px] motion-safe:animate-stage-rise"
+              className="[--stage-delay:0.1s] motion-safe:animate-stage-rise"
             >
               <em>Protect</em> what matters most with Zurich
             </Headline>
-            <ul className="mt-6 grid list-disc gap-2 pl-6 text-b-20 [--stage-rise:30px] marker:text-white motion-safe:animate-stage-rise">
+            <ul className="mt-6 grid list-disc gap-2 pl-6 text-b-20 [--stage-delay:0.22s] marker:text-white motion-safe:animate-stage-rise">
               <li>
                 Get your <strong className="font-semibold">first month free</strong> on Ezicover
                 Life Insurance and Ezicover Income Protection
@@ -36,7 +36,7 @@ export function Hero() {
               </li>
             </ul>
             {/* The wrapper rises, so the button's own press dip doesn't fight it. */}
-            <div className="mt-6 [--stage-rise:24px] motion-safe:animate-stage-rise">
+            <div className="mt-6 [--stage-delay:0.34s] motion-safe:animate-stage-rise">
               <QuoteChooser>
                 <Button variant="inverse" size="md" className="cursor-pointer">
                   Get a quote
