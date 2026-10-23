@@ -36,3 +36,4 @@ Add the DNS records Terraform outputs, then set the repository variables.
 - apps/web/src/motion: animation tokens and building blocks
 - functions/policy-issuer: Lambda that activates policies
 - infra: Terraform
+- [AI_MANIFEST.md](AI_MANIFEST.md): how this repo was built with Claude and Claude Code
