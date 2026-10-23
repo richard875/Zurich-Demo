@@ -13,3 +13,9 @@ minimumReleaseAgeExclude:
   - motion-dom@14.6.0
   - motion-utils@14.6.0
   - motion@14.6.0
+# The dev server's Rsbuild middleware calls next() from a compiler callback on the first request
+# after startup, which drops the request's AsyncLocalStorage context, so useHonoContext() throws
+# "Can't call useContext out of server scope" (500 from /api/session). The patch binds that
+# callback to the request. Dev only: production has no Rsbuild middleware.
+patchedDependencies:
+  '@modern-js/server-core@3.10.1': patches/@modern-js__server-core@3.10.1.patch

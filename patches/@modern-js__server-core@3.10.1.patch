@@ -1,0 +1,72 @@
+diff --git a/dist/cjs/adapters/node/hono.js b/dist/cjs/adapters/node/hono.js
+index cf420ad1bd06bf88ac557e63e7d68966727b1017..1836cf48e8134bfa925b3d3ca1afc9b4dc40891d 100644
+--- a/dist/cjs/adapters/node/hono.js
++++ b/dist/cjs/adapters/node/hono.js
+@@ -33,6 +33,7 @@ __webpack_require__.d(__webpack_exports__, {
+     httpCallBack2HonoMid: ()=>httpCallBack2HonoMid
+ });
+ const index_js_namespaceObject = require("./helper/index.js");
++const { AsyncResource: __AsyncResource } = require("node:async_hooks");
+ const httpCallBack2HonoMid = (handler)=>async (context, next)=>{
+         const { req, res } = context.env.node;
+         const onPipe = ()=>{
+@@ -65,10 +66,10 @@ const noop = ()=>{};
+ const connectMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
+             if (handler.length < 3) resolve(handler(req, res, noop));
+-            else handler(req, res, (err)=>{
++            else handler(req, res, __AsyncResource.bind((err)=>{
+                 if (err) reject(err);
+                 else resolve(next());
+-            });
++            }));
+         });
+ const connectMockMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
+diff --git a/dist/esm/adapters/node/hono.mjs b/dist/esm/adapters/node/hono.mjs
+index b0549bc7f217b5361c6f5abb69d63ec81b70fada..78cb30334d51f7a363eb139eedf33bbd63fb0a2b 100644
+--- a/dist/esm/adapters/node/hono.mjs
++++ b/dist/esm/adapters/node/hono.mjs
+@@ -1,4 +1,5 @@
+ import { isResFinalized } from "./helper/index.mjs";
++import { AsyncResource as __AsyncResource } from "node:async_hooks";
+ const httpCallBack2HonoMid = (handler)=>async (context, next)=>{
+         const { req, res } = context.env.node;
+         const onPipe = ()=>{
+@@ -31,10 +32,10 @@ const noop = ()=>{};
+ const connectMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
+             if (handler.length < 3) resolve(handler(req, res, noop));
+-            else handler(req, res, (err)=>{
++            else handler(req, res, __AsyncResource.bind((err)=>{
+                 if (err) reject(err);
+                 else resolve(next());
+-            });
++            }));
+         });
+ const connectMockMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
+diff --git a/dist/esm-node/adapters/node/hono.mjs b/dist/esm-node/adapters/node/hono.mjs
+index 05a2f2c746125854c03990172011820031e23278..1331e9e77137655417708476e9df08eb8ad0eb18 100644
+--- a/dist/esm-node/adapters/node/hono.mjs
++++ b/dist/esm-node/adapters/node/hono.mjs
+@@ -1,5 +1,6 @@
+ import "node:module";
+ import { isResFinalized } from "./helper/index.mjs";
++import { AsyncResource as __AsyncResource } from "node:async_hooks";
+ const httpCallBack2HonoMid = (handler)=>async (context, next)=>{
+         const { req, res } = context.env.node;
+         const onPipe = ()=>{
+@@ -32,10 +33,10 @@ const noop = ()=>{};
+ const connectMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
+             if (handler.length < 3) resolve(handler(req, res, noop));
+-            else handler(req, res, (err)=>{
++            else handler(req, res, __AsyncResource.bind((err)=>{
+                 if (err) reject(err);
+                 else resolve(next());
+-            });
++            }));
+         });
+ const connectMockMid2HonoMid = (handler)=>async (context, next)=>new Promise((resolve, reject)=>{
+             const { req, res } = context.env.node;
