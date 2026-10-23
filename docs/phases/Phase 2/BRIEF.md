@@ -1,29 +1,29 @@
 # Build brief: Phase 2, Zurich Direct redesigned
 
-You're updating the demo app in this repo. `doc/Phase 2/PLAN.md` says **what** changes and why. This brief (`doc/Phase 2/BRIEF.md`) says **how**. If the two disagree, this brief wins.
+You're updating the demo app in this repo. `docs/phases/Phase 2/PLAN.md` says **what** changes and why. This brief (`docs/phases/Phase 2/BRIEF.md`) says **how**. If the two disagree, this brief wins.
 
-The working rules from `doc/Phase 1/BRIEF.md` still apply (phases with stop points, ask before touching AWS or GitHub, check installed library versions, short docs) unless this brief changes them.
+The working rules from `docs/phases/Phase 1/BRIEF.md` still apply (phases with stop points, ask before touching AWS or GitHub, check installed library versions, short docs) unless this brief changes them.
 
 ## Files
 
 - The repo root is the folder you're running in. `doc/` is gitignored and must stay that way.
-- Don't edit, move or delete anything in `doc/`. The one exception is `doc/Phase 2/screenshots/`, where you save your review screenshots.
+- Don't edit, move or delete anything in `doc/`. The one exception is `docs/phases/Phase 2/screenshots/`, where you save your review screenshots.
 - Reference material, read-only:
 
 | Path | What it is |
 | --- | --- |
-| `doc/Phase 2/PLAN.md` | The Phase 2 plan, with `home-wireframe.png` beside it |
-| `doc/Zurich Direct/Zurich Direct.html` | Saved direct.zurich.com.au home page. **The source of all home-page copy** |
-| `doc/Zurich Direct/Zurich Direct Page.png` | Full-page desktop screenshot of it (1920px wide) |
-| `doc/Zurich Direct/Zurich Direct Mobile Page.png` | Full-page mobile screenshot of it (330px wide) |
-| `doc/Zurich Direct/Zurich Direct_files/` | Its photos (used in the new home page) |
-| `doc/Zurich Direct/Tabs/Tab 1.png` to `Tab 4.png` | Screenshots of Zurich Direct's four tabs. **The source of the copy for tabs 2–4** |
-| `doc/Zurich Direct/Tabs/Tab 2 Image.jpg` to `Tab 4 Image.jpg` | The photos for tabs 2–4 (350×437, the size Zurich Direct serves them) |
-| `doc/Zurich Australia/Zurich Australia.html` and `Zurich Australia_files/818c46e31f6e4240.css` | Saved zurich.com.au home page and its CSS. **The source of the design language** |
-| `doc/Zurich Australia/Zurich Australia Page.png` | Full-page desktop screenshot of it (1920px wide) |
-| `doc/Zurich Australia/Zurich Australia Mobile Page.png` | Full-page mobile screenshot of it (330px wide). **The source of the mobile layout.** The capture caught the quick-quote panel open beside the page. That panel isn't part of the page layout |
-| `doc/Application Flows/` | The real Zurich Direct application flow. Reference only; don't rebuild the demo flow from it |
-| `doc/Phase 1/` | Phase 1 plan and brief |
+| `docs/phases/Phase 2/PLAN.md` | The Phase 2 plan, with `home-wireframe.png` beside it |
+| `docs/reference/Zurich Direct/Zurich Direct.html` | Saved direct.zurich.com.au home page. **The source of all home-page copy** |
+| `docs/reference/Zurich Direct/Zurich Direct Page.png` | Full-page desktop screenshot of it (1920px wide) |
+| `docs/reference/Zurich Direct/Zurich Direct Mobile Page.png` | Full-page mobile screenshot of it (330px wide) |
+| `docs/reference/Zurich Direct/Zurich Direct_files/` | Its photos (used in the new home page) |
+| `docs/reference/Zurich Direct/Tabs/Tab 1.png` to `Tab 4.png` | Screenshots of Zurich Direct's four tabs. **The source of the copy for tabs 2–4** |
+| `docs/reference/Zurich Direct/Tabs/Tab 2 Image.jpg` to `Tab 4 Image.jpg` | The photos for tabs 2–4 (350×437, the size Zurich Direct serves them) |
+| `docs/reference/Zurich Australia/Zurich Australia.html` and `Zurich Australia_files/818c46e31f6e4240.css` | Saved zurich.com.au home page and its CSS. **The source of the design language** |
+| `docs/reference/Zurich Australia/Zurich Australia Page.png` | Full-page desktop screenshot of it (1920px wide) |
+| `docs/reference/Zurich Australia/Zurich Australia Mobile Page.png` | Full-page mobile screenshot of it (330px wide). **The source of the mobile layout.** The capture caught the quick-quote panel open beside the page. That panel isn't part of the page layout |
+| `docs/reference/Application Flows/` | The real Zurich Direct application flow. Reference only; don't rebuild the demo flow from it |
+| `docs/phases/Phase 1/` | Phase 1 plan and brief |
 
 ## Context
 
@@ -34,7 +34,7 @@ The working rules from `doc/Phase 1/BRIEF.md` still apply (phases with stop poin
 
 ## Before you start
 
-Read `doc/Phase 2/PLAN.md`, this brief, and the code under `apps/web/src`. Look at the desktop and mobile screenshots of both sites and the four tab screenshots. Then reply with:
+Read `docs/phases/Phase 2/PLAN.md`, this brief, and the code under `apps/web/src`. Look at the desktop and mobile screenshots of both sites and the four tab screenshots. Then reply with:
 
 1. Your plan for Step 1.
 2. Anything in this brief that doesn't fit the code as it is.
@@ -44,7 +44,7 @@ Then wait for "go". Don't write code before that.
 ## How to work with me
 
 - Work in the four steps at the end of this brief. After each step, stop and report in under 15 lines: what's done, what to look at, open questions.
-- After each step, save screenshots to `doc/Phase 2/screenshots/` (Playwright, Chromium):
+- After each step, save screenshots to `docs/phases/Phase 2/screenshots/` (Playwright, Chromium):
   - every page you changed, at 1440px and 375px
   - named `step<N>-<page>-<width>.png`, e.g. `step3-home-1440.png`
   - compare them against the reference screenshots (desktop at 1440px, mobile at 375px) and say in the report what still looks different
@@ -59,9 +59,9 @@ Then wait for "go". Don't write code before that.
 
 - **Name:** the app becomes "Zurich Direct (demo)": page titles, `modern.config.ts` title and description, README.
 - **No Harbour Bank:** delete `harbour-bank-mark.tsx` and every reference to Harbour Bank.
-- **Copy comes word for word from `doc/Zurich Direct/Zurich Direct.html`,** including the bold phrases. Keep the Australian spelling and the curly quotes. Don't invent offers, prices or product features.
+- **Copy comes word for word from `docs/reference/Zurich Direct/Zurich Direct.html`,** including the bold phrases. Keep the Australian spelling and the curly quotes. Don't invent offers, prices or product features.
   - Two small edits are allowed. The product-card teaser lines drop their trailing "with..." (e.g. "Help care for the people who depend on you – even if you're not around"). Headings and tab labels get sentence case (e.g. "Key considerations for couples"). The bold lead-ins inside the tabs keep their original case.
-- **Tabs:** tab 1's copy comes from the saved HTML. Tabs 2–4 come from the screenshots in `doc/Zurich Direct/Tabs/`, transcribed in "Tab copy" below. Where the transcription and a screenshot differ, the screenshot wins. Their photos are the `Tab N Image.jpg` files in the same folder, and their Learn more links are in Home section 5.
+- **Tabs:** tab 1's copy comes from the saved HTML. Tabs 2–4 come from the screenshots in `docs/reference/Zurich Direct/Tabs/`, transcribed in "Tab copy" below. Where the transcription and a screenshot differ, the screenshot wins. Their photos are the `Tab N Image.jpg` files in the same folder, and their Learn more links are in Home section 5.
 - **Not built:** any page we don't build links to the real page.
   - Use `target="_blank" rel="noopener noreferrer"`, an external-link icon, and visually hidden "(opens in a new tab)".
   - The URLs are in the saved HTML. Home Loan Protection links to `https://www.zurich.com.au/home-loan-protection`.
@@ -140,7 +140,7 @@ New components go in `apps/web/src/components/`. Keep each one small.
 
 ## Photos
 
-- **Source:** `doc/Zurich Direct/Zurich Direct_files/`, plus the three tab photos in `doc/Zurich Direct/Tabs/`. Copy resized versions into `apps/web/src/assets/zurich-direct/`.
+- **Source:** `docs/reference/Zurich Direct/Zurich Direct_files/`, plus the three tab photos in `docs/reference/Zurich Direct/Tabs/`. Copy resized versions into `apps/web/src/assets/zurich-direct/`.
 - **Size:** each file 250 KB or less, at most 1600px on the long edge. Use macOS `sips` or `sharp` as a dev dependency (ask first). Commit only the resized files.
 - **Tab photos:** the tab 2–4 photos are 350×437 and need no cropping or resizing. Never display them wider than 350px. Crop the tab 1 photo to the same 350:437 shape so all four match.
 - **Markup:**
@@ -157,9 +157,9 @@ New components go in `apps/web/src/components/`. Keep each one small.
 | Product: Home Loan Protection, and the Home Loan Protection promo card | `first-home-couple-1000px.jpg` |
 | Lime band (circle crop) | `test1.jfif` |
 | Tab 1 photo | `father-daughter-windfarm-1825218389.jpg`, cropped to 350:437 (sharper than the 350px copy in the same folder) |
-| Tab 2 photo | `doc/Zurich Direct/Tabs/Tab 2 Image.jpg` |
-| Tab 3 photo | `doc/Zurich Direct/Tabs/Tab 3 Image.jpg` |
-| Tab 4 photo | `doc/Zurich Direct/Tabs/Tab 4 Image.jpg` |
+| Tab 2 photo | `docs/reference/Zurich Direct/Tabs/Tab 2 Image.jpg` |
+| Tab 3 photo | `docs/reference/Zurich Direct/Tabs/Tab 3 Image.jpg` |
+| Tab 4 photo | `docs/reference/Zurich Direct/Tabs/Tab 4 Image.jpg` |
 | Talk to us promo card | `working-with-daughter.png` (2.2 MB today: convert to JPEG) |
 | Article: Why is a Will important? | `benefits-of-writing-a-will-online.jpg` |
 | Article: The benefits of writing a Will online | `couple-with-pet.jpeg` |
@@ -224,7 +224,7 @@ New components go in `apps/web/src/components/`. Keep each one small.
 
 ## The home page (`apps/web/src/routes/page.tsx`)
 
-Ten sections in this order; the wireframe is `doc/Phase 2/home-wireframe.png`. Split them into components under `apps/web/src/home/`. Leave 64px of vertical space between sections (40px on mobile).
+Ten sections in this order; the wireframe is `docs/phases/Phase 2/home-wireframe.png`. Split them into components under `apps/web/src/home/`. Leave 64px of vertical space between sections (40px on mobile).
 
 1. **Hero:**
    - A full-bleed Zurich Blue band, with two columns from md.
@@ -277,7 +277,7 @@ Ten sections in this order; the wireframe is `doc/Phase 2/home-wireframe.png`. S
 
 ## Tab copy
 
-Transcribed from `doc/Zurich Direct/Tabs/Tab 2.png` to `Tab 4.png` and checked against OCR. **Bold** marks the bold text in the screenshots. Tab 1's copy is in the saved HTML.
+Transcribed from `docs/reference/Zurich Direct/Tabs/Tab 2.png` to `Tab 4.png` and checked against OCR. **Bold** marks the bold text in the screenshots. Tab 1's copy is in the saved HTML.
 
 **Tab 2: Key Considerations for Couples**
 
@@ -313,7 +313,7 @@ Each of tabs 2–4 ends with "Learn more", like tab 1. The links are in Home sec
 
 ## Mobile
 
-Below md (768px), follow `doc/Zurich Australia/Zurich Australia Mobile Page.png`. The section specs above already cover each part. In summary:
+Below md (768px), follow `docs/reference/Zurich Australia/Zurich Australia Mobile Page.png`. The section specs above already cover each part. In summary:
 
 - **Header (below 1024px):** one white bar: logo; `sm` Get a quote pill; Menu button. No utility bar.
 - **Hero:** text in the blue band; full-bleed photo directly under it, square corners.

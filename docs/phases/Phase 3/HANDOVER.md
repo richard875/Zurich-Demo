@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | **Project** | Zurich Direct (demo): `richard875/Zurich-Demo` |
-| **Phase** | 3: Motion (`doc/Phase 3/PLAN.md`, `doc/Phase 3/BRIEF.md`, `doc/Phase 3/motion-map.png`) |
+| **Phase** | 3: Motion (`docs/phases/Phase 3/PLAN.md`, `docs/phases/Phase 3/BRIEF.md`, `docs/phases/Phase 3/motion-map.png`) |
 | **Branch** | `claude/eloquent-turing-4qzu0o` (pushed) |
 | **Written** | 23 October 2026, at the end of the build session (all times below are UTC) |
 | **Status** | All four steps built, tested and pushed. **Not deployed. CI not yet run.** |
@@ -62,7 +62,7 @@ This document is for whoever picks Phase 3 up next: Richard, or a new Claude Cod
 
 ### Quick start for a new Claude Code session
 
-- Read this file, then `doc/Phase 3/BRIEF.md` (the "how") and `doc/Phase 3/PLAN.md` (the "what"). The working rules in `doc/Phase 1/BRIEF.md` and `doc/Phase 2/BRIEF.md` still apply.
+- Read this file, then `docs/phases/Phase 3/BRIEF.md` (the "how") and `docs/phases/Phase 3/PLAN.md` (the "what"). The working rules in `docs/phases/Phase 1/BRIEF.md` and `docs/phases/Phase 2/BRIEF.md` still apply.
 - **Do not deploy, push to `main`, run `terraform apply` or touch AWS without Richard's explicit go.** Pushing to the feature branch was allowed.
 - **Do not add dependencies** other than `motion` without asking. Do not change copy, layout, spacing, colours, focus order or behaviour without asking.
 - The restraint rule: if a motion isn't in the catalogue (section 7), nothing moves. When in doubt, leave it still and ask.
@@ -76,7 +76,7 @@ This document is for whoever picks Phase 3 up next: Richard, or a new Claude Cod
 - **Base:** `main` at `f8cbe87` ("docs: track project plans and reference assets"), where the plan said `fa66ba4`; `main` had moved on by two code commits and one docs commit before Phase 3 started (none touched what Phase 3 changed, apart from adding the apply page's info tooltip).
 - **`main` today:** `20cb235` ("fix(ci): ignore reviewed archived-site Gitleaks findings", Richard, adds `.gitleaksignore`). Merged into the branch as `78973e1`, with a merge commit (no rebase or force-push).
 - **Ahead/behind:** the branch is 10 commits ahead of `origin/main` and 0 behind (11 counting this handover's commit). `main` can fast-forward.
-- **Size of the Phase 3 code change:** 39 files under `apps/`, `README.md`, `docs/`, `pnpm-lock.yaml` and `pnpm-workspace.yaml`: +1,239 / −263 lines. Plus review material in `doc/Phase 3/` (about 52 MB of recordings and 22 MB of screenshots; `doc/` is tracked in git since `f8cbe87`).
+- **Size of the Phase 3 code change:** 39 files under `apps/`, `README.md`, `docs/`, `pnpm-lock.yaml` and `pnpm-workspace.yaml`: +1,239 / −263 lines. Plus review material in `docs/phases/Phase 3/` (about 52 MB of recordings and 22 MB of screenshots; `doc/` is tracked in git since `f8cbe87`).
 - The full commit list is in section 19.
 
 ---
@@ -109,7 +109,7 @@ The brief asked for a Step 1 plan, the exact `motion` version, a sketch of serve
 
 | # | Question | Answer | What was done |
 | --- | --- | --- | --- |
-| 1 | `doc/` is tracked in git now (brief said gitignored). Commit recordings? | Yes; Richard removed it from `.gitignore` himself and confirmed there is no PII | Recordings, screenshots and scripts are committed under `doc/Phase 3/` |
+| 1 | `doc/` is tracked in git now (brief said gitignored). Commit recordings? | Yes; Richard removed it from `.gitignore` himself and confirmed there is no PII | Recordings, screenshots and scripts are committed under `docs/phases/Phase 3/` |
 | 2 | May the feature branch be pushed after each step? | Yes | Pushed after every step |
 | 3 | Lighthouse isn't installed; Docker isn't running (no DynamoDB Local) | "You can run anything you want" | `npx lighthouse@13.5.0`; DynamoDB Local from AWS's jar with the container's Java (section 14) |
 | 4 | Tailwind v4's `scale-*`/`translate-*` set the `scale`/`translate` properties, not `transform`; press (100ms) and colour (200ms) need per-property durations | "Go anything you want" | A `press` utility with a per-property transition list (section 6.12) |
@@ -147,7 +147,7 @@ Two options were put to Richard:
 
 ## 5. Deviations from the brief
 
-Every place the build differs from `doc/Phase 3/BRIEF.md`, and why:
+Every place the build differs from `docs/phases/Phase 3/BRIEF.md`, and why:
 
 | Brief says | Built | Why |
 | --- | --- | --- |
@@ -360,7 +360,7 @@ When a reveal starts, an effect calls `element.getAnimations({ subtree: true })`
 | 6 | Switch | Cover tabs; quote steps; loading → content; Help menu | CSS `[data-switched]`; Motion `StepTransition`; `Loaded`; tw-animate on Radix states | Opacity only, 150ms |
 | 7 | Confirm | Quote progress; My policies pill; received icon | CSS `animate-pop`, scaled fill, Lemon layer | Instant swap |
 
-Motion map (`doc/Phase 3/motion-map.png`): header, footer and demo strip still; no block has more than three motions.
+Motion map (`docs/phases/Phase 3/motion-map.png`): header, footer and demo strip still; no block has more than three motions.
 
 ---
 
@@ -466,7 +466,7 @@ All 18 pre-existing E2E tests pass with motion on, including the journey (quote 
 ### 11.1 Method
 
 - Production build (`pnpm build`), served from `.output` on port 8090 with the E2E environment (section 14.3).
-- `doc/Phase 3/recordings/measure.mjs <label>`: loads `/` at 1440×900 in Chromium and gzips (level 9) every script response, split into before and after the `load` event; then Lighthouse 13.5.0 (`npx`), performance only, 3 runs each mobile (default, simulated throttling) and desktop (`--preset=desktop`), medians. Results in `doc/Phase 3/recordings/measurements-<label>.json`, including per-run values and the LCP element.
+- `docs/phases/Phase 3/recordings/measure.mjs <label>`: loads `/` at 1440×900 in Chromium and gzips (level 9) every script response, split into before and after the `load` event; then Lighthouse 13.5.0 (`npx`), performance only, 3 runs each mobile (default, simulated throttling) and desktop (`--preset=desktop`), medians. Results in `docs/phases/Phase 3/recordings/measurements-<label>.json`, including per-run values and the LCP element.
 - **These numbers come from the cloud container's Chromium 141; they compare only with each other**, not with a laptop or production.
 
 ### 11.2 Results
@@ -523,7 +523,7 @@ The script (`cpu4x.mjs`) lived in the session's scratchpad, not the repo. To rep
 
 ## 13. Review material: recordings, screenshots and scripts
 
-All under `doc/Phase 3/` (tracked in git).
+All under `docs/phases/Phase 3/` (tracked in git).
 
 ### 13.1 Recordings (`recordings/`, about 52 MB)
 
@@ -544,7 +544,7 @@ Each take exists as `.webm` (VP9, re-encoded at CRF 34 to about a quarter of Pla
 
 - **`recordings/measure.mjs <label> [baseUrl]`**: the performance method in section 11.1. Uses the web app's Playwright and `npx lighthouse@13.5.0`; set `CHROME_PATH` if Chromium isn't at `/opt/pw-browsers/chromium`.
 - **`recordings/record.mjs <step> [baseUrl]`**: records the scenes for a step at 1440×900 and 375×812 (and reduced where listed), re-encodes, writes screenshots. Scenes: `1` = lab (**obsolete: `/motion-lab` is deleted**), `2` = home, `3` = journey. The journey jumps to the top of the apply, received and policies pages as they open (section 15.2). The press helper cancels its own click so it never navigates.
-- Both live in `doc/`, which ESLint, Prettier and Docker ignore.
+- Both live in `docs/phases/`, which ESLint, Prettier and Docker ignore.
 
 ---
 
@@ -655,7 +655,7 @@ Phases 1 and 2 set a 10-line maximum; the Phase 3 brief asked for two more lines
 
 ## 16. Definition of done: checklist
 
-From `doc/Phase 3/BRIEF.md`:
+From `docs/phases/Phase 3/BRIEF.md`:
 
 - [x] The seven motions are in place where the catalogue says, and nothing else moves (pre-existing kept motions as listed in section 8).
 - [x] Every animation uses the tokens, and none runs longer than 600ms (unit test enforces durations; longest sequence 0.96s).
@@ -667,7 +667,7 @@ From `doc/Phase 3/BRIEF.md`:
 - [x] axe finds no serious or critical issues, checked after animations finish.
 - [~] `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm e2e` pass **locally**; **CI not yet run** (Richard will run it).
 - [x] README and `docs/decisions.md` are updated, and each still fits on one screen (decisions is 12 lines, section 15.12).
-- [x] The lab page is gone, and the recordings for each step are in `doc/Phase 3/recordings/` (Step 4 changed nothing visible, so it has none).
+- [x] The lab page is gone, and the recordings for each step are in `docs/phases/Phase 3/recordings/` (Step 4 changed nothing visible, so it has none).
 
 ---
 
@@ -708,8 +708,8 @@ cd apps/web && NODE_OPTIONS="--import=<scratch>/ipv4.mjs" npx playwright test
 npx playwright test e2e/motion.spec.ts --repeat-each=5   # flakiness check
 
 # Measurements and recordings (server running on 8090)
-node "doc/Phase 3/recordings/measure.mjs" <label>
-node "doc/Phase 3/recordings/record.mjs" <2|3>
+node "docs/phases/Phase 3/recordings/measure.mjs" <label>
+node "docs/phases/Phase 3/recordings/record.mjs" <2|3>
 
 # Deploy (only with Richard's go): main fast-forwards to the branch
 git checkout main && git merge --ff-only claude/eloquent-turing-4qzu0o && git push origin main

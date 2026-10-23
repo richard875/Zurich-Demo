@@ -24,7 +24,7 @@ The front page is three short sections in a narrow 1024px column. The applicatio
 
 ## Zurich Direct content inventory
 
-The saved Zurich Direct home page has twelve blocks, and all twelve carry over. Copy is taken word for word from `doc/Zurich Direct/Zurich Direct.html`.
+The saved Zurich Direct home page has twelve blocks, and all twelve carry over. Copy is taken word for word from `docs/reference/Zurich Direct/Zurich Direct.html`.
 
 | # | Block on Zurich Direct today | What it says | Where it goes |
 | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ The saved Zurich Direct home page has twelve blocks, and all twelve carry over. 
 | 11 | Offer terms | Accordion with the Will and Loving Life offer terms, partners and privacy link | Accordion |
 | 12 | Footer | Nine info links, Legal, Privacy, Disclaimer, the Ezicover disclaimer, © 2026 Zurich Australia | New footer |
 
-**Tabs:** the first tab's text is in the saved page. Tabs 2–4 come from your screenshots in `doc/Zurich Direct/Tabs/`, with their photos saved alongside and their Learn more links in the brief. The photos are 350×437, the size Zurich Direct serves them, so they're never shown larger than that.
+**Tabs:** the first tab's text is in the saved page. Tabs 2–4 come from your screenshots in `docs/reference/Zurich Direct/Tabs/`, with their photos saved alongside and their Learn more links in the brief. The photos are 350×437, the size Zurich Direct serves them, so they're never shown larger than that.
 
 ## Zurich Australia's design language
 
@@ -172,9 +172,9 @@ Claude Code builds this in four steps. After each step it stops and shows screen
 
 ## Sources
 
-- Your saved Zurich Direct home page: `doc/Zurich Direct/` (HTML, desktop and mobile screenshots, PDF, images), from [direct.zurich.com.au](https://direct.zurich.com.au/)
-- Your screenshots of Zurich Direct's four tabs and the photos for tabs 2–4: `doc/Zurich Direct/Tabs/`. The tab 2–4 Learn more links came from you.
-- Your saved Zurich Australia home page: `doc/Zurich Australia/` (HTML, CSS, desktop and mobile screenshots, images), from [zurich.com.au](https://www.zurich.com.au/). Sizes, radii and colours were measured from this page in Chromium on 22 Oct 2026
-- The real application flow screenshots: `doc/Application Flows/` (Steps 1–11)
+- Your saved Zurich Direct home page: `docs/reference/Zurich Direct/` (HTML, desktop and mobile screenshots, PDF, images), from [direct.zurich.com.au](https://direct.zurich.com.au/)
+- Your screenshots of Zurich Direct's four tabs and the photos for tabs 2–4: `docs/reference/Zurich Direct/Tabs/`. The tab 2–4 Learn more links came from you.
+- Your saved Zurich Australia home page: `docs/reference/Zurich Australia/` (HTML, CSS, desktop and mobile screenshots, images), from [zurich.com.au](https://www.zurich.com.au/). Sizes, radii and colours were measured from this page in Chromium on 22 Oct 2026
+- The real application flow screenshots: `docs/reference/Application Flows/` (Steps 1–11)
 - The current demo: its code in this repo and the deployed site, viewed 22 Oct 2026
-- Phase 1 plan and brief: `doc/Phase 1/`
+- Phase 1 plan and brief: `docs/phases/Phase 1/`

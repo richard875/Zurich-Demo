@@ -1,8 +1,8 @@
 // Phase 3 review recordings, against a running build (default http://localhost:8090).
-//   node "doc/Phase 3/recordings/record.mjs" <step> [baseUrl]
+//   node "docs/phases/Phase 3/recordings/record.mjs" <step> [baseUrl]
 // For each page in the step: a .webm (and an .mp4, if ffmpeg is installed) scrolled top to bottom at a
 // steady pace at 1440x900 and 375x812, with motion on and, where listed, reduced. Then a full-page
-// screenshot of its final state in doc/Phase 3/screenshots/, named the same way.
+// screenshot of its final state in docs/phases/Phase 3/screenshots/, named the same way.
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, renameSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';

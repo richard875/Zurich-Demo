@@ -1,6 +1,6 @@
 # Build brief: Zurich Life Direct (demo)
 
-You're building a small demo app described in `doc/PLAN.md`. PLAN.md says **what** to build and with which stack. This brief (`doc/BRIEF.md`) says **how**: it fills in the details the plan leaves open and sets the rules. If the two disagree, this brief wins.
+You're building a small demo app described in `docs/phases/Phase 1/PLAN.md`. PLAN.md says **what** to build and with which stack. This brief (`docs/phases/Phase 1/BRIEF.md`) says **how**: it fills in the details the plan leaves open and sets the rules. If the two disagree, this brief wins.
 
 ## Files
 
@@ -17,7 +17,7 @@ You're building a small demo app described in `doc/PLAN.md`. PLAN.md says **what
 
 ## Before you start
 
-Read `doc/PLAN.md` and this brief end to end. Then ask me for all of these in one message and wait for my answers:
+Read `docs/phases/Phase 1/PLAN.md` and this brief end to end. Then ask me for all of these in one message and wait for my answers:
 
 1. My main AWS CLI profile name (the AWS Organizations management account).
 2. The email address for the new `zurich-demo` account's root user.
@@ -319,7 +319,7 @@ Keep the test suite small and fast. No snapshot tests.
 
 ### README and docs
 
-- There are exactly two docs: `README.md` and `docs/decisions.md`. Copy `doc/architecture.png` to `docs/architecture.png` for the README.
+- There are exactly two docs: `README.md` and `docs/decisions.md`. Copy `docs/phases/Phase 1/architecture.png` to `docs/architecture.png` for the README.
 - The README is the template in PLAN.md, filled in, not extended. You may add one "First deploy" block of at most five commands.
 - `docs/decisions.md` is one line per decision, 10 lines at most.
 - Sentences under 20 words. No badges, emoji, "Features" lists or "Overview" sections.

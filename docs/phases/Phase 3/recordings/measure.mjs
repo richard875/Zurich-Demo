@@ -1,6 +1,6 @@
 // Phase 3 performance check, run against a production build (`pnpm build`, then start .output).
-//   node "doc/Phase 3/recordings/measure.mjs" <label> [baseUrl]
-// Writes doc/Phase 3/recordings/measurements-<label>.json:
+//   node "docs/phases/Phase 3/recordings/measure.mjs" <label> [baseUrl]
+// Writes docs/phases/Phase 3/recordings/measurements-<label>.json:
 // - the home page's JavaScript, gzipped, split into what loads before the load event and after it
 // - Lighthouse LCP, CLS and TBT on mobile and desktop, the median of 3 runs each
 // Uses the web app's Playwright and Lighthouse 13.5.0 through npx; CHROME_PATH picks the browser.
