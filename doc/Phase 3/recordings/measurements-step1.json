@@ -1,0 +1,115 @@
+{
+  "label": "step1",
+  "base": "http://localhost:8090",
+  "measuredAt": "2026-10-23T02:35:30.308Z",
+  "javascript": {
+    "firstLoadKB": 286.92,
+    "afterLoadKB": 19.13,
+    "scripts": [
+      {
+        "file": "/static/js/lib-router.d6e80f81f5.js",
+        "afterLoad": false,
+        "gzipKB": 30.63
+      },
+      {
+        "file": "/static/js/lib-react.2903d87dd9.js",
+        "afterLoad": false,
+        "gzipKB": 67.15
+      },
+      {
+        "file": "/static/js/lib-polyfill.9e72e087c2.js",
+        "afterLoad": false,
+        "gzipKB": 47.07
+      },
+      {
+        "file": "/static/js/index.c97a41b514.js",
+        "afterLoad": false,
+        "gzipKB": 11.49
+      },
+      {
+        "file": "/static/js/8.6d72d7ec99.js",
+        "afterLoad": false,
+        "gzipKB": 112.79
+      },
+      {
+        "file": "/static/js/async/7.db44690f2d.js",
+        "afterLoad": false,
+        "gzipKB": 4.98
+      },
+      {
+        "file": "/static/js/async/p.add0034c85.js",
+        "afterLoad": false,
+        "gzipKB": 4.68
+      },
+      {
+        "file": "/static/js/async/page.df9a0174e5.js",
+        "afterLoad": false,
+        "gzipKB": 8.13
+      },
+      {
+        "file": "/static/js/async/i.d20c70630f.js",
+        "afterLoad": true,
+        "gzipKB": 0.13
+      },
+      {
+        "file": "/static/js/async/9z.1ecfcbbcd5.js",
+        "afterLoad": true,
+        "gzipKB": 19
+      }
+    ]
+  },
+  "mobile": {
+    "median": {
+      "lcpMs": 6620,
+      "cls": 0.006,
+      "tbtMs": 436
+    },
+    "runs": [
+      {
+        "lcpMs": 6620,
+        "cls": 0.006,
+        "tbtMs": 416,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      },
+      {
+        "lcpMs": 6098,
+        "cls": 0.006,
+        "tbtMs": 449,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      },
+      {
+        "lcpMs": 6621,
+        "cls": 0.006,
+        "tbtMs": 436,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      }
+    ]
+  },
+  "desktop": {
+    "median": {
+      "lcpMs": 1455,
+      "cls": 0.003,
+      "tbtMs": 27
+    },
+    "runs": [
+      {
+        "lcpMs": 1471,
+        "cls": 0.003,
+        "tbtMs": 29,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      },
+      {
+        "lcpMs": 1455,
+        "cls": 0.003,
+        "tbtMs": 24,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      },
+      {
+        "lcpMs": 1353,
+        "cls": 0.003,
+        "tbtMs": 27,
+        "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover md:-mb-16 md:rounded-promo\">"
+      }
+    ]
+  }
+}

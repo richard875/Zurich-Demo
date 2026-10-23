@@ -2,17 +2,26 @@ import { useSyncExternalStore, type ReactNode } from 'react';
 import { LazyMotion, MotionConfig } from 'motion/react';
 import { duration, ease } from './tokens';
 
-// Motion's animation features arrive after the first render. Until they have, reveals hide nothing,
-// so a slow or failed chunk leaves the page as it is without motion.
+// Motion's animation features arrive once the page has loaded, so they never compete with the hero
+// photo. Until they have, reveals hide nothing, so a slow or failed chunk leaves the page as it is
+// without motion.
 let featuresLoaded = false;
 const listeners = new Set<() => void>();
 
-const loadFeatures = () =>
-  import('./features').then((features) => {
-    featuresLoaded = true;
-    for (const listener of listeners) listener();
-    return features.default;
+const pageLoaded = () =>
+  new Promise<void>((resolve) => {
+    if (document.readyState === 'complete') resolve();
+    else window.addEventListener('load', () => resolve(), { once: true });
   });
+
+const loadFeatures = () =>
+  pageLoaded()
+    .then(() => import('./features'))
+    .then((features) => {
+      featuresLoaded = true;
+      for (const listener of listeners) listener();
+      return features.default;
+    });
 
 const subscribe = (listener: () => void) => {
   listeners.add(listener);
