@@ -104,6 +104,10 @@ export const requestSize: MiddlewareHandler = async (c, next) => {
   if (encoding && encoding !== 'identity') {
     return c.json({ message: 'Compressed requests are not supported.' }, 415);
   }
+  // With neither header an HTTP/1.1 request has no body (RFC 9112 §6.3), so bodiless calls like
+  // sign-out's DELETE skip the limit. Buffering their empty stream anyway crashes on Node 24,
+  // which can't copy the proxied Request Modern.js hands us.
+  if (!c.req.header('content-length') && !c.req.header('transfer-encoding')) return next();
   return limitBody(c, next);
 };
 
