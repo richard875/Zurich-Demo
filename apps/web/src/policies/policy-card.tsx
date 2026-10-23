@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn';
 const STATUS: Record<Policy['status'], { label: string; pill: string; icon?: ZurichIconName }> = {
   PROCESSING: { label: 'Processing', pill: 'bg-lemon' },
   ACTIVE: { label: 'Active', pill: 'bg-mint', icon: 'check:line' },
-  REFERRED: { label: 'Being reviewed', pill: 'bg-sand-stone', icon: 'clock:line' },
+  REFERRED: { label: 'Being reviewed', pill: 'bg-lemon', icon: 'clock:line' },
 };
 
 const appliedOn = new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium' });
