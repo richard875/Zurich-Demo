@@ -62,15 +62,10 @@
   --default-transition-duration: var(--motion-state);
   --default-transition-timing-function: var(--ease-state);
 
-  /* The stage entrance: text rises into place from 0.2s (zurich.com.au waits 0.4s). Each element
-     sets how far it rises (--stage-rise) and how faint it starts (--stage-opacity). */
-  --animate-stage-rise: stage-rise var(--motion-enter) var(--ease-entrance) var(--stage-delay, 0.2s)
-    both;
   /* A photo settles into its frame. Its opacity never changes: the hero photo is the page's
-     largest paint. */
+     largest paint. (The stage rise and the pop are utilities below, as each element sets their
+     variables.) */
   --animate-stage-media-settle: stage-media-settle var(--motion-settle) var(--ease-entrance) both;
-  /* A tick or icon pops in, overshooting by 8%, after --pop-delay if it waits for something. */
-  --animate-pop: pop var(--motion-confirm) var(--ease-entrance) var(--pop-delay, 0s) both;
 
   /* zurich.com.au's hero shape entrance: it fades in while sliding 72px from the left. */
   --animate-stage-shape-slide-in: stage-shape-slide-in 0.5s cubic-bezier(0, 0, 0, 1) 0.1s both;
@@ -310,6 +305,19 @@
   from {
     transform: translateY(8px);
   }
+}
+
+/* The stage entrance: text rises into place from 0.2s (zurich.com.au waits 0.4s). Each element sets
+   how far it rises (--stage-rise), how faint it starts (--stage-opacity) and, for a card that is the
+   whole page, when it starts (--stage-delay). Utilities rather than theme values, so the variables
+   are read on each element. */
+@utility animate-stage-rise {
+  animation: stage-rise var(--motion-enter) var(--ease-entrance) var(--stage-delay, 0.2s) both;
+}
+
+/* A tick or icon pops in, overshooting by 8%, after --pop-delay if it waits for something. */
+@utility animate-pop {
+  animation: pop var(--motion-confirm) var(--ease-entrance) var(--pop-delay, 0s) both;
 }
 
 /* A pressed button dips to 98%, quicker than its colours change. */

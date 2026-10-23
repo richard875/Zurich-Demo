@@ -11,6 +11,7 @@ import { FlowLayout, PageBand } from '@/components/page-band';
 import { phones } from '@/components/site/links';
 import { TalkCard } from '@/components/site/talk-card';
 import { Button } from '@/components/ui/button';
+import { Loaded, useWasLoading } from '@/motion/loaded';
 import { policiesQueryKey } from '@/policies/fetch-policies';
 import { useJourneyLoaded, useQuoteJourney } from '@/quote/journey-store';
 import { RequireSession } from '@/session/require-session';
@@ -21,20 +22,23 @@ function Apply() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const application = useMutation({ mutationFn: submitApplication });
+  const wasLoading = useWasLoading(!loaded);
 
   if (!loaded) return <LoadingPanel label="Loading your quote…" blocks={2} />;
   if (!quote) {
     return (
-      <MessagePanel
-        icon="document-contract:line"
-        action={
-          <Button asChild size="md">
-            <Link to="/quote">Get a quote</Link>
-          </Button>
-        }
-      >
-        You need a quote before you can apply.
-      </MessagePanel>
+      <Loaded fade={wasLoading}>
+        <MessagePanel
+          icon="document-contract:line"
+          action={
+            <Button asChild size="md">
+              <Link to="/quote">Get a quote</Link>
+            </Button>
+          }
+        >
+          You need a quote before you can apply.
+        </MessagePanel>
+      </Loaded>
     );
   }
 
@@ -47,33 +51,35 @@ function Apply() {
     .join(' and ');
 
   return (
-    <div className="grid gap-10">
-      <p className="flex items-center gap-4 rounded-card bg-zurich-white p-6 text-b-18">
-        <IconCircle name="document-contract:line" />
-        <span>
-          You're applying for {cover}, at{' '}
-          <strong className="font-semibold">{formatCents(quote.monthlyPremiumCents)}</strong> a
-          month.
-        </span>
-      </p>
-      <ApplicationForm
-        pending={application.isPending}
-        error={application.error?.message ?? null}
-        onSubmit={({ answers }) =>
-          application.mutate(
-            { quoteId: quote.quoteId, answers },
-            {
-              onSuccess: ({ status }) => {
-                reset();
-                void queryClient.invalidateQueries({ queryKey: policiesQueryKey });
-                const outcome = status === 'REFERRED' ? 'referred' : 'processing';
-                navigate(`/apply/received?outcome=${outcome}`);
+    <Loaded fade={wasLoading}>
+      <div className="grid gap-10">
+        <p className="flex items-center gap-4 rounded-card bg-zurich-white p-6 text-b-18">
+          <IconCircle name="document-contract:line" />
+          <span>
+            You're applying for {cover}, at{' '}
+            <strong className="font-semibold">{formatCents(quote.monthlyPremiumCents)}</strong> a
+            month.
+          </span>
+        </p>
+        <ApplicationForm
+          pending={application.isPending}
+          error={application.error?.message ?? null}
+          onSubmit={({ answers }) =>
+            application.mutate(
+              { quoteId: quote.quoteId, answers },
+              {
+                onSuccess: ({ status }) => {
+                  reset();
+                  void queryClient.invalidateQueries({ queryKey: policiesQueryKey });
+                  const outcome = status === 'REFERRED' ? 'referred' : 'processing';
+                  navigate(`/apply/received?outcome=${outcome}`);
+                },
               },
-            },
-          )
-        }
-      />
-    </div>
+            )
+          }
+        />
+      </div>
+    </Loaded>
   );
 }
 

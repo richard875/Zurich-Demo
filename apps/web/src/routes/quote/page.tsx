@@ -7,6 +7,8 @@ import { LoadingPanel } from '@/components/message-panel';
 import { FlowLayout, PageBand } from '@/components/page-band';
 import { phones } from '@/components/site/links';
 import { TalkCard } from '@/components/site/talk-card';
+import { Loaded, useWasLoading } from '@/motion/loaded';
+import { StepTransition } from '@/motion/step-transition';
 import { AboutYouForm } from '@/quote/about-you-form';
 import { CoverForm } from '@/quote/cover-form';
 import { useJourneyLoaded, useQuoteJourney } from '@/quote/journey-store';
@@ -54,6 +56,7 @@ export default function QuotePage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const loaded = useJourneyLoaded();
+  const wasLoading = useWasLoading(!loaded);
   const { aboutYou, cover, quote, incomeProtectionPreset, saveAboutYou, saveQuote } =
     useQuoteJourney();
   const quoteRequest = useMutation({ mutationFn: requestQuote });
@@ -110,36 +113,44 @@ export default function QuotePage() {
       >
         {!loaded ? (
           <LoadingPanel label="Loading your answers…" blocks={2} />
-        ) : step === 1 ? (
-          <AboutYouForm
-            defaultValues={aboutYou}
-            onSubmit={(values) => {
-              saveAboutYou(values);
-              goTo(2);
-            }}
-          />
-        ) : step === 2 && aboutYou ? (
-          <CoverForm
-            defaultValues={cover}
-            incomeProtectionPreset={incomeProtectionPreset}
-            pending={quoteRequest.isPending}
-            error={quoteRequest.error?.message ?? null}
-            onBack={() => goTo(1)}
-            onSubmit={(nextCover) =>
-              quoteRequest.mutate(
-                { ...aboutYou, ...nextCover },
-                {
-                  onSuccess: (newQuote) => {
-                    saveQuote(nextCover, newQuote);
-                    goTo(3);
-                  },
-                },
-              )
-            }
-          />
-        ) : quote ? (
-          <QuoteSummary quote={quote} onApply={apply} onChangeCover={() => goTo(2)} />
-        ) : null}
+        ) : (
+          // Each step crosses to the next (motion/step-transition.tsx); the first fades in as it
+          // replaces the loading panel.
+          <Loaded fade={wasLoading}>
+            <StepTransition step={step}>
+              {step === 1 ? (
+                <AboutYouForm
+                  defaultValues={aboutYou}
+                  onSubmit={(values) => {
+                    saveAboutYou(values);
+                    goTo(2);
+                  }}
+                />
+              ) : step === 2 && aboutYou ? (
+                <CoverForm
+                  defaultValues={cover}
+                  incomeProtectionPreset={incomeProtectionPreset}
+                  pending={quoteRequest.isPending}
+                  error={quoteRequest.error?.message ?? null}
+                  onBack={() => goTo(1)}
+                  onSubmit={(nextCover) =>
+                    quoteRequest.mutate(
+                      { ...aboutYou, ...nextCover },
+                      {
+                        onSuccess: (newQuote) => {
+                          saveQuote(nextCover, newQuote);
+                          goTo(3);
+                        },
+                      },
+                    )
+                  }
+                />
+              ) : quote ? (
+                <QuoteSummary quote={quote} onApply={apply} onChangeCover={() => goTo(2)} />
+              ) : null}
+            </StepTransition>
+          </Loaded>
+        )}
       </FlowLayout>
     </>
   );

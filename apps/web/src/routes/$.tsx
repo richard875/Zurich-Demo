@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { photos } from '@/home/photos';
 
 // Any address the app doesn't have, inside the site's header and footer, in the home page's pink
-// promo card. $.data.ts keeps the 404 status.
+// promo card, which enters with the stage entrance. $.data.ts keeps the 404 status.
 export default function NotFoundPage() {
   return (
     <Container className="py-10 md:py-16">
@@ -17,6 +17,7 @@ export default function NotFoundPage() {
         <title>Page not found | Zurich Direct (demo)</title>
       </Helmet>
       <PromoCard
+        stage
         tone="pink"
         photo={photos.limeBandHands}
         actions={

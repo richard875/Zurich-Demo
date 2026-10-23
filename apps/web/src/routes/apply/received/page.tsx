@@ -8,8 +8,11 @@ import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
 import { photos } from '@/home/photos';
 
+// Once the card has landed (500ms), its icon pops 200ms later, so all of it is still by 1 second.
+const iconPop = '[--pop-delay:700ms] motion-safe:animate-pop';
+
 // The outcome in the home page's split promo card: mint while the policy is set up, lime while it
-// waits for a person to review it.
+// waits for a person to review it. The card enters with the stage entrance, then its icon pops.
 export default function ApplicationReceivedPage() {
   const [searchParams] = useSearchParams();
   const referred = searchParams.get('outcome') === 'referred';
@@ -21,6 +24,7 @@ export default function ApplicationReceivedPage() {
       </Helmet>
       {referred ? (
         <PromoCard
+          stage
           tone="lime"
           photo={photos.talkToUs}
           actions={
@@ -29,7 +33,7 @@ export default function ApplicationReceivedPage() {
             </Button>
           }
         >
-          <IconCircle name="clock:line" tone="white" />
+          <IconCircle name="clock:line" tone="white" className={iconPop} />
           <Headline as="h1">
             Application <em>received</em>
           </Headline>
@@ -43,6 +47,7 @@ export default function ApplicationReceivedPage() {
         </PromoCard>
       ) : (
         <PromoCard
+          stage
           tone="mint"
           photo={photos.hero}
           actions={
@@ -54,7 +59,7 @@ export default function ApplicationReceivedPage() {
             </Button>
           }
         >
-          <IconCircle name="check:line" tone="white" />
+          <IconCircle name="check:line" tone="white" className={iconPop} />
           <Headline as="h1">
             Application <em>received</em>
           </Headline>

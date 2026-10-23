@@ -14,8 +14,10 @@ const STATUS: Record<Policy['status'], { label: string; pill: string; icon?: Zur
 const appliedOn = new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium' });
 
 // The cover step's card: the product's icon and name, its status pill, and the details in a Zurich
-// White panel inside.
-export function PolicyCard({ policy }: { policy: Policy }) {
+// White panel inside. When the policy has just turned active while the page is open, the pill fades
+// from Lemon to Mint (a Lemon layer fading out over it) and its tick pops; the label swaps at once.
+// With reduced motion, all of it swaps at once.
+export function PolicyCard({ policy, justActivated }: { policy: Policy; justActivated: boolean }) {
   const status = STATUS[policy.status];
   return (
     <li className="grid gap-6 rounded-card bg-white p-6 ring-1 ring-dove md:p-10">
@@ -36,13 +38,22 @@ export function PolicyCard({ policy }: { policy: Policy }) {
         </div>
         <p
           className={cn(
-            'inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium',
+            'relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full px-3 py-1 text-sm font-medium',
             status.pill,
           )}
           data-testid="policy-status"
         >
+          {justActivated && (
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 -z-10 bg-lemon [--tw-animation-fill-mode:forwards] motion-safe:animate-out motion-safe:fade-out motion-safe:duration-(--motion-confirm) motion-safe:ease-state motion-reduce:hidden"
+            />
+          )}
           {status.icon ? (
-            <ZurichIcon name={status.icon} className="text-base" />
+            <ZurichIcon
+              name={status.icon}
+              className={cn('text-base', justActivated && 'motion-safe:animate-pop')}
+            />
           ) : (
             // Processing pulses while the policy is being set up.
             <span
