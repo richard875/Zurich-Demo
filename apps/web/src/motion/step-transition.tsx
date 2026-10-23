@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { AnimatePresence, useReducedMotion, type Variants } from 'motion/react';
 import * as m from 'motion/react-m';
+import { MotionProvider } from './motion-provider';
 import { duration, ease } from './tokens';
 
 // How far a new step slides in, from the side it's coming from.
@@ -36,18 +37,20 @@ export function StepTransition({ step, children }: { step: number; children: Rea
   const move: Move = { direction: shown.direction, reduce };
 
   return (
-    <AnimatePresence mode="wait" initial={false} custom={move}>
-      <m.div
-        key={step}
-        custom={move}
-        variants={variants}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        className="overflow-clip [overflow-clip-margin:1rem]"
-      >
-        {children}
-      </m.div>
-    </AnimatePresence>
+    <MotionProvider>
+      <AnimatePresence mode="wait" initial={false} custom={move}>
+        <m.div
+          key={step}
+          custom={move}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="overflow-clip [overflow-clip-margin:1rem]"
+        >
+          {children}
+        </m.div>
+      </AnimatePresence>
+    </MotionProvider>
   );
 }

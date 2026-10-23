@@ -6,6 +6,7 @@ import { Headline } from '@/components/headline';
 import { ProductCard } from '@/components/product-card';
 import { zurichLinks } from '@/components/site/links';
 import { Button } from '@/components/ui/button';
+import { RevealGroup, RevealItem } from '@/motion/reveal';
 import { QUOTE_START, useStartQuote } from '@/quote/start-quote';
 import { photos } from './photos';
 
@@ -25,13 +26,17 @@ function OnlineQuoteButton({ incomeProtection }: { incomeProtection: boolean }) 
   );
 }
 
+// The heading, then each card 120ms after the one before, as the row comes into view.
 export function Products() {
   return (
-    <section aria-labelledby="products-heading">
+    <RevealGroup as="section" aria-labelledby="products-heading">
       <Container>
-        <Headline id="products-heading">Choose the product that suits your needs</Headline>
+        <RevealItem index={0}>
+          <Headline id="products-heading">Choose the product that suits your needs</Headline>
+        </RevealItem>
         <div className="mt-10 grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           <ProductCard
+            revealIndex={1}
             photo={photos.productLife}
             teaser="Help care for the people who depend on you - even if you're not around with..."
             title="Ezicover Life Insurance"
@@ -43,6 +48,7 @@ export function Products() {
             action={<OnlineQuoteButton incomeProtection={false} />}
           />
           <ProductCard
+            revealIndex={2}
             photo={photos.productIncome}
             teaser="Help protect your ability to earn a living if things go wrong with..."
             title="Ezicover Income Protection"
@@ -54,6 +60,7 @@ export function Products() {
             action={<OnlineQuoteButton incomeProtection />}
           />
           <ProductCard
+            revealIndex={3}
             photo={photos.homeLoanCard}
             teaser="Buying a home is hard. Make sure you get protected..."
             title="Zurich Home Loan Protection"
@@ -70,6 +77,6 @@ export function Products() {
           />
         </div>
       </Container>
-    </section>
+    </RevealGroup>
   );
 }

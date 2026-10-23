@@ -1,13 +1,12 @@
 import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { MotionProvider } from './motion-provider';
 import { Reveal, RevealGroup, RevealItem, Settle } from './reveal';
 
 // The server's HTML is always fully visible: a reveal hides nothing until it's running in the browser.
 describe('Reveal on the server', () => {
   it('renders no opacity or transform styles', () => {
     const html = renderToString(
-      <MotionProvider>
+      <>
         <Reveal as="section" aria-labelledby="intro">
           <h2 id="intro">Intro</h2>
           <Settle className="overflow-hidden">
@@ -22,9 +21,9 @@ describe('Reveal on the server', () => {
             A card
           </RevealItem>
         </RevealGroup>
-      </MotionProvider>,
+      </>,
     );
     expect(html.match(/data-reveal="shown"/g)).toHaveLength(3);
-    expect(html).not.toMatch(/opacity|transform|style=/);
+    expect(html).not.toMatch(/opacity|transform|style=|data-revealing/);
   });
 });

@@ -6,13 +6,15 @@ import { phones } from '@/components/site/links';
 import { QuoteChooser } from '@/components/site/quote-chooser';
 import { Button } from '@/components/ui/button';
 import { ZurichIcon } from '@/components/zurich-icon';
+import { Reveal } from '@/motion/reveal';
 import { photos } from './photos';
 
 // The card is about talking to us, so Call leads and Get a quote follows. The two share a width:
-// side by side where both fit, otherwise stacked full width.
+// side by side where both fit, otherwise stacked full width. Like the Home loan card, it reveals as
+// it comes into view, and its photo settles in its half.
 export function TalkToUs() {
   return (
-    <section aria-labelledby="talk-heading">
+    <Reveal as="section" aria-labelledby="talk-heading">
       <Container>
         <PromoCard
           tone="mint"
@@ -49,13 +51,13 @@ export function TalkToUs() {
           </p>
         </PromoCard>
       </Container>
-    </section>
+    </Reveal>
   );
 }
 
 export function HomeLoanPromo() {
   return (
-    <section aria-labelledby="home-loan-heading">
+    <Reveal as="section" aria-labelledby="home-loan-heading">
       <Container>
         <PromoCard
           tone="pink"
@@ -71,6 +73,6 @@ export function HomeLoanPromo() {
           </Headline>
         </PromoCard>
       </Container>
-    </section>
+    </Reveal>
   );
 }

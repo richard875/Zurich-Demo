@@ -1,143 +1,167 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
+  type CSSProperties,
   type ReactNode,
 } from 'react';
-import { useReducedMotion, type Variants } from 'motion/react';
-import * as m from 'motion/react-m';
 import { useHydrated } from '@/lib/use-hydrated';
-import { useMotionReady } from './motion-provider';
-import { distance, duration, stagger } from './tokens';
 
-// Motion goes on the element itself, so a card in a grid gets no extra box around it.
-const elements = { div: m.div, section: m.section, article: m.article, li: m.li };
+// Reveals run on CSS (the [data-reveal] rules in globals.css). This file only decides when: what
+// starts below the screen waits, hidden, and plays once it comes into view.
 
 interface RevealProps {
-  as?: keyof typeof elements;
+  // The element itself takes part, so a card in a grid gets no extra box around it.
+  as?: 'div' | 'section' | 'article' | 'li';
   className?: string;
   id?: string;
   'aria-labelledby'?: string;
   children: ReactNode;
 }
 
-// zurich.com.au's trigger: 10% of it on screen, ignoring the bottom tenth of the screen; once.
-const viewport = { once: true, amount: 0.1, margin: '0px 0px -10% 0px' } as const;
+// One observer for every reveal, on zurich.com.au's trigger: 10% of it on screen, ignoring the bottom
+// tenth of the screen. Each element is watched until it first comes into view.
+const onEnter = new WeakMap<Element, () => void>();
+let observer: IntersectionObserver | undefined;
 
-// From md, things rise as they fade in and groups stagger; on phones they fade in place.
-const wideQuery = '(min-width: 48rem)';
-const subscribeWide = (listener: () => void) => {
-  const query = window.matchMedia(wideQuery);
-  query.addEventListener('change', listener);
-  return () => query.removeEventListener('change', listener);
-};
-function useWide(): boolean {
-  return useSyncExternalStore(
-    subscribeWide,
-    () => window.matchMedia(wideQuery).matches,
-    () => false,
+function watch(element: Element, callback: () => void) {
+  observer ??= new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer?.unobserve(entry.target);
+        onEnter.get(entry.target)?.();
+      }
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
   );
+  onEnter.set(element, callback);
+  observer.observe(element);
+  return () => {
+    observer?.unobserve(element);
+    onEnter.delete(element);
+  };
 }
 
-// Nothing moves on the server, during hydration, before Motion's features arrive, or with reduced
-// motion. Until then a reveal renders exactly what the page would without it.
-function useLive(): boolean {
-  const hydrated = useHydrated();
-  const ready = useMotionReady();
-  const reduce = useReducedMotion();
-  return hydrated && ready && !reduce;
+function mediaQuery(query: string) {
+  return {
+    subscribe: (listener: () => void) => {
+      const list = window.matchMedia(query);
+      list.addEventListener('change', listener);
+      return () => list.removeEventListener('change', listener);
+    },
+    matches: () => window.matchMedia(query).matches,
+  };
 }
 
-interface Timing {
-  rise: boolean;
-  delay: number;
-  instant: boolean;
-  seconds: number;
+const reducedMotion = mediaQuery('(prefers-reduced-motion: reduce)');
+// From md, groups stagger; below it each item reveals on its own as it arrives.
+const wide = mediaQuery('(min-width: 48rem)');
+
+// Both false on the server and during hydration.
+function useReducedMotion(): boolean {
+  return useSyncExternalStore(reducedMotion.subscribe, reducedMotion.matches, () => false);
 }
 
-const revealVariants: Variants = {
-  hidden: ({ rise }: Timing) => ({
-    opacity: 0,
-    transform: rise ? `translateY(${distance.rise}px)` : 'none',
-    transition: { duration: 0 },
-  }),
-  // Motion ends a transform at translateY(0px); transitionEnd clears it, so a revealed block keeps no
-  // transform (and no stacking context) of its own.
-  shown: ({ delay, instant, seconds }: Timing) => ({
-    opacity: 1,
-    transform: 'none',
-    transition: instant ? { duration: 0 } : { duration: seconds, delay },
-    transitionEnd: { transform: 'none' },
-  }),
-};
+function useWide(): boolean {
+  return useSyncExternalStore(wide.subscribe, wide.matches, () => false);
+}
 
-// "still" is how the server rendered it, and stays that way unless it starts below the screen.
+// "still" is the server's HTML, and stays that way unless it starts below the screen.
 type Phase = 'still' | 'hidden' | 'revealing' | 'shown';
 
 function RevealElement({
   as = 'div',
-  seconds,
+  parts = false,
+  item = false,
   groupTriggered,
-  delay = 0,
+  index,
   children,
   ...props
 }: RevealProps & {
-  seconds: number;
-  // Set when a group from md decides when it shows; otherwise it waits for its own trigger.
+  parts?: boolean;
+  item?: boolean;
+  // Set when a group decides when it shows (from md); otherwise it waits for its own trigger.
   groupTriggered?: boolean;
-  delay?: number;
+  index?: number;
 }) {
-  const Element = elements[as] as typeof m.div;
+  // Typed as a div for the ref: every tag allowed here is a plain block element.
+  const Tag = as as 'div';
   const ref = useRef<HTMLDivElement>(null);
-  const live = useLive();
-  const wide = useWide();
+  const hydrated = useHydrated();
+  const reduce = useReducedMotion();
   const [phase, setPhase] = useState<Phase>('still');
-  const [instant, setInstant] = useState(false);
   const decided = useRef(false);
 
-  // Hidden only if it is entirely below the screen once Motion is live, so nothing on screen flickers.
+  // Nothing changes on the server, during hydration or with reduced motion. After hydration it is
+  // hidden only if it is entirely below the screen, so nothing on screen ever flickers.
   useLayoutEffect(() => {
-    if (!live || decided.current || !ref.current) return;
+    if (!hydrated || reduce || decided.current || !ref.current) return;
     decided.current = true;
     if (ref.current.getBoundingClientRect().top >= window.innerHeight) setPhase('hidden');
-  }, [live]);
+  }, [hydrated, reduce]);
 
   const ownTrigger = groupTriggered === undefined;
-  // Reduced motion switched on while it waits shows it at once.
-  const waiting = phase === 'hidden' && live && !groupTriggered;
-  const showNow = () => {
-    setInstant(true);
-    setPhase('revealing');
-  };
+  useEffect(() => {
+    if (phase !== 'hidden' || !ownTrigger || !ref.current) return;
+    return watch(ref.current, () => setPhase('revealing'));
+  }, [phase, ownTrigger]);
+
+  // Once its animations (its own and its parts') have finished, it counts as shown.
+  const revealing = phase === 'revealing' || (phase === 'hidden' && groupTriggered === true);
+  useEffect(() => {
+    if (!revealing || !ref.current) return;
+    let current = true;
+    const running = ref.current
+      .getAnimations({ subtree: true })
+      .filter((animation) => animation.effect?.getTiming().iterations !== Infinity);
+    void Promise.all(running.map((animation) => animation.finished.catch(() => undefined))).then(
+      () => current && setPhase('shown'),
+    );
+    return () => {
+      current = false;
+    };
+  }, [revealing]);
 
   return (
-    <Element
+    <Tag
       ref={ref}
       {...props}
       // "hidden" until the reveal has finished, so tests never check half-transparent text.
       data-reveal={phase === 'hidden' || phase === 'revealing' ? 'hidden' : 'shown'}
-      variants={revealVariants}
-      custom={{ rise: wide, delay: ownTrigger ? 0 : delay, instant: instant || !live, seconds }}
-      animate={phase === 'still' ? undefined : waiting ? 'hidden' : 'shown'}
-      viewport={ownTrigger && waiting ? viewport : undefined}
-      onViewportEnter={ownTrigger && waiting ? () => setPhase('revealing') : undefined}
-      // Anything inside that takes focus while hidden shows at once.
-      onFocus={waiting ? showNow : undefined}
-      onAnimationComplete={(definition) => {
-        if (definition === 'shown') setPhase('shown');
-      }}
+      data-revealing={revealing ? '' : undefined}
+      data-reveal-parts={parts ? '' : undefined}
+      data-reveal-item={item ? '' : undefined}
+      style={
+        revealing && !ownTrigger && index
+          ? ({ '--reveal-index': index } as CSSProperties)
+          : undefined
+      }
+      // Anything inside that takes keyboard focus while it waits or reveals shows at once, so focus never
+      // rests on something faint or moving. Focus from a click (not :focus-visible) leaves it be, so
+      // nothing jumps from under the pointer between press and release.
+      onFocus={
+        phase === 'hidden' || phase === 'revealing'
+          ? (event) => {
+              if (event.target.matches(':focus-visible')) setPhase('shown');
+            }
+          : undefined
+      }
     >
       {children}
-    </Element>
+    </Tag>
   );
 }
 
-// A section or block that fades in and rises 32px the first time it comes into view.
-export function Reveal(props: RevealProps) {
-  return <RevealElement {...props} seconds={duration.enter} />;
+// A section or block that fades in and rises 32px over 500ms the first time it comes into view (on
+// phones it fades in place). With `parts`, only its [data-reveal-part] children fade and rise, so a
+// coloured band can stay put while its text comes in.
+export function Reveal(props: RevealProps & { parts?: boolean }) {
+  return <RevealElement {...props} />;
 }
 
 interface Group {
@@ -147,61 +171,55 @@ interface Group {
 
 const GroupContext = createContext<Group | null>(null);
 
-// A row of items, led by its heading, that reveal one after another (120ms apart) from md once 10% of
-// the group is in view. Below md each item reveals on its own as it arrives.
+// A heading and a row of items that reveal one after another, 120ms apart, once 10% of the group is
+// in view (from md). Below md each item reveals on its own as it arrives. The group itself never
+// fades, so its background stays put.
 export function RevealGroup({ as = 'div', children, ...props }: RevealProps) {
-  const Element = elements[as] as typeof m.div;
-  const live = useLive();
+  const Tag = as as 'div';
+  const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
+  const reduce = useReducedMotion();
   const wide = useWide();
   const [triggered, setTriggered] = useState(false);
-  const watch = live && wide && !triggered;
+
+  useEffect(() => {
+    if (!hydrated || reduce || !wide || triggered || !ref.current) return;
+    return watch(ref.current, () => setTriggered(true));
+  }, [hydrated, reduce, wide, triggered]);
+
   return (
     <GroupContext.Provider value={{ stagger: wide, triggered }}>
-      <Element
-        {...props}
-        viewport={watch ? viewport : undefined}
-        onViewportEnter={watch ? () => setTriggered(true) : undefined}
-      >
+      <Tag ref={ref} {...props}>
         {children}
-      </Element>
+      </Tag>
     </GroupContext.Provider>
   );
 }
 
-// One item in a RevealGroup: index 0 is the heading, then each card in order. Outside a group it
-// renders as a plain element.
+// One item in a RevealGroup, over 600ms: index 0 is the heading, then each card in order. Outside a
+// group it renders as a plain element.
 export function RevealItem({ index = 0, ...props }: RevealProps & { index?: number }) {
   const group = useContext(GroupContext);
   if (!group) {
-    const { as = 'div', children, ...rest } = props;
-    const Element = elements[as] as typeof m.div;
-    return <Element {...rest}>{children}</Element>;
+    const { as: Tag = 'div', children, ...rest } = props;
+    return <Tag {...rest}>{children}</Tag>;
   }
   return (
     <RevealElement
       {...props}
-      seconds={duration.settle}
+      item
+      index={index}
       groupTriggered={group.stagger ? group.triggered : undefined}
-      delay={index * stagger}
     />
   );
 }
-
-const settleVariants: Variants = {
-  hidden: { transform: 'scale(1.06)', transition: { duration: 0 } },
-  shown: {
-    transform: 'none',
-    transition: { duration: duration.settle },
-    transitionEnd: { transform: 'none' },
-  },
-};
 
 // A photo settling into its frame as the reveal around it plays: scale 1.06 to 1, no fade. The frame
 // clips it (overflow-hidden), so its corners stay put.
 export function Settle({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <m.div className={className} variants={settleVariants}>
+    <div data-settle="" className={className}>
       {children}
-    </m.div>
+    </div>
   );
 }

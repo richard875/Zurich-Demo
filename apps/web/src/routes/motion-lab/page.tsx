@@ -57,7 +57,7 @@ function Stage() {
               <li>Temporary: this page goes in Step 4</li>
             </ul>
             <div className="mt-6 [--stage-rise:24px] motion-safe:animate-stage-rise">
-              <Button variant="inverse" size="md" className="press!">
+              <Button variant="inverse" size="md">
                 Get a quote
               </Button>
             </div>
@@ -120,11 +120,7 @@ function Products() {
               {...product}
               revealIndex={index + 1}
               learnMore={{ href: '#lab-products', label: `Learn more about ${product.title}` }}
-              action={
-                <Button size="md" className="press!">
-                  Get an online quote
-                </Button>
-              }
+              action={<Button size="md">Get an online quote</Button>}
             />
           ))}
         </div>
@@ -276,7 +272,7 @@ function Steps() {
               action={
                 <div className="flex flex-wrap gap-4">
                   {step < 3 && (
-                    <Button size="md" className="press! nudge" onClick={() => go(step + 1)}>
+                    <Button size="md" onClick={() => go(step + 1)}>
                       Continue
                       <ZurichIcon name="arrow-right:line" />
                     </Button>
@@ -285,7 +281,7 @@ function Steps() {
                     <Button
                       variant="outline"
                       size="md"
-                      className="press! nudge"
+
                       onClick={() => go(step - 1)}
                     >
                       <ZurichIcon name="arrow-left:line" />
@@ -319,7 +315,7 @@ function Loading() {
         <Button
           variant="outline"
           size="md"
-          className="press!"
+
           onClick={() => {
             setReloaded(true);
             setLoading(true);
@@ -375,7 +371,7 @@ function Pill() {
           </>
         )}
       </p>
-      <Button variant="outline" size="md" className="press!" onClick={() => setActive(!active)}>
+      <Button variant="outline" size="md" onClick={() => setActive(!active)}>
         {active ? 'Back to Processing' : 'Activate'}
       </Button>
     </Container>
@@ -389,7 +385,7 @@ function Received() {
   return (
     <Container className="grid gap-6">
       <div>
-        <Button variant="outline" size="md" className="press!" onClick={() => setRun(run + 1)}>
+        <Button variant="outline" size="md" onClick={() => setRun(run + 1)}>
           Replay
         </Button>
       </div>
@@ -398,7 +394,7 @@ function Received() {
           tone="mint"
           photo={photos.hero}
           actions={
-            <Button size="md" className="press! nudge">
+            <Button size="md">
               View my policies
               <ZurichIcon name="arrow-right:line" />
             </Button>
@@ -454,15 +450,15 @@ export default function MotionLab() {
           label="5 · Hover and press: buttons dip to 98% while pressed; arrows nudge 4px their way"
         >
           <Container className="flex flex-wrap gap-4">
-            <Button size="md" className="press! nudge">
+            <Button size="md">
               Continue
               <ZurichIcon name="arrow-right:line" />
             </Button>
-            <Button variant="outline" size="md" className="press! nudge">
+            <Button variant="outline" size="md">
               <ZurichIcon name="arrow-left:line" />
               Back
             </Button>
-            <Button variant="outline" size="md" className="press!">
+            <Button variant="outline" size="md">
               Change cover
             </Button>
           </Container>
