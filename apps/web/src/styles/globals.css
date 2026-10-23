@@ -131,7 +131,7 @@
   --ring: var(--color-zurich-blue);
 }
 
-/* Motion tokens. motion/tokens.ts mirrors them for Motion, and a test keeps the two in step. */
+/* Motion tokens. motion/tokens.ts mirrors the ones Motion needs, and a test keeps them in step. */
 :root {
   --motion-press: 100ms;
   --motion-state: 200ms;

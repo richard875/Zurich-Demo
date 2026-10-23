@@ -1,5 +1,6 @@
-// The motion tokens in styles/globals.css, for Motion: durations in seconds, easings as cubic-bezier
-// points, distances in pixels. tests/motion-tokens.test.ts keeps the two in step.
+// The motion tokens in styles/globals.css that Motion needs for the quote steps: durations in
+// seconds, easings as cubic-bezier points. Everything else moves in CSS and reads the tokens there.
+// tests/motion-tokens.test.ts keeps the two in step.
 export const ease = {
   // zurich.com.au's curve for every entrance and reveal.
   entrance: [0, 0, 0, 1],
@@ -15,11 +16,4 @@ export const duration = {
   enter: 0.5,
   settle: 0.6,
   confirm: 0.3,
-} as const;
-
-export const stagger = 0.12;
-
-export const distance = {
-  rise: 32,
-  nudge: 4,
 } as const;
