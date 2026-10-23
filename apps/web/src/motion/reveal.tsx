@@ -74,9 +74,10 @@ function useWide(): boolean {
   return useSyncExternalStore(wide.subscribe, wide.matches, () => false);
 }
 
-// "still" is the server's HTML, and stays that way unless it starts below the screen. "entering" is
-// an entrance revealing as it arrives, in line with the others.
-type Phase = 'still' | 'hidden' | 'entering' | 'revealing' | 'shown';
+// "still" is the server's HTML, and stays that way unless it starts below the screen. "unseen" is not
+// shown yet (below lg the flow pages' side card waits, invisible, for the page's content). "entering"
+// is revealing as it arrives, in line with the others.
+type Phase = 'still' | 'unseen' | 'hidden' | 'entering' | 'revealing' | 'shown';
 
 // An entrance waits at most three places behind the first, so the last is done inside a second.
 const MAX_PLACE = 3;
@@ -116,9 +117,37 @@ function RevealElement({
   useLayoutEffect(() => {
     if (!hydrated || reduce || decided.current || !ref.current) return;
     decided.current = true;
-    if (ref.current.getBoundingClientRect().top >= window.innerHeight) setPhase('hidden');
+    if (getComputedStyle(ref.current).visibility === 'hidden') setPhase('unseen');
+    else if (ref.current.getBoundingClientRect().top >= window.innerHeight) setPhase('hidden');
     else if (arrives.current) setPhase('entering');
   }, [hydrated, reduce]);
+
+  // Something unseen arrives once it's shown, when what it waits for has loaded: it plays at once if
+  // it's on screen, or waits to be scrolled to. Until then it stays transparent, so it never flashes.
+  // Whatever played inside it meanwhile (an entrance on load) went unseen, so it ends there, rather
+  // than running on under the reveal.
+  useEffect(() => {
+    if (phase !== 'unseen' || !ref.current) return;
+    const element = ref.current;
+    let arrived = false;
+    const arrive = () => {
+      if (arrived || getComputedStyle(element).visibility === 'hidden') return;
+      arrived = true;
+      observer.disconnect();
+      for (const animation of element.getAnimations({ subtree: true })) {
+        if (animation.effect?.getTiming().iterations !== Infinity) animation.finish();
+      }
+      setPhase(element.getBoundingClientRect().top >= window.innerHeight ? 'hidden' : 'entering');
+    };
+    const observer = new MutationObserver(arrive);
+    observer.observe(document.body, { childList: true, subtree: true });
+    // It may be shown already, if what it waited for arrived while this was being set up.
+    const frame = requestAnimationFrame(arrive);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [phase]);
 
   const ownTrigger = groupTriggered === undefined;
   useEffect(() => {
@@ -126,6 +155,7 @@ function RevealElement({
     return watch(ref.current, () => setPhase('revealing'));
   }, [phase, ownTrigger]);
 
+  const waiting = phase === 'unseen' || phase === 'hidden';
   // Once its animations (its own and its parts') have finished, it counts as shown.
   const revealing =
     phase === 'entering' ||
@@ -156,7 +186,7 @@ function RevealElement({
       ref={ref}
       {...props}
       // "hidden" until the reveal has finished, so tests never check half-transparent text.
-      data-reveal={phase === 'hidden' || revealing ? 'hidden' : 'shown'}
+      data-reveal={waiting || revealing ? 'hidden' : 'shown'}
       data-revealing={revealing ? '' : undefined}
       data-reveal-parts={parts ? '' : undefined}
       data-reveal-item={item ? '' : undefined}
@@ -165,7 +195,7 @@ function RevealElement({
       // rests on something faint or moving. Focus from a click (not :focus-visible) leaves it be, so
       // nothing jumps from under the pointer between press and release.
       onFocus={
-        phase === 'hidden' || revealing
+        waiting || revealing
           ? (event) => {
               if (event.target.matches(':focus-visible')) setPhase('shown');
             }
