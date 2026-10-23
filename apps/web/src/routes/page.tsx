@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
+import { useLocation } from '@modern-js/runtime/router';
 import { Articles } from '@/home/articles';
 import { Benefits } from '@/home/benefits';
 import { BrandBand, IntroStatement } from '@/home/brand-band';
@@ -10,6 +12,14 @@ import { HomeLoanPromo, TalkToUs } from '@/home/promos';
 
 // Zurich Direct's home page content in zurich.com.au's design language, in the wireframe's order.
 export default function Index() {
+  // Start at the top on every visit, the header's logo included, even from this page: each
+  // navigation gets a new key, though the URL doesn't change.
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as cleanup.
+  const { key } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [key]);
+
   return (
     <>
       <Helmet>
