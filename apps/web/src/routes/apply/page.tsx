@@ -86,7 +86,10 @@ function Apply() {
 
 export default function ApplyPage() {
   // Start at the top, as the quote steps do, rather than where "Apply now" was on the summary.
-  useEffect(() => window.scrollTo({ top: 0 }), []);
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as cleanup.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   return (
     <>
