@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
 import { Link, useNavigate } from '@modern-js/runtime/router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -84,6 +85,9 @@ function Apply() {
 }
 
 export default function ApplyPage() {
+  // Start at the top, as the quote steps do, rather than where "Apply now" was on the summary.
+  useEffect(() => window.scrollTo({ top: 0 }), []);
+
   return (
     <>
       <Helmet>
