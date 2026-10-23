@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [appTools(), bffPlugin()],
   server: {
     ssr: true,
+    // Its logger prints two debug lines for every request, static files and health checks
+    // included. The app logs requests itself, and takes Modern.js's warnings and errors from its
+    // monitors (server/request-log.ts).
+    logger: false,
   },
   output: {
     // Don't emit application source maps into the public static directory.

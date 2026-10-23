@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -6,12 +7,14 @@ import {
   type ApplicationForm as ApplicationFormValues,
 } from '@shared/application';
 import { describedBy, FieldError, FormField, FormSection } from '@/components/form-field';
+import { InfoTip } from '@/components/info-tip';
 import { ErrorAlert } from '@/components/message-panel';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { randomDemoName } from './demo-names';
 
 export function ApplicationForm({
   pending,
@@ -22,27 +25,26 @@ export function ApplicationForm({
   error: string | null;
   onSubmit: (values: ApplicationFormValues) => void;
 }) {
+  // Picked once per visit to the form. It's only shown: it isn't one of the form's values, so it's
+  // never sent, and the BFF turns away an application that carries a name.
+  const [demoName] = useState(randomDemoName);
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApplicationFormValues>({
-    resolver: zodResolver(applicationFormSchema),
-    defaultValues: { firstName: '' },
-  });
+  } = useForm<ApplicationFormValues>({ resolver: zodResolver(applicationFormSchema) });
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="grid gap-10">
       <FormSection>
-        <FormField id="first-name" label="First name" error={errors.firstName?.message}>
+        <FormField id="first-name" label="First name">
           {(controlProps) => (
-            <Input
-              autoComplete="given-name"
-              className="sm:max-w-xs"
-              {...controlProps}
-              {...register('firstName')}
-            />
+            <div className="flex items-center gap-2">
+              <Input readOnly value={demoName} className="sm:max-w-xs" {...controlProps} />
+              <InfoTip label="Why can't I change my name?">
+                This is a demo, so we've picked a made-up name to keep real ones out of it.
+              </InfoTip>
+            </div>
           )}
         </FormField>
       </FormSection>

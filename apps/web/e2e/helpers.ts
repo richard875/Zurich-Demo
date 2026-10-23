@@ -46,7 +46,11 @@ export async function signInAndApply(page: Page, { answerYes = false, checkAxe =
   await dialog.getByRole('button', { name: 'Continue' }).click();
 
   await expect(heading(page, 'Apply for cover')).toBeVisible();
-  await page.getByLabel('First name').fill('Sam');
+  const firstName = page.getByLabel('First name');
+  await expect(firstName).toHaveValue(/^[A-Z][a-z]+$/);
+  await expect(firstName).not.toBeEditable();
+  await page.getByRole('button', { name: "Why can't I change my name?" }).hover();
+  await expect(page.getByRole('tooltip')).toContainText('made-up name');
   const questions = page.getByRole('group', { name: /^\d\. / });
   await expect(questions).toHaveCount(4);
   for (const [index, question] of (await questions.all()).entries()) {

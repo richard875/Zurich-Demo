@@ -46,6 +46,33 @@ test('a yes to a health question is referred for review', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'View my policies' })).toHaveCount(0);
 });
 
+test('the BFF turns away an application that carries a name', async ({ request, baseURL }) => {
+  const headers = { origin: baseURL ?? '' };
+  const signIn = await request.post('/api/session', {
+    headers,
+    data: { visitorId: 'e2eNameCheck01' },
+  });
+  expect(signIn.ok()).toBe(true);
+  const application = {
+    quoteId: '6f1c2f6e-3c1a-4b8e-9f0a-2d4c6e8a0b1c',
+    answers: {
+      heartCancerStroke: false,
+      undiagnosedSymptoms: false,
+      hazardousWork: false,
+      overseasStay: false,
+    },
+  };
+  const named = await request.post('/api/applications', {
+    headers,
+    data: { ...application, firstName: 'Sam' },
+  });
+  expect(named.status()).toBe(400);
+  // Without the name it gets past validation, to the unknown quote.
+  expect((await request.post('/api/applications', { headers, data: application })).status()).toBe(
+    404,
+  );
+});
+
 test.describe('when mock MuleSoft is down', () => {
   test.use({ baseURL: failingServerUrl });
 

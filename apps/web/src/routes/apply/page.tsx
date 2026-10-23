@@ -59,9 +59,9 @@ function Apply() {
       <ApplicationForm
         pending={application.isPending}
         error={application.error?.message ?? null}
-        onSubmit={({ firstName, answers }) =>
+        onSubmit={({ answers }) =>
           application.mutate(
-            { quoteId: quote.quoteId, firstName, answers },
+            { quoteId: quote.quoteId, answers },
             {
               onSuccess: ({ status }) => {
                 reset();

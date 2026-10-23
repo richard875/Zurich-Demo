@@ -1,9 +1,11 @@
-import type { MiddlewareHandler } from '@modern-js/server-runtime';
+import { createHmac } from 'node:crypto';
+import type { IncomingMessage } from 'node:http';
+import type { Context, MiddlewareHandler } from '@modern-js/server-runtime';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
 import { getEnv } from '../api/lambda/_lib/env';
 import { MULESOFT_AUTH_HEADER, validMulesoftToken } from '../api/lambda/_lib/mulesoft-auth';
-import { tokenBucket } from './request-limits';
+import { perVisitor } from './request-limits';
 
 const isStatic = (path: string) => path.startsWith('/static/');
 const fingerprintedAsset = /\.[a-f0-9]{8,}\.[a-z0-9]+$/i;
@@ -105,10 +107,30 @@ export const requestSize: MiddlewareHandler = async (c, next) => {
   return limitBody(c, next);
 };
 
-const allowRead = tokenBucket(180, 3);
-const allowWrite = tokenBucket(60, 1);
+// The load balancer appends the address each request came from to X-Forwarded-For, so the last
+// entry is the visitor's own and can't be forged; earlier entries can. Local and CI runs have no
+// load balancer and use the socket's address.
+export function visitorAddress(c: Context): string {
+  const forwarded = c.req.header('x-forwarded-for')?.split(',').at(-1)?.trim();
+  if (forwarded) return forwarded;
+  const env = c.env as { node?: { req?: IncomingMessage } } | undefined;
+  return env?.node?.req?.socket.remoteAddress ?? 'unknown';
+}
+
+// Logs name a visitor by a keyed hash of their address: enough to tell visitors apart, without
+// writing addresses down.
+const visitorTag = (address: string) =>
+  createHmac('sha256', getEnv().SESSION_SECRET)
+    .update(`zurich-demo:visitor:${address}`)
+    .digest('hex')
+    .slice(0, 12);
+
+// Each visitor has their own allowance, so one busy script can't use up everyone else's: 900 reads
+// with 15 more a second, and 300 writes with 5 more a second.
+const allowRead = perVisitor(900, 15);
+const allowWrite = perVisitor(300, 5);
 export const apiRateLimit: MiddlewareHandler = async (c, next) => {
-  const path = c.req.path;
+  const { method, path } = c.req;
   // Internal calls have already authenticated; health checks must stay available under load.
   if (
     !path.startsWith('/api/') ||
@@ -117,8 +139,16 @@ export const apiRateLimit: MiddlewareHandler = async (c, next) => {
   ) {
     return next();
   }
-  const retryAfter = ['GET', 'HEAD'].includes(c.req.method) ? allowRead() : allowWrite();
+  const visitor = visitorAddress(c);
+  const allow = ['GET', 'HEAD'].includes(method) ? allowRead : allowWrite;
+  const { retryAfter, refusalsToLog } = allow(visitor);
   if (retryAfter) {
+    if (refusalsToLog) {
+      c.get('logger').warn(
+        { visitor: visitorTag(visitor), method, path, refusals: refusalsToLog, retryAfter },
+        'rate limited',
+      );
+    }
     c.header('Retry-After', String(retryAfter));
     return c.json({ message: 'Too many requests. Please try again in a moment.' }, 429);
   }
