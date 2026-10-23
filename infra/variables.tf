@@ -25,3 +25,12 @@ variable "github_repository" {
   type        = string
   default     = "richard875@53744839/Zurich-Demo@1428594295"
 }
+
+variable "aws_account_id" {
+  description = "Only this isolated demo account may be changed. CI derives it from the deploy role ARN."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9]{12}$", var.aws_account_id))
+    error_message = "aws_account_id must contain exactly 12 digits."
+  }
+}

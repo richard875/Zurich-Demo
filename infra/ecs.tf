@@ -81,7 +81,7 @@ resource "aws_iam_role" "task" {
 
 data "aws_iam_policy_document" "task" {
   statement {
-    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query", "dynamodb:UpdateItem"]
+    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query"]
     resources = [aws_dynamodb_table.main.arn]
   }
 
@@ -104,6 +104,7 @@ resource "aws_iam_role_policy_attachment" "task_xray" {
 
 locals {
   web_environment = {
+    APP_ORIGIN                  = "https://${var.domain_name}"
     AWS_REGION                  = var.region
     DYNAMODB_TABLE              = aws_dynamodb_table.main.name
     EVENTS_MODE                 = "sns"
@@ -134,9 +135,14 @@ resource "aws_ecs_task_definition" "web" {
 
   container_definitions = jsonencode([
     {
-      name         = "web"
-      image        = "${aws_ecr_repository.web.repository_url}:${var.image_tag}"
-      essential    = true
+      name                   = "web"
+      image                  = "${aws_ecr_repository.web.repository_url}:${var.image_tag}"
+      essential              = true
+      readonlyRootFilesystem = true
+      linuxParameters = {
+        initProcessEnabled = true
+        capabilities       = { drop = ["ALL"] }
+      }
       portMappings = [{ containerPort = 8080, protocol = "tcp" }]
       environment  = [for key, value in local.web_environment : { name = key, value = value }]
       secrets      = [{ name = "SESSION_SECRET", valueFrom = aws_ssm_parameter.session_secret.arn }]

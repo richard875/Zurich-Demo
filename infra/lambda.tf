@@ -90,6 +90,7 @@ resource "aws_lambda_function" "policy_issuer" {
 }
 
 resource "aws_lambda_event_source_mapping" "policy_issuer" {
+  # Keep on-demand polling: a maximum-concurrency setting disables SQS's cheaper idle polling.
   event_source_arn        = aws_sqs_queue.policy_issuer.arn
   function_name           = aws_lambda_function.policy_issuer.arn
   batch_size              = 10

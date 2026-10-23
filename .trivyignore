@@ -1,6 +1,7 @@
 # One reason per suppression. CI fails on HIGH and CRITICAL only.
 
-# braces: build-time glob matching (fast-glob via Modern.js and shadcn). No fixed release yet; not in the runtime image.
+# braces: no fixed release yet. Modern.js also bundles glob helpers into the runtime image;
+# their patterns come from build/server configuration, not customer inputs. Retained demo exception.
 CVE-2026-93687
 
 # Old browserslist, js-yaml and nanoid compiled into @modern-js/utils 3.10.1 (the latest), so they can't be upgraded here.

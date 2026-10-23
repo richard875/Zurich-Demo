@@ -3,6 +3,7 @@
 import type { Logger } from 'pino';
 import type { z } from 'zod';
 import { getEnv } from './env';
+import { MULESOFT_AUTH_HEADER, mulesoftToken } from './mulesoft-auth';
 
 export type MulesoftFailure =
   'timeout' | 'unavailable' | 'rejected' | 'invalid-response' | 'network';
@@ -35,9 +36,14 @@ async function attempt<S extends z.ZodTypeAny>(
   try {
     response = await fetchImpl(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-correlation-id': correlationId },
+      headers: {
+        'content-type': 'application/json',
+        'x-correlation-id': correlationId,
+        [MULESOFT_AUTH_HEADER]: mulesoftToken(getEnv().SESSION_SECRET),
+      },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(timeoutMs),
+      redirect: 'error',
     });
   } catch (error) {
     const timedOut = error instanceof DOMException && error.name === 'TimeoutError';

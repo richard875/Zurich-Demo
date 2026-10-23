@@ -12,6 +12,7 @@ export const logger = pino({
       'authorization',
       'headers.cookie',
       'headers.authorization',
+      'headers["x-mulesoft-token"]',
       'firstName',
       '*.firstName',
       'answers',
