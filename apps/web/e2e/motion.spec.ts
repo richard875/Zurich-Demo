@@ -56,6 +56,49 @@ test('after scrolling to the end of the home page, every reveal has shown', asyn
   expect(await faint(page)).toEqual([]);
 });
 
+// Frozen a quarter of the way in, a reveal is part faded in and part risen, and its photo is still
+// settling. (If its waiting styles stayed on while it played, it would play invisibly from start to
+// end, then appear all at once.)
+test('a block coming into view fades, rises and settles in, rather than appearing at the end', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const talk = page.getByRole('region', { name: 'Want to talk to us?' });
+  await expect(talk).toHaveAttribute('data-reveal', 'hidden');
+  const quarterWay = await talk.evaluate(async (section) => {
+    section.scrollIntoView({ block: 'center' });
+    const animations = await new Promise<Animation[]>((resolve) => {
+      const started = () => {
+        if (section.hasAttribute('data-revealing'))
+          resolve(section.getAnimations({ subtree: true }));
+        else requestAnimationFrame(started);
+      };
+      started();
+    });
+    for (const animation of animations) {
+      animation.pause();
+      animation.currentTime = Number(animation.effect?.getTiming().duration) / 4;
+    }
+    const photo = section.querySelector('[data-settle]');
+    const block = new DOMMatrix(getComputedStyle(section).transform);
+    const settle = new DOMMatrix(photo ? getComputedStyle(photo).transform : 'none');
+    const state = {
+      opacity: Number(getComputedStyle(section).opacity),
+      rise: block.m42,
+      scale: settle.a,
+    };
+    for (const animation of animations) animation.play();
+    return state;
+  });
+  expect(quarterWay.opacity).toBeGreaterThan(0.2);
+  expect(quarterWay.opacity).toBeLessThan(1);
+  expect(quarterWay.rise).toBeGreaterThan(0);
+  expect(quarterWay.rise).toBeLessThan(32);
+  expect(quarterWay.scale).toBeGreaterThan(1);
+  expect(quarterWay.scale).toBeLessThan(1.06);
+  await expect(talk).toHaveAttribute('data-reveal', 'shown');
+});
+
 test('with reduced motion, the hero is in place at once and nothing waits', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   // Notes any reveal that is ever hidden, from the first moment the page exists.

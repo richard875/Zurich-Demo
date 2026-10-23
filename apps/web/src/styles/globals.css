@@ -221,7 +221,9 @@
      32px low; when it comes into view it fades and rises in, a group's items 120ms apart. On phones
      it fades in place. Sections take 500ms, a group's items 600ms. With `parts`, only its
      [data-reveal-part] children move; photos marked [data-settle] settle from 1.06 and band shapes
-     [data-reveal-shapes] slide in as the hero's do. Nothing waits with reduced motion or in print. */
+     [data-reveal-shapes] slide in as the hero's do. Nothing waits with reduced motion or in print.
+     The waiting styles come off as it starts revealing: an animation runs to the element's own
+     values, so left on, they would make it play invisibly and then appear all at once. */
   [data-reveal] {
     --reveal-rise: 0px;
     --reveal-duration: var(--motion-enter);
@@ -236,17 +238,17 @@
   }
 
   @media screen and (prefers-reduced-motion: no-preference) {
-    [data-reveal='hidden']:not([data-reveal-parts]),
-    [data-reveal='hidden'] [data-reveal-part] {
+    [data-reveal='hidden']:not([data-revealing]):not([data-reveal-parts]),
+    [data-reveal='hidden']:not([data-revealing]) [data-reveal-part] {
       opacity: 0;
       transform: translateY(var(--reveal-rise));
     }
 
-    [data-reveal='hidden'] [data-settle] {
+    [data-reveal='hidden']:not([data-revealing]) [data-settle] {
       transform: scale(1.06);
     }
 
-    [data-reveal='hidden'] [data-reveal-shapes] {
+    [data-reveal='hidden']:not([data-revealing]) [data-reveal-shapes] {
       opacity: 0;
     }
 
