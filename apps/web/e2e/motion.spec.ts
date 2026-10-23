@@ -110,14 +110,19 @@ const policies = Array.from({ length: 5 }, (_, i) => ({
   monthlyPremiumCents: 4250 + i * 300,
 }));
 
-test('policy cards on screen come in one after another as the list arrives, the rest as they are scrolled to', async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
+// Signed in, with those policies, without touching the database.
+async function signedInWithPolicies(page: Page) {
   await page.route('**/api/session', (route) =>
     route.fulfill({ json: { signedIn: true, customerId: 'motion', deviceLabel: 'Customer m0t1' } }),
   );
   await page.route('**/api/policies', (route) => route.fulfill({ json: { policies } }));
+}
+
+test('policy cards on screen come in one after another as the list arrives, the rest as they are scrolled to', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await signedInWithPolicies(page);
   // Notes each card's reveal as it starts: which card, and how long it waits.
   await page.addInitScript(() => {
     const scope = window as unknown as { cardReveals: { card: number; delay: unknown }[] };
@@ -146,6 +151,19 @@ test('policy cards on screen come in one after another as the list arrives, the 
     { card: 1, delay: 120 },
   ]);
   await expect(cards.last()).toHaveAttribute('data-reveal', 'hidden');
+  // The side card is there from the start, beside the band, so it comes in as the page opens, just
+  // after the band's text, and never waits.
+  const side = page.locator('[data-slot="flow-aside"] > [data-reveal]');
+  await expect(side).toHaveAttribute('data-reveal', 'shown');
+  expect(
+    await side
+      .getByRole('region', { name: 'Want to talk to us?' })
+      .evaluate((card) =>
+        card
+          .getAnimations()
+          .map((a) => [(a as CSSAnimation).animationName, a.effect?.getTiming().delay]),
+      ),
+  ).toEqual([['stage-rise', 320]]);
 
   await scrollThrough(page);
   await expect(page.locator('[data-reveal="hidden"]')).toHaveCount(0);
@@ -157,6 +175,49 @@ test('policy cards on screen come in one after another as the list arrives, the 
   await animationsDone(page.getByRole('main'));
   expect(await faint(page)).toEqual([]);
 });
+
+// Below lg the side card follows the page's content, which loads after the page opens (the session,
+// the saved answers, the policies). Wherever it shows, it comes in once it's shown, never before.
+for (const path of ['/quote', '/apply', '/policies']) {
+  test(`at 375px, the Talk card on ${path} comes in once it is shown, never before`, async ({
+    page,
+  }) => {
+    await signedInWithPolicies(page);
+    await page.setViewportSize({ width: 375, height: 812 });
+    // Notes if the side card is ever on show before its reveal starts (visible, and not
+    // transparent), and whether its reveal ever starts.
+    await page.addInitScript(() => {
+      const scope = window as unknown as { sideEarly: boolean; sideRevealed: boolean };
+      scope.sideEarly = false;
+      scope.sideRevealed = false;
+      new MutationObserver(() => {
+        const side = document.querySelector('[data-slot="flow-aside"] > [data-reveal]');
+        if (!side || side.getAttribute('data-reveal') === 'shown') return;
+        if (side.hasAttribute('data-revealing')) scope.sideRevealed = true;
+        if (scope.sideRevealed) return;
+        const { visibility, opacity } = getComputedStyle(side);
+        if (visibility === 'visible' && Number(opacity) > 0) scope.sideEarly = true;
+      }).observe(document, { subtree: true, childList: true, attributes: true });
+    });
+
+    await page.goto(path);
+    await expect(page.locator('main [data-slot="loading-panel"]')).toHaveCount(0);
+    await scrollThrough(page);
+    const side = page.locator('[data-slot="flow-aside"] > [data-reveal]');
+    await expect(side).toHaveAttribute('data-reveal', 'shown');
+    expect(
+      await page.evaluate(() => {
+        const { sideEarly, sideRevealed } = window as unknown as {
+          sideEarly: boolean;
+          sideRevealed: boolean;
+        };
+        return { sideEarly, sideRevealed };
+      }),
+    ).toEqual({ sideEarly: false, sideRevealed: true });
+    await animationsDone(side);
+    expect(await side.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+  });
+}
 
 test('with reduced motion, the hero is in place at once and nothing waits', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
