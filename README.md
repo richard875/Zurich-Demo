@@ -2,7 +2,7 @@
 
 ![Zurich Direct, a design concept](docs/readme-top.png)
 
-[How it was built with AI](docs/AI_MANIFEST.md) · [Key decisions](docs/decisions.md)
+[How I use AI](docs/AI_MANIFEST.md) · [Key Decisions](docs/decisions.md)
 
 Zurich Direct's life insurance and income protection site, redesigned in zurich.com.au's design language and built end to end: a server-rendered React front end, a BFF in front of mock MuleSoft APIs, an event-driven policy issuer on AWS, Terraform and a CI/CD pipeline that tests, scans and deploys every push to main.
 
