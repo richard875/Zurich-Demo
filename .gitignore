@@ -1,6 +1,3 @@
-# Planning files, never committed
-doc/
-
 node_modules/
 .env
 .env.*
