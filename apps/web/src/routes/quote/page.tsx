@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
-import { useNavigate, useSearchParams } from '@modern-js/runtime/router';
+import { useLocation, useNavigate, useSearchParams } from '@modern-js/runtime/router';
 import { useMutation } from '@tanstack/react-query';
 import { Headline } from '@/components/headline';
 import { LoadingPanel } from '@/components/message-panel';
@@ -72,13 +72,20 @@ export default function QuotePage() {
     if (loaded && allowed !== requested) navigate(`/quote?step=${allowed}`, { replace: true });
   }, [loaded, allowed, requested, navigate]);
 
+  // Start at the top on every visit and every step, "Get a quote" included, even from step 1 itself:
+  // each navigation gets a new key, though the URL may not change.
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as cleanup.
+  const { key } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [key]);
+
   // Move focus to the new heading when the step changes, so screen readers announce it.
   const headingRef = useRef<HTMLHeadingElement>(null);
   const shownStep = useRef(step);
   useEffect(() => {
     if (shownStep.current === step) return;
     shownStep.current = step;
-    window.scrollTo({ top: 0 });
     headingRef.current?.focus({ preventScroll: true });
   }, [step]);
 
