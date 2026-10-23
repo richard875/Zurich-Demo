@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
 import { defineServerConfig, getCookie, type MiddlewareHandler } from '@modern-js/server-runtime';
 import { getEnv } from '../api/lambda/_lib/env';
 import { logger } from '../api/lambda/_lib/logger';
 import { SESSION_COOKIE, verifySession } from '../api/lambda/_lib/session';
+import { requestLog } from './request-log';
 import {
   apiRateLimit,
   internalMulesoft,
@@ -10,41 +10,6 @@ import {
   responseSecurity,
   sameOrigin,
 } from './security';
-
-const safeCorrelationId = /^[\w-]{8,64}$/;
-
-// Reuses a caller's x-correlation-id (e.g. the BFF calling mock MuleSoft) or starts a new one,
-// and gives the request a logger that stamps it on every line.
-const correlation: MiddlewareHandler = async (c, next) => {
-  const incoming = c.req.header('x-correlation-id');
-  const correlationId = incoming && safeCorrelationId.test(incoming) ? incoming : randomUUID();
-  const log = logger.child({ correlationId });
-  c.set('correlationId', correlationId);
-  c.set('logger', log);
-
-  const started = performance.now();
-  await next();
-  c.header('x-correlation-id', correlationId);
-
-  const quietRead =
-    c.req.method === 'GET' && ['/api/session', '/api/policies'].includes(c.req.path) && c.res.ok;
-  if (
-    c.req.path.startsWith('/api/') &&
-    c.req.path !== '/api/health' &&
-    !quietRead &&
-    c.res.status !== 429
-  ) {
-    log.info(
-      {
-        method: c.req.method,
-        path: c.req.path,
-        status: c.res.status,
-        durationMs: Math.round(performance.now() - started),
-      },
-      'request',
-    );
-  }
-};
 
 // Pairs with the robots meta tag so no page or API response gets indexed.
 const noIndex: MiddlewareHandler = async (c, next) => {
@@ -75,7 +40,7 @@ export default defineServerConfig({
   middlewares: [
     // Static serving can finish before ordinary middleware; this must wrap it too.
     { name: 'response-security', order: 'pre', handler: responseSecurity },
-    { name: 'correlation', handler: correlation },
+    { name: 'request-log', handler: requestLog(logger) },
     { name: 'no-index', handler: noIndex },
     { name: 'internal-mulesoft', handler: internalMulesoft },
     { name: 'same-origin', handler: sameOrigin },

@@ -41,12 +41,7 @@ export const post = Api(Post('/applications'), Data(applicationRequestSchema), a
     }
 
     const status = underwriting.data.decision === 'ACCEPT' ? 'PROCESSING' : 'REFERRED';
-    const { applicationId, sk } = await saveApplication({
-      customerId,
-      quote,
-      firstName: data.firstName,
-      status,
-    });
+    const { applicationId, sk } = await saveApplication({ customerId, quote, status });
     if (status === 'PROCESSING') {
       await publishApplicationSubmitted(
         { type: 'ApplicationSubmitted', customerId, sk, applicationId, correlationId },

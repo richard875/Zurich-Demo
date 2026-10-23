@@ -6,11 +6,10 @@ import { getDb, tableName } from './dynamo';
 
 const customerKey = (customerId: string) => `CUSTOMER#${customerId}`;
 
-// The first name is stored with the application but never logged. Health answers aren't stored.
+// An application holds the cover and its price, never a name or the health answers.
 export async function saveApplication(input: {
   customerId: string;
   quote: Quote;
-  firstName: string;
   status: 'PROCESSING' | 'REFERRED';
 }): Promise<{ applicationId: string; sk: string }> {
   const applicationId = randomUUID();
@@ -26,7 +25,6 @@ export async function saveApplication(input: {
         SK: sk,
         applicationId,
         quoteId: input.quote.quoteId,
-        firstName: input.firstName,
         lifeCover: input.quote.life.sumInsured,
         incomeProtection: input.quote.incomeProtection?.monthlyBenefit ?? null,
         monthlyPremiumCents: input.quote.monthlyPremiumCents,

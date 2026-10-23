@@ -34,26 +34,22 @@ export const healthAnswersSchema = z.object({
   overseasStay: answer,
 }) satisfies z.ZodType<Record<HealthQuestionId, boolean>>;
 
-const firstNameSchema = z
-  .string()
-  .trim()
-  .min(1, 'Enter your first name')
-  .max(40, 'Use 40 characters or fewer')
-  .regex(/^\p{L}[\p{L}' -]*$/u, 'Use letters, spaces, hyphens or apostrophes');
-
+// The demo takes no names: the form shows a made-up one (src/apply/demo-names.ts) that it never sends.
 export const applicationFormSchema = z.object({
-  firstName: firstNameSchema,
   answers: healthAnswersSchema,
   declaration: z.literal(true, {
     errorMap: () => ({ message: 'Tick the box to confirm your answers' }),
   }),
 });
 
-export const applicationRequestSchema = z.object({
-  quoteId: z.string().uuid(),
-  firstName: firstNameSchema,
-  answers: healthAnswersSchema,
-});
+// Strict, so a request carrying anything more, such as a first name, is turned away with a 400
+// rather than quietly trimmed.
+export const applicationRequestSchema = z
+  .object({
+    quoteId: z.string().uuid(),
+    answers: healthAnswersSchema,
+  })
+  .strict();
 
 export const applicationResultSchema = z.object({
   applicationId: z.string().uuid(),

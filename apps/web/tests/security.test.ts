@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { Logger } from 'pino';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getEnv } from '../api/lambda/_lib/env';
 import { mulesoftToken, validMulesoftToken } from '../api/lambda/_lib/mulesoft-auth';
-import { tokenBucket } from '../server/request-limits';
+import { perVisitor, tokenBucket } from '../server/request-limits';
 import {
   apiRateLimit,
   internalMulesoft,
@@ -146,22 +147,71 @@ describe('same-origin check', () => {
   });
 });
 
-describe('cost protection', () => {
-  it('returns Retry-After when API traffic is excessive, while keeping health checks available', async () => {
-    const app = new Hono();
-    app.use(apiRateLimit);
-    app.get('/api/policies', (c) => c.json({ policies: [] }));
-    app.get('/api/health', (c) => c.json({ ok: true }));
-    let rejected = false;
-    for (let i = 0; i < 185; i += 1) {
-      const response = await app.request('/api/policies');
-      if (response.status === 429) {
-        rejected = true;
-        expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0);
-      }
+describe('rate limits', () => {
+  const warn = vi.fn();
+  const app = new Hono();
+  app.use(async (c, next) => {
+    c.set('logger', { warn } as unknown as Logger);
+    await next();
+  });
+  app.use(apiRateLimit);
+  app.get('/api/policies', (c) => c.json({ policies: [] }));
+  app.post('/api/quotes', (c) => c.json({ ok: true }));
+  app.get('/api/health', (c) => c.json({ ok: true }));
+  const from = (forwardedFor: string) => ({ headers: { 'x-forwarded-for': forwardedFor } });
+  const quote = (forwardedFor: string) =>
+    app.request('/api/quotes', { method: 'POST', ...from(forwardedFor) });
+
+  // Stopped clocks, so no tokens come back mid-test.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    warn.mockClear();
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('gives each visitor, by the address the load balancer added, 300 writes of their own', async () => {
+    for (let i = 0; i < 300; i += 1) expect((await quote('198.51.100.1')).status).toBe(200);
+    const refused = await quote('198.51.100.1');
+    expect(refused.status).toBe(429);
+    expect(refused.headers.get('retry-after')).toBe('1');
+    // Adding an earlier address doesn't make them someone else.
+    expect((await quote('203.0.113.9, 198.51.100.1')).status).toBe(429);
+    expect((await quote('198.51.100.2')).status).toBe(200);
+    expect((await app.request('/api/health', from('198.51.100.1'))).status).toBe(200);
+  });
+
+  it('gives each visitor 900 reads, and logs their first refusal without their address', async () => {
+    for (let i = 0; i < 900; i += 1) {
+      expect((await app.request('/api/policies', from('198.51.100.3'))).status).toBe(200);
     }
-    expect(rejected).toBe(true);
-    expect((await app.request('/api/health')).status).toBe(200);
+    for (let i = 0; i < 3; i += 1) {
+      expect((await app.request('/api/policies', from('198.51.100.3'))).status).toBe(429);
+    }
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0]?.[0]).toEqual({
+      visitor: expect.stringMatching(/^[0-9a-f]{12}$/),
+      method: 'GET',
+      path: '/api/policies',
+      refusals: 1,
+      retryAfter: 1,
+    });
+    expect(JSON.stringify(warn.mock.calls)).not.toContain('198.51.100.3');
+  });
+
+  it('keeps a bucket per visitor, logs refusals once a minute and forgets the least recent', () => {
+    let now = 0;
+    const allow = perVisitor(1, 1, { maxVisitors: 2, now: () => now });
+    expect(allow('a')).toEqual({ retryAfter: 0, refusalsToLog: 0 });
+    expect(allow('a')).toEqual({ retryAfter: 1, refusalsToLog: 1 });
+    expect(allow('a')).toEqual({ retryAfter: 1, refusalsToLog: 0 });
+    now += 60_000;
+    expect(allow('b')).toEqual({ retryAfter: 0, refusalsToLog: 0 });
+    expect(allow('a')).toEqual({ retryAfter: 0, refusalsToLog: 0 });
+    // The refusal counted quietly, and this one.
+    expect(allow('a')).toEqual({ retryAfter: 1, refusalsToLog: 2 });
+    // A third visitor pushes out b, the least recently seen, who comes back with a full bucket.
+    expect(allow('c').retryAfter).toBe(0);
+    expect(allow('b').retryAfter).toBe(0);
   });
 
   it('bounds bursts and refills gradually even while rejected requests continue', () => {
