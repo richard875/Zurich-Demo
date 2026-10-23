@@ -59,6 +59,7 @@ describe('API boundaries', () => {
   app.use(requestSize);
   app.post('/api/mock-mulesoft/rating', (c) => c.json({ ok: true }));
   app.post('/api/quotes', async (c) => c.json(await c.req.json()));
+  app.delete('/api/session', (c) => c.json({ signedIn: false }));
 
   it('authenticates mock calls without accepting session signatures or a different secret', async () => {
     const token = mulesoftToken('local-dev-only');
@@ -100,10 +101,27 @@ describe('API boundaries', () => {
       new Request('http://localhost/api/quotes', {
         method: 'POST',
         body: streamed,
+        headers: { 'transfer-encoding': 'chunked' },
         duplex: 'half',
       } as RequestInit),
     );
     expect(response.status).toBe(413);
+  });
+
+  it('lets a bodiless DELETE through the Proxy Modern.js wraps it in', async () => {
+    // Modern.js gives every non-GET request an (empty) body stream and wraps it in a Proxy.
+    const request = new Request('http://localhost/api/session', {
+      method: 'DELETE',
+      body: new ReadableStream({ start: (controller) => controller.close() }),
+      duplex: 'half',
+    } as RequestInit);
+    const proxied = new Proxy(request, {
+      get(target, prop) {
+        const value = Reflect.get(target, prop, target);
+        return typeof value === 'function' ? value.bind(target) : value;
+      },
+    });
+    expect((await app.request(proxied)).status).toBe(200);
   });
 
   it('accepts the small form payload and rejects request compression', async () => {
