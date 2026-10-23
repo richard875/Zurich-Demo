@@ -1,0 +1,19 @@
+# Reviewed findings from archived Zurich website reference pages in f8cbe87.
+# Fingerprints apply only to the listed commit, file, rule and line.
+# New findings, including future changes to these files, remain scanned.
+
+# Third-party Sitecore search key copied from www.zurich.com.au's browser bundle;
+# this is reference material, not a credential used by the demo application.
+f8cbe87bde67503b39b6cfd8598e41053122beef:doc/Zurich Australia/Zurich Australia_files/182-01a4ac0de0fb5e11.js:generic-api-key:1
+
+# Minified Sitecore export assignment: the match is t.DEFAULT_PLACEHOLDER_UID,
+# a JavaScript identifier following QUERY_PARAM_EDITING_SECRET, not a secret.
+f8cbe87bde67503b39b6cfd8598e41053122beef:doc/Zurich Australia/Zurich Australia_files/995-6cf54b7522f6bfad.js:generic-api-key:63
+f8cbe87bde67503b39b6cfd8598e41053122beef:doc/Zurich Direct/Zurich Direct_files/346-3eba7665db2c5428.js:generic-api-key:84
+
+# Netlify's public Core Web Vitals / RUM token embedded in the saved HTML.
+# https://answers.netlify.com/t/114502
+f8cbe87bde67503b39b6cfd8598e41053122beef:doc/Zurich Direct/Zurich Direct.html:jwt:650
+
+# Google Tag Manager click-tracking element ID: teaser-ff7d2002e6-cta-81e67e6b2e.
+f8cbe87bde67503b39b6cfd8598e41053122beef:doc/Zurich Direct/Zurich Direct_files/gtm.js:generic-api-key:14
