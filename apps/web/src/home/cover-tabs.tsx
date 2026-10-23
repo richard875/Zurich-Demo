@@ -185,7 +185,8 @@ export function CoverTabs() {
                   photo={tab.photo}
                   className="hidden aspect-350/437 w-full rounded-promo object-cover md:block"
                 />
-                <div className="max-w-160">
+                {/* As a panel is switched to, this text rises 8px while the panel fades in. */}
+                <div data-slot="tab-text" className="max-w-160">
                   <p className="text-b-20 font-light md:text-2xl md:leading-normal [&_strong]:font-medium">
                     {tab.lead}
                   </p>

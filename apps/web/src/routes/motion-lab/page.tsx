@@ -152,14 +152,9 @@ const tabs = [
 
 // 6. A switched-to panel fades in, its text rising 8px; the first panel doesn't animate on load.
 function SwitchTabs() {
-  const [switched, setSwitched] = useState(false);
   return (
     <Container>
-      <Tabs
-        defaultValue={tabs[0].value}
-        data-switched={switched ? '' : undefined}
-        onValueChange={() => setSwitched(true)}
-      >
+      <Tabs defaultValue={tabs[0].value}>
         <TabsList aria-label="Lab tabs">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value} className="cursor-pointer">

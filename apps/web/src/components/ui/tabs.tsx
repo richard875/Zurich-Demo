@@ -4,8 +4,21 @@ import * as React from 'react';
 import { Tabs as TabsPrimitive } from 'radix-ui';
 import { cn } from '@/lib/cn';
 
-function Tabs(props: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return <TabsPrimitive.Root data-slot="tabs" {...props} />;
+// After the first switch the tabs carry data-switched, and from then on the panel switched to fades in
+// (globals.css). The panel shown on load doesn't.
+function Tabs({ onValueChange, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
+  const [switched, setSwitched] = React.useState(false);
+  return (
+    <TabsPrimitive.Root
+      data-slot="tabs"
+      data-switched={switched ? '' : undefined}
+      onValueChange={(value) => {
+        setSwitched(true);
+        onValueChange?.(value);
+      }}
+      {...props}
+    />
+  );
 }
 
 function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {

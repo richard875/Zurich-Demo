@@ -4,12 +4,16 @@ import { Shapes } from '@/components/shapes';
 
 // The flow pages' opening: the home hero's Zurich Blue band, without the photo, and its shapes
 // resting on the bottom edge. 40px above the text, 64px above and below it from md, as between the
-// home page's sections.
+// home page's sections. Its stage entrance plays when it mounts, from the stylesheet alone: from
+// 0.2s each line of text rises 32px into place, the heading from 10% opacity. It stays put as the
+// quote moves between steps.
 export function PageBand({ children }: { children: ReactNode }) {
   return (
     <div className="on-blue bg-zurich-blue text-white">
       <Container className="flex flex-col md:flex-row md:items-end md:justify-between md:gap-16">
-        <div className="max-w-180 pt-10 md:py-16">{children}</div>
+        <div className="max-w-180 pt-10 motion-safe:*:animate-stage-rise md:py-16 [&>h1]:[--stage-opacity:0.1]">
+          {children}
+        </div>
         <Shapes
           arrangement="hero"
           className="mt-8 -mr-4 aspect-[267/144] h-16 shrink-0 self-end motion-safe:animate-stage-shape-slide-in sm:-mr-6 md:mt-0 md:mr-0 md:h-24"
