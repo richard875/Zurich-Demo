@@ -144,7 +144,7 @@ Animation must never cost content, accessibility or speed. These rules are teste
 
 ## Build plan and definition of done
 
-Claude Code builds this in four steps. After each one it stops, saves short screen recordings at 1440px and 375px to `doc/Phase 3/recordings/`, and reports what to look at.
+Claude Code builds this in four steps. After each one it stops, saves short screen recordings at 1440px and 375px to `docs/phases/Phase 3/recordings/`, and reports what to look at.
 
 1. **Foundations.** Install Motion, add the tokens, the motion provider, the reveal and stagger building blocks and the CSS stage entrance. A temporary lab page shows all seven motions side by side.
 2. **Home page.** Stage entrance, reveals, staggers, settles, and hover and press, section by section.
@@ -180,11 +180,11 @@ Claude Code builds this in four steps. After each one it stops, saves short scre
 ## Sources
 
 - The demo's code on main (commit `fa66ba4`), read 23 Oct 2026, and the running site at 1440px and 375px
-- Your saved zurich.com.au page: `doc/Zurich Australia/`. Timings, easing and triggers come from its stylesheet (`818c46e31f6e4240.css`) and main script (`182-01a4ac0de0fb5e11.js`), read 23 Oct 2026
+- Your saved zurich.com.au page: `docs/reference/Zurich Australia/`. Timings, easing and triggers come from its stylesheet (`818c46e31f6e4240.css`) and main script (`182-01a4ac0de0fb5e11.js`), read 23 Oct 2026
 - Zurich's design system packages in the repo: `@zurich/design-tokens` and `@zurich/css-components` 0.8.1
 - Motion: [reduce bundle size](https://motion.dev/docs/react-reduce-bundle-size), [accessibility](https://motion.dev/docs/react-accessibility), [scroll animations](https://motion.dev/docs/react-scroll-animations), [changelog](https://motion.dev/changelog?type=major); `motion` 14.6.0 on npm, published 22 Oct 2026
 - GSAP: [3.15 README](https://cdn.jsdelivr.net/npm/gsap@3.15.0/README.md), [3.13 README](https://app.unpkg.com/gsap@3.13.0/files/README.md) (free, including all plugins), [GreenSock's React guidance](https://tessl.io/registry/skills/github/greensock/gsap-skills/gsap-react)
 - WebKit: [scroll-driven animations with just CSS](https://webkit.org/blog/17101/a-guide-to-scroll-driven-animations-with-just-css/)
 - DebugBear: [opacity animations and LCP](https://www.debugbear.com/blog/opacity-animation-poor-lcp)
 - W3C: [Understanding 2.3.3, Animation from Interactions](https://w3.org/WAI/WCAG21/Understanding/animation-from-interactions)
-- Phase 1 and Phase 2 plans and briefs: `doc/Phase 1/`, `doc/Phase 2/`
+- Phase 1 and Phase 2 plans and briefs: `docs/phases/Phase 1/`, `docs/phases/Phase 2/`
