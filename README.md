@@ -1,6 +1,6 @@
-# Zurich Direct (demo)
-
 ![Zurich Direct, a design concept](docs/readme-top.png)
+
+# Zurich Direct (demo)
 
 [How I use AI](docs/AI_MANIFEST.md) · [Key Decisions](docs/decisions.md)
 
