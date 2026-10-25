@@ -245,6 +245,19 @@ test('with reduced motion, the hero is in place at once and nothing waits', asyn
   expect(await faint(page)).toEqual([]);
 });
 
+test('with reduced motion, nothing rotates and state changes take 150ms at most', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const longest = (list: string) => Math.max(...list.split(',').map((value) => parseFloat(value)));
+  const chevron = page.getByRole('button', { name: 'Help & information' }).locator('i');
+  expect(await chevron.evaluate((el) => getComputedStyle(el).transitionProperty)).toBe('none');
+  const button = page.getByRole('main').getByRole('button', { name: 'Get a quote' }).first();
+  const durations = await button.evaluate((el) => getComputedStyle(el).transitionDuration);
+  expect(longest(durations)).toBeLessThanOrEqual(0.15);
+});
+
 test('with motion on, each quote step moves focus to its heading, forward and back', async ({
   page,
 }) => {
