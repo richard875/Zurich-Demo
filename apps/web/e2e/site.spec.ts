@@ -53,6 +53,33 @@ test('every page has the demo strip and noindex', async ({ page }) => {
   }
 });
 
+test('a page that fails to render shows the error card, not a stack trace', async ({ page }) => {
+  // A quote saved in an older shape makes the quote summary throw.
+  await page.goto('/');
+  await page.evaluate(() =>
+    sessionStorage.setItem(
+      'zld-quote',
+      JSON.stringify({
+        state: { aboutYou: { dateOfBirth: '1990-06-15', smoker: false, state: 'NSW' }, quote: {} },
+        version: 0,
+      }),
+    ),
+  );
+  await page.goto('/quote?step=3');
+  await expect(heading(page, 'Something went wrong')).toBeVisible();
+  await expect(page.getByRole('banner')).toBeVisible();
+  await expect(page.getByText(/Unexpected Application Error|Hey developer/)).toHaveCount(0);
+  await expectNoSeriousAxeViolations(page);
+});
+
+test("a page whose code doesn't load shows the error card", async ({ page }) => {
+  await page.goto('/');
+  await page.route('**/static/js/async/policies/**', (route) => route.abort());
+  await page.getByRole('banner').getByRole('link', { name: 'My policies' }).click();
+  await expect(heading(page, 'Something went wrong')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+});
+
 test('Help & information opens from the keyboard and Esc closes it', async ({ page }) => {
   await page.goto('/');
   const trigger = page.getByRole('button', { name: 'Help & information' });

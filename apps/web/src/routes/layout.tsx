@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Helmet } from '@modern-js/runtime/head';
-import { Outlet } from '@modern-js/runtime/router';
+import { Outlet, useLocation } from '@modern-js/runtime/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import favicon from '@/assets/zurich-favicon.png';
 import { DemoBanner } from '@/components/site/demo-banner';
+import { PageErrorBoundary } from '@/components/site/page-error';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
 import { SignInDialog } from '@/session/sign-in-dialog';
@@ -22,6 +23,7 @@ import '@/styles/globals.css';
 export default function Layout() {
   // One client per browser session (and per server render), never shared between users.
   const [queryClient] = useState(() => new QueryClient());
+  const { pathname } = useLocation();
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
@@ -34,7 +36,9 @@ export default function Layout() {
             same as its top. Only a page shorter than the screen is stretched, to keep the footer at
             the bottom. The footer stays hidden until the page is in place (globals.css). */}
         <main className="flex-1">
-          <Outlet />
+          <PageErrorBoundary key={pathname}>
+            <Outlet />
+          </PageErrorBoundary>
         </main>
         <SiteFooter />
       </div>
