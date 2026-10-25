@@ -1,7 +1,7 @@
 import { Api, Data, Post } from '@modern-js/plugin-bff/server';
 import { useHonoContext } from '@modern-js/server-runtime';
 import { applicationRequestSchema, type ApplicationResult } from '@shared/application';
-import { saveApplication } from './_lib/application-store';
+import { QuoteAlreadyUsedError, saveApplication } from './_lib/application-store';
 import { publishApplicationSubmitted } from './_lib/events';
 import { postToMulesoft } from './_lib/mulesoft-client';
 import { underwritingResponseSchema } from './_lib/mulesoft-contract';
@@ -53,6 +53,12 @@ export const post = Api(Post('/applications'), Data(applicationRequestSchema), a
     const result: ApplicationResult = { applicationId, status };
     return result;
   } catch (error) {
+    if (error instanceof QuoteAlreadyUsedError) {
+      return errorResponse(
+        409,
+        "You've already applied with this quote. Get a new quote to apply again.",
+      );
+    }
     log.error({ err: error }, 'saving application failed');
     return errorResponse(500, "We couldn't save your application just now. Please try again.");
   }

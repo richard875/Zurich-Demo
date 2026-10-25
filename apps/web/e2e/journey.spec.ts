@@ -92,6 +92,39 @@ test('the BFF turns away an application that carries a name', async ({ request, 
   );
 });
 
+test('a quote can be applied for only once', async ({ request, baseURL }) => {
+  const headers = { origin: baseURL ?? '' };
+  await request.post('/api/session', { headers, data: { visitorId: 'e2eOneQuote01' } });
+  const quote = await request.post('/api/quotes', {
+    headers,
+    data: {
+      dateOfBirth: '1990-06-15',
+      smoker: false,
+      state: 'NSW',
+      lifeCover: 500_000,
+      incomeProtection: null,
+    },
+  });
+  const application = {
+    quoteId: ((await quote.json()) as { quoteId: string }).quoteId,
+    answers: {
+      heartCancerStroke: false,
+      undiagnosedSymptoms: false,
+      hazardousWork: false,
+      overseasStay: false,
+    },
+  };
+  expect((await request.post('/api/applications', { headers, data: application })).status()).toBe(
+    200,
+  );
+  // The same quote from a second tab.
+  const again = await request.post('/api/applications', { headers, data: application });
+  expect(again.status()).toBe(409);
+  expect(await again.json()).toEqual({
+    message: "You've already applied with this quote. Get a new quote to apply again.",
+  });
+});
+
 test.describe('when mock MuleSoft is down', () => {
   test.use({ baseURL: failingServerUrl });
 
