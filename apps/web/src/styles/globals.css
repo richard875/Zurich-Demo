@@ -148,6 +148,14 @@
   --motion-nudge: 4px;
 }
 
+/* With reduced motion, state changes crossfade for 150ms at most. Every transition without its own
+   timing, and the press utility's colours, run on --motion-state. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-state: var(--motion-switch-out);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -33,7 +33,7 @@ function MainNav() {
             Help &amp; information
             <ZurichIcon
               name="arrow-down:line"
-              className="icon-bold transition-transform group-data-[state=open]:rotate-180"
+              className="icon-bold transition-transform group-data-[state=open]:rotate-180 motion-reduce:transition-none"
             />
           </NavigationMenu.Trigger>
           {/* Without a Viewport, Radix renders the panel here, under its trigger. It fades in while

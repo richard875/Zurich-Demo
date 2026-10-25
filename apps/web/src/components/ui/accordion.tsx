@@ -57,7 +57,7 @@ function AccordionTrigger({
           {icon === 'chevron' && (
             <ZurichIcon
               name="arrow-down:line"
-              className="text-xl transition-transform group-data-[state=open]:rotate-180"
+              className="text-xl transition-transform group-data-[state=open]:rotate-180 motion-reduce:transition-none"
             />
           )}
         </AccordionPrimitive.Trigger>
