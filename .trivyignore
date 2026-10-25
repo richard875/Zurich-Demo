@@ -15,6 +15,10 @@ CVE-2026-67213
 CVE-2026-67214
 CVE-2026-73086
 
+# zod 3: fixed only in zod 4, a major upgrade planned for after the demo. Every API body is capped
+# at 16 KB before validation, so no request can carry a collection large enough to matter.
+CVE-2023-54404
+
 # The ALB is public on purpose: anyone may visit the demo.
 AWS-0053
 
