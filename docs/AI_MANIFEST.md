@@ -2,7 +2,7 @@
 
 Zurich Direct (demo) · Richard Everley, with Claude and Claude Code · 23 October 2026
 
-Some engineers, me included on some days, doubt that AI-written code matches a careful human's. The leverage is not in doubt: this repo (front end, back end, AWS, CI/CD and about 100 automated tests) took 91 commits in 37 hours. It came from a strategy, not from asking Claude Code to "build me an app".
+Some engineers, me included on some days, doubt that AI-written code matches a careful human's. The leverage is not in doubt: this repo (front end, back end, AWS, CI/CD and about 115 automated tests) took 134 commits in 88 hours. It came from a strategy, not from asking Claude Code to "build me an app".
 
 ## Principles
 
