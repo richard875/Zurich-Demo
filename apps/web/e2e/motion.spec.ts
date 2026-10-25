@@ -278,3 +278,20 @@ test('with motion on, each quote step moves focus to its heading, forward and ba
   await page.getByRole('button', { name: 'Change cover' }).click();
   await expect(heading(page, 'Choose your cover')).toBeFocused();
 });
+
+// Safari ignores overflow-clip-margin, so the step area's own box must leave room for the cards' ring
+// borders: clipped at the box itself, iPhones lost the cards' sides.
+test("on a phone, the quote step area's clip leaves the cards' borders whole", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/quote');
+  await page.getByRole('button', { name: 'Use demo details' }).click();
+  const area = page.locator('main form').locator('xpath=..');
+  // How far inside the step area the first ring-bordered card sits, on each side.
+  const gaps = await area.evaluate((el) => {
+    const a = el.getBoundingClientRect();
+    const c = el.querySelector('[class*="ring-1"]')?.getBoundingClientRect() ?? a;
+    return [c.left - a.left, a.right - c.right];
+  });
+  for (const gap of gaps) expect(gap).toBeGreaterThanOrEqual(4);
+  expect(await area.evaluate((el) => getComputedStyle(el).overflowX)).toBe('clip');
+});

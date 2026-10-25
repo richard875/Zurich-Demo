@@ -28,8 +28,9 @@ const variants: Variants = {
 
 // The old step fades out, then the new one fades in, sliding 24px from the right going forward and
 // from the left going back. With reduced motion, both only fade, over 150ms. The first step shown
-// doesn't animate. The step area clips sideways, so the slide never widens the page on phones, with
-// room left for focus rings.
+// doesn't animate. The step area clips sideways, so the slide never widens the page on phones. The
+// clip sits 1rem outside the content (negative margin, matching padding), so the cards' ring borders
+// and focus rings stay visible; Safari ignores overflow-clip-margin, so that can't do it.
 export function StepTransition({ step, children }: { step: number; children: ReactNode }) {
   const reduce = useReducedMotion() ?? false;
   const [shown, setShown] = useState<{ step: number; direction: 1 | -1 }>({ step, direction: 1 });
@@ -46,7 +47,7 @@ export function StepTransition({ step, children }: { step: number; children: Rea
           initial="enter"
           animate="center"
           exit="exit"
-          className="overflow-clip [overflow-clip-margin:1rem]"
+          className="-mx-4 overflow-x-clip px-4"
         >
           {children}
         </m.div>
