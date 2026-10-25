@@ -18,6 +18,8 @@ export default defineConfig({
   html: {
     title: 'Zurich Direct (demo)',
     meta: {
+      // Modern.js's default also sets maximum-scale=1 and user-scalable=no, which stops pinch zoom.
+      viewport: 'width=device-width,initial-scale=1,viewport-fit=cover',
       robots: 'noindex,nofollow',
       description: 'This is a Demo site and not the live Zurich Direct site.',
     },
