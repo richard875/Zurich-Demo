@@ -12,7 +12,7 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
 }) => {
   await page.goto('/');
   await expect(page.getByRole('note')).toContainText(
-    'This is a Demo site and not the live Zurich Direct site.',
+    'This is a demo site and not the live Zurich Direct site.',
   );
   await expectNoSeriousAxeViolations(page);
 

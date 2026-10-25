@@ -106,7 +106,7 @@ export function SiteFooter() {
             <p>Always was, always will be Aboriginal land.</p>
             <p>
               © 2026 Zurich Australia · Design concept, not the live Zurich Direct site · A Richard
-              Everley's Production
+              Everley production
             </p>
           </div>
         </div>
