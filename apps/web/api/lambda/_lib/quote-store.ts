@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { quoteSchema, type Quote, type QuoteRequest } from '@shared/quote';
 import { getDb, tableName } from './dynamo';
 
-const QUOTE_TTL_SECONDS = 7 * 24 * 60 * 60;
+export const QUOTE_TTL_SECONDS = 7 * 24 * 60 * 60;
 
 const keyFor = (quoteId: string) => ({ PK: `QUOTE#${quoteId}`, SK: 'QUOTE' });
 
