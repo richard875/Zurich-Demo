@@ -4,6 +4,7 @@ import { logger } from '../api/lambda/_lib/logger';
 import { SESSION_COOKIE, verifySession } from '../api/lambda/_lib/session';
 import { requestLog } from './request-log';
 import {
+  apiNotFound,
   apiRateLimit,
   internalMulesoft,
   requestSize,
@@ -42,6 +43,7 @@ export default defineServerConfig({
     { name: 'response-security', order: 'pre', handler: responseSecurity },
     { name: 'request-log', handler: requestLog(logger) },
     { name: 'no-index', handler: noIndex },
+    { name: 'api-not-found', handler: apiNotFound },
     { name: 'internal-mulesoft', handler: internalMulesoft },
     { name: 'same-origin', handler: sameOrigin },
     { name: 'api-rate-limit', handler: apiRateLimit },
