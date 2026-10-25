@@ -54,7 +54,8 @@ function Policies() {
       </p>
       {policies.isPending ? (
         <LoadingPanel label="Loading your policies…" blocks={2} />
-      ) : policies.isSuccess && policies.data.length > 0 ? (
+      ) : policies.data && policies.data.length > 0 ? (
+        // A poll that fails keeps the list it already has, and polling carries on.
         // The cards bring themselves in (PolicyCard).
         <ul className="grid gap-6">
           {policies.data.map((policy, index) => (

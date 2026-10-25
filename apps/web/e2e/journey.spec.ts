@@ -38,6 +38,25 @@ test('quote, sign in and apply, then the policy goes from Processing to Active',
   await expect(newest.getByTestId('policy-number')).toHaveText(/^ZLD-\d{8}$/);
 });
 
+test('My policies keeps its list when a poll fails', async ({ page }) => {
+  await getQuoteWithDemoDetails(page);
+  await signInAndApply(page);
+  // The first load works; every poll after it fails, retries included.
+  let loads = 0;
+  let failures = 0;
+  await page.route('**/api/policies', (route) => {
+    if (loads++ === 0) return route.fallback();
+    failures += 1;
+    return route.fulfill({ status: 500, contentType: 'application/json', body: '{"message":"x"}' });
+  });
+  await page.getByRole('link', { name: 'View my policies' }).click();
+  const newest = page.getByRole('main').getByRole('listitem').first();
+  await expect(newest.getByTestId('policy-status')).toHaveText('Processing');
+  await expect.poll(() => failures, { timeout: 20_000 }).toBeGreaterThan(3);
+  await expect(newest.getByTestId('policy-status')).toHaveText('Processing');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
 test('a yes to a health question is referred for review', async ({ page }) => {
   await getQuoteWithDemoDetails(page);
   await expect(heading(page, 'Your quote')).toBeVisible();
