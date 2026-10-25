@@ -4,6 +4,8 @@ Step 1 audit of `main` at `a024dfe`, 25 October 2026. Newest priority first. Evi
 
 **Step 2 (25 October 2026):** the P0, the code and UI P1s and most P2s are fixed, each with a regression test where one makes sense. Lint, types, 81 unit tests and 34 E2E tests pass. The docs P1s wait for Step 4, when the documents are updated last.
 
+**Step 3 (25 October 2026):** the whole site as a first-time visitor in desktop Chromium, desktop WebKit, an iPhone-sized WebKit and an Android-sized Chromium: 17 checks each covering every section, tab, accordion and menu, external links, the chooser and product-card quotes, back, forward and refresh, sign in, apply, Processing to Active, the referred and MuleSoft-down paths, a second tab, signing out mid-journey, signed-out pages, an unknown address, and one whole journey by keyboard (desktop). All pass; one new P3 (F-34). Script: `scripts/final-pass.mjs`.
+
 | ID | Area | Priority | Where | What's wrong | Evidence | Outcome |
 | --- | --- | --- | --- | --- | --- | --- |
 | F-01 | Security | P0 | Dependencies | CI's dependency scan began failing on a newly published advisory, so pushes to `main` stopped deploying. Reviewed and accepted with a reason until a planned upgrade after the demo | Local Trivy filesystem and image scans pass | Fixed in `fix(security): accept a reviewed dependency advisory until after the demo`; the upgrade is logged for after the demo |
@@ -39,6 +41,7 @@ Step 1 audit of `main` at `a024dfe`, 25 October 2026. Newest priority first. Evi
 | F-31 | Code | P3 | Tests | No E2E test covers the 404 status, sign out, loading or failed states, or WebKit. | Test list | Logged |
 | F-32 | Docs | P3 | `docs/phases/Phase 3/HANDOVER.md` | Says Phase 3 isn't deployed. Richard approved a one-line note that it shipped. | The file | Open (Step 4) |
 | F-33 | UI | P3 | Firefox | Firefox warns about glyph boxes in the Ogg font from the design-tokens package. Nothing visible. | `reports/captures-firefox-report-firefox-1440.json` | Logged |
+| F-34 | Final pass | P3 | Help & information menu, desktop, both engines | An Escape pressed within about 200ms of clicking the menu open is lost: Radix's hover-open timer, started as the pointer arrives, opens it again. At a person's pace, and from the keyboard, Escape closes it. | Probe of Escape at 0 to 500ms after the click | Logged for after the demo |
 
 ## What was checked
 
