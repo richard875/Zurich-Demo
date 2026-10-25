@@ -87,6 +87,22 @@ test("a page whose code doesn't load shows the error card", async ({ page }) => 
   await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
 });
 
+test('a failed sign-in check says so and can be retried', async ({ page }) => {
+  await page.route('**/api/session', (route) =>
+    route.request().method() === 'GET'
+      ? route.fulfill({ status: 500, contentType: 'application/json', body: '{"message":"x"}' })
+      : route.fallback(),
+  );
+  await page.goto('/policies');
+  // The query retries three times first.
+  await expect(page.getByText("We couldn't check whether you're signed in.")).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.unroute('**/api/session');
+  await page.getByRole('button', { name: 'Try again' }).click();
+  await expect(page.getByText('Sign in to see your policies.')).toBeVisible();
+});
+
 test('Help & information opens from the keyboard and Esc closes it', async ({ page }) => {
   await page.goto('/');
   const trigger = page.getByRole('button', { name: 'Help & information' });
