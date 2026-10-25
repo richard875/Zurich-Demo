@@ -14,8 +14,12 @@ export function InfoTip({ label, children }: { label: string; children: ReactNod
           type="button"
           aria-label={label}
           className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-2xl text-zurich-blue transition-colors hover:bg-muted"
-          // Radix closes the tooltip when the button is pressed. Skipping that keeps it open.
-          onPointerDown={(event) => event.preventDefault()}
+          // Radix closes the tooltip when the button is pressed. Skipping that keeps it open. WebKit then
+          // sends no click for a tap, so a touch opens it here.
+          onPointerDown={(event) => {
+            event.preventDefault();
+            if (event.pointerType !== 'mouse') setOpen(true);
+          }}
           onClick={(event) => {
             event.preventDefault();
             setOpen(true);
