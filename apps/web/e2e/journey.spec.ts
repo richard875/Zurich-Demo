@@ -83,5 +83,12 @@ test.describe('when mock MuleSoft is down', () => {
     );
     await expect(heading(page, 'Choose your cover')).toBeVisible();
     await expectNoSeriousAxeViolations(page);
+
+    // The error belongs to that attempt: back and on again, it's gone until the next try.
+    await page.getByRole('button', { name: 'Back' }).click();
+    await expect(heading(page, 'About you')).toBeVisible();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(heading(page, 'Choose your cover')).toBeVisible();
+    await expect(page.getByRole('alert')).toHaveCount(0);
   });
 });

@@ -89,6 +89,12 @@ export default function QuotePage() {
     headingRef.current?.focus({ preventScroll: true });
   }, [step]);
 
+  // A failed price belongs to the attempt that made it: leaving the cover step clears it.
+  const { reset: resetQuoteRequest } = quoteRequest;
+  useEffect(() => {
+    if (step !== 2) resetQuoteRequest();
+  }, [step, resetQuoteRequest]);
+
   const goTo = (next: Step) => navigate(`/quote?step=${next}`);
   const apply = () => (session.data?.signedIn ? navigate('/apply') : requestSignIn('/apply'));
 
