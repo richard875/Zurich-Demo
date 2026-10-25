@@ -1,10 +1,7 @@
 # One reason per suppression. CI fails on HIGH and CRITICAL only.
 
-# braces: no fixed release yet. Modern.js also bundles glob helpers into the runtime image;
-# their patterns come from build/server configuration, not customer inputs. Retained demo exception.
-CVE-2026-93687
-
-# Old browserslist, js-yaml and nanoid compiled into @modern-js/utils 3.10.1 (the latest), so they can't be upgraded here.
+# Old browserslist, js-yaml and nanoid compiled into @modern-js/utils (3.10.3, the latest, still
+# bundles the same versions), so they can't be upgraded here.
 # They serve Modern.js build tooling, not request handling.
 CVE-2026-73088
 CVE-2026-73089
