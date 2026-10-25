@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ApplicationForm } from './application-form';
@@ -29,6 +29,13 @@ describe('ApplicationForm', () => {
     expect(await screen.findByRole('tooltip')).toHaveTextContent(
       "This is a demo, so we've picked a made-up name",
     );
+  });
+
+  it('opens the tooltip from a tap, even when no click follows (as in WebKit)', async () => {
+    renderForm();
+    const info = screen.getByRole('button', { name: "Why can't I change my name?" });
+    fireEvent.pointerDown(info, { pointerType: 'touch' });
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('made-up name');
   });
 
   it('submits the answers and the declaration, never a name', async () => {
