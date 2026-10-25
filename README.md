@@ -22,7 +22,7 @@ You can get a quote, sign in with one click, apply, and watch your policy go fro
 
 ## Run it locally
 
-Needs Node 22.18 or later (22.x), pnpm 11 and Docker. Nothing touches AWS: DynamoDB runs locally, and the policy issuer runs in-process instead of behind SNS and SQS.
+Needs Node 22.18 or later (22.x), pnpm 11 and Docker. Nothing touches AWS: DynamoDB runs locally and policies are issued in-process.
 
 ```bash
 pnpm install
@@ -34,21 +34,23 @@ pnpm dev               # http://localhost:8080
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm test   # ESLint, Prettier, types, unit tests
-pnpm e2e                                   # builds, then runs Playwright against DynamoDB Local
+pnpm --filter web exec playwright install chromium
+pnpm e2e                                   # builds, then runs Playwright
 ```
 
 ## Deploy
 
-Push to main. GitHub Actions lints, tests and scans, builds the image, pushes it to ECR, applies Terraform, waits for ECS to settle and smoke-tests the live URL.
+Push to main. GitHub Actions lints, tests and scans, pushes the image to ECR, applies Terraform, then smoke-tests the live URL once ECS settles.
 
 ### First deploy
 
-Do this once, in a dedicated AWS account with a `zurich-demo` CLI profile.
+Do this once, in a dedicated AWS account with a `zurich-demo` profile.
 
-1. Copy `infra/backend.hcl.example` and `infra/terraform.tfvars.example`, and fill in the account ID, domain and image tag. Deploying from a fork? Set `github_repository` too.
-2. Create the state bucket and a monthly budget alert, then the certificate and image repository:
+1. Copy the two `.example` files in `infra/` and fill them in. Deploying from a fork? Set `github_repository` too.
+2. Create the state bucket, a budget alert, the certificate and the image repository:
 
    ```bash
+   export AWS_PROFILE=zurich-demo AWS_REGION=ap-southeast-2
    infra/bootstrap.sh <account-id> <alert-email> 20
    terraform -chdir=infra init -backend-config=backend.hcl
    terraform -chdir=infra apply -target=aws_acm_certificate.app -target=aws_ecr_repository.web
@@ -58,6 +60,7 @@ Do this once, in a dedicated AWS account with a `zurich-demo` CLI profile.
 4. Push the first image and create everything else:
 
    ```bash
+   aws ecr get-login-password | docker login -u AWS --password-stdin <account-id>.dkr.ecr.ap-southeast-2.amazonaws.com
    pnpm build && docker buildx build --platform linux/amd64 --push -t <ecr-url>:$(git rev-parse HEAD) .
    terraform -chdir=infra apply -var image_tag=$(git rev-parse HEAD)
    ```
