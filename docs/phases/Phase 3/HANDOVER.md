@@ -1,5 +1,7 @@
 # Phase 3 (Motion): handover
 
+> **Shipped:** Phase 3 was merged into `main` through pull request 1 and deployed on 23 October 2026. The rest of this file is the record as written before that.
+
 | | |
 | --- | --- |
 | **Project** | Zurich Direct (demo): `richard875/Zurich-Demo` |
