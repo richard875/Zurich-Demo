@@ -53,6 +53,13 @@ test('every page has the demo strip and noindex', async ({ page }) => {
   }
 });
 
+test('every page can be zoomed', async ({ page }) => {
+  await page.goto('/');
+  const viewport = page.locator('meta[name="viewport"]');
+  await expect(viewport).toHaveCount(1);
+  await expect(viewport).not.toHaveAttribute('content', /user-scalable=no|maximum-scale/);
+});
+
 test('a page that fails to render shows the error card, not a stack trace', async ({ page }) => {
   // A quote saved in an older shape makes the quote summary throw.
   await page.goto('/');
