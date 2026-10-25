@@ -179,6 +179,16 @@
     @apply text-4xl leading-tight font-light md:text-5xl;
   }
 
+  /* iOS Safari draws a native date input at its own width, ignoring width: 100%, so on a phone it
+     overflows its card. Without the native look it sizes like any other input; the value then
+     centres unless told otherwise. The picker still opens on tap. */
+  input[type='date'] {
+    appearance: none;
+  }
+  input::-webkit-date-and-time-value {
+    text-align: start;
+  }
+
   /* Modern.js streams each page into main after the header and footer have arrived: until then
      main holds only React's placeholder <template>, or nothing while a page's code loads on a
      client-side visit. A page's loading blocks then give way to content of another height. Through
