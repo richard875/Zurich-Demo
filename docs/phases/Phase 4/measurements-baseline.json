@@ -1,0 +1,598 @@
+{
+  "label": "baseline",
+  "base": "http://localhost:8090",
+  "measuredAt": "2026-10-25T05:07:45.466Z",
+  "pages": {
+    "home": {
+      "path": "/",
+      "javascript": {
+        "firstLoadKB": 271.06,
+        "afterLoadKB": 0,
+        "scripts": [
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/page.6f27d53695.js",
+            "afterLoad": false,
+            "gzipKB": 12.93
+          }
+        ]
+      },
+      "mobile": {
+        "median": {
+          "lcpMs": 6701,
+          "cls": 0.001,
+          "tbtMs": 421,
+          "accessibility": 95
+        },
+        "runs": [
+          {
+            "lcpMs": 7600,
+            "cls": 0.001,
+            "tbtMs": 544,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          },
+          {
+            "lcpMs": 6321,
+            "cls": 0.001,
+            "tbtMs": 421,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          },
+          {
+            "lcpMs": 6701,
+            "cls": 0.001,
+            "tbtMs": 352,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          }
+        ]
+      },
+      "desktop": {
+        "median": {
+          "lcpMs": 1446,
+          "cls": 0.001,
+          "tbtMs": 96,
+          "accessibility": 95
+        },
+        "runs": [
+          {
+            "lcpMs": 1699,
+            "cls": 0.001,
+            "tbtMs": 300,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          },
+          {
+            "lcpMs": 1446,
+            "cls": 0.001,
+            "tbtMs": 96,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          },
+          {
+            "lcpMs": 1246,
+            "cls": 0.001,
+            "tbtMs": 92,
+            "accessibility": 95,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\" class=\"aspect-square w-full object-cover motion-safe:animate-stage-media-settle\">"
+          }
+        ]
+      }
+    },
+    "quote": {
+      "path": "/quote?step=1",
+      "javascript": {
+        "firstLoadKB": 305.46,
+        "afterLoadKB": 17.61,
+        "scripts": [
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/c.589d01b00a.js",
+            "afterLoad": false,
+            "gzipKB": 17.72
+          },
+          {
+            "file": "/static/js/async/27.e535d99ed0.js",
+            "afterLoad": false,
+            "gzipKB": 3.23
+          },
+          {
+            "file": "/static/js/async/26.808a1bd70d.js",
+            "afterLoad": false,
+            "gzipKB": 20.14
+          },
+          {
+            "file": "/static/js/async/quote/page.f4dc91ff60.js",
+            "afterLoad": false,
+            "gzipKB": 6.24
+          },
+          {
+            "file": "/static/js/async/i.d20c70630f.js",
+            "afterLoad": true,
+            "gzipKB": 0.13
+          },
+          {
+            "file": "/static/js/async/9.26b32ffb00.js",
+            "afterLoad": true,
+            "gzipKB": 17.48
+          }
+        ]
+      },
+      "mobile": {
+        "median": {
+          "lcpMs": 4531,
+          "cls": 0.001,
+          "tbtMs": 743,
+          "accessibility": 95
+        },
+        "runs": [
+          {
+            "lcpMs": 4527,
+            "cls": 0.001,
+            "tbtMs": 947,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          },
+          {
+            "lcpMs": 4531,
+            "cls": 0.001,
+            "tbtMs": 743,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          },
+          {
+            "lcpMs": 4675,
+            "cls": 0.001,
+            "tbtMs": 712,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          }
+        ]
+      },
+      "desktop": {
+        "median": {
+          "lcpMs": 907,
+          "cls": 0.002,
+          "tbtMs": 98,
+          "accessibility": 95
+        },
+        "runs": [
+          {
+            "lcpMs": 907,
+            "cls": 0.002,
+            "tbtMs": 72,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          },
+          {
+            "lcpMs": 988,
+            "cls": 0.002,
+            "tbtMs": 101,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          },
+          {
+            "lcpMs": 907,
+            "cls": 0.002,
+            "tbtMs": 98,
+            "accessibility": 95,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\" tabindex=\"-1\">"
+          }
+        ]
+      }
+    },
+    "apply": {
+      "path": "/apply",
+      "javascript": {
+        "firstLoadKB": 296.55,
+        "afterLoadKB": 0,
+        "scripts": [
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/27.e535d99ed0.js",
+            "afterLoad": false,
+            "gzipKB": 3.23
+          },
+          {
+            "file": "/static/js/async/apply/page.9c4a942514.js",
+            "afterLoad": false,
+            "gzipKB": 4.84
+          },
+          {
+            "file": "/static/js/async/6.6446f1d6b9.js",
+            "afterLoad": false,
+            "gzipKB": 12.63
+          },
+          {
+            "file": "/static/js/async/c.589d01b00a.js",
+            "afterLoad": false,
+            "gzipKB": 17.72
+          }
+        ]
+      },
+      "mobile": {
+        "median": {
+          "lcpMs": 4971,
+          "cls": 0.002,
+          "tbtMs": 627,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 4900,
+            "cls": 0.002,
+            "tbtMs": 591,
+            "accessibility": 94,
+            "lcpElement": "<p class=\"text-b-20\">"
+          },
+          {
+            "lcpMs": 5119,
+            "cls": 0.002,
+            "tbtMs": 627,
+            "accessibility": 94,
+            "lcpElement": "<p class=\"text-b-20\">"
+          },
+          {
+            "lcpMs": 4971,
+            "cls": 0.002,
+            "tbtMs": 633,
+            "accessibility": 94,
+            "lcpElement": "<p class=\"text-b-20\">"
+          }
+        ]
+      },
+      "desktop": {
+        "median": {
+          "lcpMs": 962,
+          "cls": 0.002,
+          "tbtMs": 104,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 859,
+            "cls": 0.002,
+            "tbtMs": 113,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 962,
+            "cls": 0.002,
+            "tbtMs": 104,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 1000,
+            "cls": 0.002,
+            "tbtMs": 79,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          }
+        ]
+      }
+    },
+    "received": {
+      "path": "/apply/received",
+      "javascript": {
+        "firstLoadKB": 261.68,
+        "afterLoadKB": 0,
+        "scripts": [
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/apply/received/page.744cd4859e.js",
+            "afterLoad": false,
+            "gzipKB": 3.55
+          }
+        ]
+      },
+      "mobile": {
+        "median": {
+          "lcpMs": 5946,
+          "cls": 0.001,
+          "tbtMs": 696,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 5948,
+            "cls": 0.001,
+            "tbtMs": 696,
+            "accessibility": 94,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"lazy\" decoding=\"async\" class=\"size-full object-cover\">"
+          },
+          {
+            "lcpMs": 5946,
+            "cls": 0.001,
+            "tbtMs": 781,
+            "accessibility": 94,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"lazy\" decoding=\"async\" class=\"size-full object-cover\">"
+          },
+          {
+            "lcpMs": 3939,
+            "cls": 0.001,
+            "tbtMs": 671,
+            "accessibility": 94,
+            "lcpElement": "<div class=\"bg-dark-blue px-4 py-2 text-center text-sm text-white\" role=\"note\">"
+          }
+        ]
+      },
+      "desktop": {
+        "median": {
+          "lcpMs": 906,
+          "cls": 0.001,
+          "tbtMs": 85,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 869,
+            "cls": 0.001,
+            "tbtMs": 107,
+            "accessibility": 94,
+            "lcpElement": "<div class=\"bg-dark-blue px-4 py-2 text-center text-sm text-white\" role=\"note\">"
+          },
+          {
+            "lcpMs": 1122,
+            "cls": 0.001,
+            "tbtMs": 85,
+            "accessibility": 94,
+            "lcpElement": "<img src=\"/static/image/hero.9d9ef444fd.jpg\" width=\"1000\" height=\"1000\" alt=\"A mother and father laughing as they hug their young daughter\" loading=\"lazy\" decoding=\"async\" class=\"size-full object-cover\">"
+          },
+          {
+            "lcpMs": 906,
+            "cls": 0.001,
+            "tbtMs": 72,
+            "accessibility": 94,
+            "lcpElement": "<div class=\"bg-dark-blue px-4 py-2 text-center text-sm text-white\" role=\"note\">"
+          }
+        ]
+      }
+    },
+    "policies": {
+      "path": "/policies",
+      "javascript": {
+        "firstLoadKB": 264.17,
+        "afterLoadKB": 0,
+        "scripts": [
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/27.e535d99ed0.js",
+            "afterLoad": false,
+            "gzipKB": 3.23
+          },
+          {
+            "file": "/static/js/async/policies/page.c36992cef1.js",
+            "afterLoad": false,
+            "gzipKB": 2.81
+          }
+        ]
+      },
+      "mobile": {
+        "median": {
+          "lcpMs": 4665,
+          "cls": 0.001,
+          "tbtMs": 594,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 4667,
+            "cls": 0.001,
+            "tbtMs": 648,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 4524,
+            "cls": 0.001,
+            "tbtMs": 594,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 4665,
+            "cls": 0.001,
+            "tbtMs": 516,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          }
+        ]
+      },
+      "desktop": {
+        "median": {
+          "lcpMs": 942,
+          "cls": 0.002,
+          "tbtMs": 92,
+          "accessibility": 94
+        },
+        "runs": [
+          {
+            "lcpMs": 942,
+            "cls": 0.002,
+            "tbtMs": 49,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 860,
+            "cls": 0.002,
+            "tbtMs": 112,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          },
+          {
+            "lcpMs": 942,
+            "cls": 0.002,
+            "tbtMs": 92,
+            "accessibility": 94,
+            "lcpElement": "<h1 class=\"text-h-36 font-light md:text-h-48 [&amp;_em]:font-display [&amp;_em]:font-normal […\">"
+          }
+        ]
+      }
+    },
+    "notFound": {
+      "path": "/no-such-page",
+      "javascript": {
+        "firstLoadKB": 261.47,
+        "afterLoadKB": 0,
+        "scripts": [
+          {
+            "file": "/static/js/lib-router.d6e80f81f5.js",
+            "afterLoad": false,
+            "gzipKB": 30.63
+          },
+          {
+            "file": "/static/js/lib-polyfill.9e72e087c2.js",
+            "afterLoad": false,
+            "gzipKB": 47.07
+          },
+          {
+            "file": "/static/js/lib-react.2903d87dd9.js",
+            "afterLoad": false,
+            "gzipKB": 67.15
+          },
+          {
+            "file": "/static/js/index.2fa295e57e.js",
+            "afterLoad": false,
+            "gzipKB": 11.17
+          },
+          {
+            "file": "/static/js/1.2e69cb8c61.js",
+            "afterLoad": false,
+            "gzipKB": 102.11
+          },
+          {
+            "file": "/static/js/async/$.3667828666.js",
+            "afterLoad": false,
+            "gzipKB": 3.34
+          }
+        ]
+      },
+      "mobile": null,
+      "desktop": null
+    }
+  }
+}
