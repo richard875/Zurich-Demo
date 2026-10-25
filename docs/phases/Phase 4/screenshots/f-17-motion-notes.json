@@ -1,0 +1,16 @@
+{
+  "setup": "Chromium 1440, reduced motion",
+  "before": [
+    "over 150ms with reduced motion: transition outline-color 200ms on button#radix-_modern-js-R_972l_-trigger-life-or-income.rounded-full.bg-zurich-wh",
+    "over 150ms with reduced motion: transition background-color 200ms on button.inline-flex.shrink-0",
+    "over 150ms with reduced motion: transition box-shadow 200ms on button.inline-flex.shrink-0",
+    "over 150ms with reduced motion: transition background-color 200ms on button#radix-_modern-js-R_972l_-trigger-couples.rounded-full.bg-zurich-white",
+    "over 150ms with reduced motion: transition color 200ms on button#radix-_modern-js-R_972l_-trigger-couples.rounded-full.bg-zurich-white",
+    "over 150ms with reduced motion: transition outline-color 200ms on button#radix-_modern-js-R_972l_-trigger-couples.rounded-full.bg-zurich-white",
+    "over 150ms with reduced motion: transition background-color 200ms on button#radix-_modern-js-R_972l_-trigger-life-or-income.rounded-full.bg-zurich-wh",
+    "over 150ms with reduced motion: transition color 200ms on button#radix-_modern-js-R_972l_-trigger-life-or-income.rounded-full.bg-zurich-wh",
+    "moves with reduced motion: transition rotate 200ms on i.icon-bold.transition-transform",
+    "over 150ms with reduced motion: transition rotate 200ms on i.icon-bold.transition-transform"
+  ],
+  "after": []
+}
