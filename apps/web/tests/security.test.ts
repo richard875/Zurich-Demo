@@ -5,6 +5,7 @@ import { getEnv } from '../api/lambda/_lib/env';
 import { mulesoftToken, validMulesoftToken } from '../api/lambda/_lib/mulesoft-auth';
 import { perVisitor, tokenBucket } from '../server/request-limits';
 import {
+  apiNotFound,
   apiRateLimit,
   internalMulesoft,
   requestSize,
@@ -137,6 +138,22 @@ describe('API boundaries', () => {
         })
       ).status,
     ).toBe(415);
+  });
+});
+
+describe('unknown API addresses', () => {
+  const app = new Hono();
+  app.use(apiNotFound);
+  app.get('/api/session', (c) => c.json({ signedIn: false }));
+  app.notFound((c) => c.html('<h1>404: This page could not be found.</h1>', 404));
+
+  it("answer with the API's JSON error, while pages keep their HTML 404", async () => {
+    const api = await app.request('/api/nope');
+    expect(api.status).toBe(404);
+    expect(await api.json()).toEqual({ message: 'Not found.' });
+    const page = await app.request('/nope');
+    expect(page.headers.get('content-type')).toContain('text/html');
+    expect((await app.request('/api/session')).status).toBe(200);
   });
 });
 

@@ -59,6 +59,19 @@ export const internalMulesoft: MiddlewareHandler = async (c, next) => {
   await next();
 };
 
+// An address under /api that no function answers gets Modern.js's HTML 404 page; API callers get the
+// same { message } JSON as every other API error instead.
+export const apiNotFound: MiddlewareHandler = async (c, next) => {
+  await next();
+  if (
+    c.req.path.startsWith('/api/') &&
+    c.res.status === 404 &&
+    c.res.headers.get('content-type')?.includes('text/html')
+  ) {
+    c.res = c.json({ message: 'Not found.' }, 404);
+  }
+};
+
 const unsafeMethods = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
 function originOf(origin: string): string | null {
