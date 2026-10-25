@@ -132,6 +132,9 @@ test.describe('at 375px', () => {
     await expect(sheet.getByRole('link', { name: 'My policies' })).toBeVisible();
     await animationsDone(sheet);
     await expectNoSeriousAxeViolations(page);
+    const close = await sheet.getByRole('button', { name: 'Close' }).boundingBox();
+    expect(close?.width).toBeGreaterThanOrEqual(44);
+    expect(close?.height).toBeGreaterThanOrEqual(44);
 
     await page.keyboard.press('Escape');
     await expect(sheet).toBeHidden();

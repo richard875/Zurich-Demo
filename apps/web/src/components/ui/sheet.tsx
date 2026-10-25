@@ -43,7 +43,8 @@ function SheetContent({
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-3 right-3 px-2 sm:top-6 sm:right-6"
+            // 44px to tap, its icon where the 40px button had it.
+            className="absolute top-2.5 right-2.5 size-11 px-0 sm:top-5.5 sm:right-5.5"
           >
             <ZurichIcon name="close:line" />
             <span className="sr-only">Close</span>
