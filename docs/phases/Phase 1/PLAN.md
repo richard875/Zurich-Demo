@@ -1,5 +1,7 @@
 # Zurich Demo App — Product & Stack Plan
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup; the account stays open rather than being closed after the demo. The rest of this file is the plan as written.
+
 ## The product: Zurich Life Direct (demo)
 
 Build a small direct-to-customer life insurance journey. A customer gets a quote without logging in, signs in to apply and buy, then watches the policy go live on a "My policies" page. That one flow covers the demo's stack.

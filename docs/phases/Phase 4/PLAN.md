@@ -1,5 +1,7 @@
 # Zurich Demo App — Phase 4 Plan: Audit and Final Polish
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. Where this plan checks ECS, the load balancer and its tracing sidecar, those are gone; the rest of this file is the plan as written.
+
 25 October 2026 · Richard Everley
 
 ## The goal

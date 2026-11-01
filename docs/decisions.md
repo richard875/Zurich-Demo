@@ -1,9 +1,9 @@
 - Modern.js BFF, not a separate Hono service: one deployable, and it runs on Hono anyway.
-- ECS Fargate in its own AWS account, with no NAT gateway: no cluster to run, only the load balancer can reach the tasks, and closing the account removes everything.
+- Lambda behind CloudFront in its own AWS account, deployed only from `dev`: AWS Lambda Web Adapter runs the same Node server, nothing is billed by the hour, and the site costs about US$0.10 a month instead of the US$55 ECS Fargate and a load balancer cost during the demo. The price is a cold start of a second or two after a quiet spell.
 - Mock MuleSoft is in the app but reached only over HTTP, behind an HMAC token. Inline events mean local and CI runs need no AWS.
 - FingerprintJS mock sign-in: no identity provider to set up for a demo. Not real auth.
 - Public URL, no WAF or IP allowlist: every page says it is a demo, and nothing is indexed.
-- The app guards itself instead: per-visitor rate limits in memory (one task, so no Redis), a 16 KB body cap and capped DynamoDB throughput.
+- The app guards itself instead: it refuses requests that skip CloudFront, keeps per-visitor rate limits in memory (each function instance has its own; no Redis), caps bodies at 16 KB and DynamoDB throughput too.
 - No real names: the apply form shows a made-up one, and the BFF rejects any request carrying a name.
 - Real Zurich Direct copy, photos and 5% bundle discount; only the home page and the quote flow are built, and other links go to the real site.
 - Pill buttons, rounder corners and animation timing come from zurich.com.au; reduced motion turns movement off, and no content waits for the app's scripts.

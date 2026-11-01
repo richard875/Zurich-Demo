@@ -4,7 +4,7 @@
 
 [How I use AI](docs/AI_MANIFEST.md) · [Key Decisions](docs/decisions.md)
 
-Zurich Direct's life insurance and income protection site, redesigned in zurich.com.au's design language and built end to end: a server-rendered React front end, a BFF in front of mock MuleSoft APIs, an event-driven policy issuer on AWS, Terraform and a CI/CD pipeline that tests, scans and deploys every push to main.
+Zurich Direct's life insurance and income protection site, redesigned in zurich.com.au's design language and built end to end: a server-rendered React front end, a BFF in front of mock MuleSoft APIs, an event-driven policy issuer on AWS, Terraform and a CI/CD pipeline that tests, scans and deploys every push to `dev`.
 
 You can get a quote, sign in with one click, apply, and watch your policy go from Processing to Active. The site is a design concept, not the live Zurich Direct site. Prices are invented, the sign-in is a mock, and no real names are collected.
 
@@ -15,8 +15,8 @@ You can get a quote, sign in with one click, apply, and watch your policy go fro
 ## Tech stack
 
 - **Front end:** React 19, Modern.js (streaming SSR), Tailwind CSS 4, shadcn/ui on Radix, Zurich's design tokens, TanStack Query, Zustand, React Hook Form and Zod, Motion
-- **Back end:** Modern.js BFF on Hono, mock MuleSoft rating and underwriting APIs, FingerprintJS mock sign-in, pino logs and OpenTelemetry traces
-- **AWS:** ECS Fargate, Application Load Balancer, DynamoDB, SNS, SQS, Lambda, ECR, SSM Parameter Store, CloudWatch, X-Ray
+- **Back end:** Modern.js BFF on Hono, mock MuleSoft rating and underwriting APIs, FingerprintJS mock sign-in, pino logs and X-Ray traces
+- **AWS:** Lambda (the site, through AWS Lambda Web Adapter, and the policy issuer), CloudFront, DynamoDB, SNS, SQS, ECR, SSM Parameter Store, ACM, CloudWatch, X-Ray
 - **Delivery:** Terraform, GitHub Actions with OIDC, Docker, gitleaks and Trivy
 - **Tests:** Vitest, Testing Library, Playwright with axe accessibility checks, Terraform tests
 
@@ -40,7 +40,9 @@ pnpm e2e                                   # builds, then runs Playwright
 
 ## Deploy
 
-Push to main. GitHub Actions lints, tests and scans, pushes the image to ECR, applies Terraform, then smoke-tests the live URL once ECS settles.
+Push to `dev`. GitHub Actions lints, tests and scans, pushes the image to ECR, applies Terraform, then smoke-tests the live URL once the Lambda function has updated. Only `dev` deploys: the AWS deploy role trusts that branch alone, and `main` still holds the earlier ECS and load balancer setup.
+
+The site runs on a Lambda function behind CloudFront, so nothing is billed by the hour. At a few visits a week it stays inside AWS's always-free allowances and costs about US$0.10 a month, mostly image storage. The first page after a quiet spell takes a second or two longer while the function starts.
 
 ### First deploy
 
@@ -53,30 +55,32 @@ Do this once, in a dedicated AWS account with a `zurich-demo` profile.
    export AWS_PROFILE=zurich-demo AWS_REGION=ap-southeast-2
    infra/bootstrap.sh <account-id> <alert-email> 20
    terraform -chdir=infra init -backend-config=backend.hcl
-   terraform -chdir=infra apply -target=aws_acm_certificate.app -target=aws_ecr_repository.web
+   terraform -chdir=infra apply -target=aws_acm_certificate.cloudfront -target=aws_ecr_repository.web
    ```
 
-3. Add the certificate's DNS validation record at your DNS provider.
-4. Push the first image and create everything else:
+3. Add the certificate's DNS validation record (the `dns_validation_records` output) at your DNS provider.
+4. Push the first image and create everything else. Lambda needs a single-platform image, hence no provenance:
 
    ```bash
    aws ecr get-login-password | docker login -u AWS --password-stdin <account-id>.dkr.ecr.ap-southeast-2.amazonaws.com
-   pnpm build && docker buildx build --platform linux/amd64 --push -t <ecr-url>:$(git rev-parse HEAD) .
+   pnpm build   # also bundles the policy issuer, which Terraform zips
+   docker build --platform linux/amd64 --provenance=false -t <ecr-url>:$(git rev-parse HEAD) .
+   docker push <ecr-url>:$(git rev-parse HEAD)
    terraform -chdir=infra apply -var image_tag=$(git rev-parse HEAD)
    ```
 
-5. Point a CNAME for your domain at the `alb_dns_name` output.
+5. Point a CNAME for your domain at the `cloudfront_domain_name` output. On Cloudflare, leave it DNS only (grey cloud).
 6. In GitHub, set the repository variables `AWS_DEPLOY_ROLE_ARN` (the `deploy_role_arn` output), `AWS_REGION` and `DOMAIN_NAME`.
 
 ## Where things are
 
-| Path                      | What                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| `apps/web/src`            | Pages, components and motion                                 |
-| `apps/web/api/lambda`     | BFF functions and the mock MuleSoft APIs                     |
-| `apps/web/server`         | Middleware: sessions, security headers, rate limits, logging |
-| `apps/web/shared`         | Validation rules shared by the browser and the BFF           |
-| `functions/policy-issuer` | The Lambda that issues policies                              |
-| `infra`                   | Terraform for the whole AWS account                          |
-| `.github/workflows`       | CI/CD                                                        |
-| `docs/phases`             | Each phase's plan, brief and evidence                        |
+| Path                      | What                                                                               |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `apps/web/src`            | Pages, components and motion                                                       |
+| `apps/web/api/lambda`     | BFF functions and the mock MuleSoft APIs                                           |
+| `apps/web/server`         | Middleware: sessions, security headers, the CloudFront check, rate limits, logging |
+| `apps/web/shared`         | Validation rules shared by the browser and the BFF                                 |
+| `functions/policy-issuer` | The Lambda that issues policies                                                    |
+| `infra`                   | Terraform for the whole AWS account                                                |
+| `.github/workflows`       | CI/CD                                                                              |
+| `docs/phases`             | Each phase's plan, brief and evidence                                              |

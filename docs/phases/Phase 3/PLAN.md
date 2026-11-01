@@ -1,5 +1,7 @@
 # Zurich Demo App — Phase 3 Plan: Motion
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. The motion work is unchanged; the rest of this file is the plan as written.
+
 ## The goal
 
 Add a small, consistent set of animations so the redesign feels finished and alive, without changing what any page says or how the flow works. Restraint is the rule: each animation has to help someone notice, follow or get feedback, and none can hold back content or call attention to itself.

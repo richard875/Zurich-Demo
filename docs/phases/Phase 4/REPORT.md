@@ -1,5 +1,7 @@
 # Phase 4 report: audit and final polish
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. The rest of this file is the report as written.
+
 25 October 2026 · Claude Code, for Richard Everley
 
 Phase 4 added no features. It checked everything built in Phases 1 to 3 and fixed what was wrong, in four steps on the `phase-4-audit` branch, with a stop for Richard after each. The full list is in `FINDINGS.md`; the scripts that repeat the audit are in `scripts/`; the full capture set is on the `phase-4-evidence` branch, kept off `main`.

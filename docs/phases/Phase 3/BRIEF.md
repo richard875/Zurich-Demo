@@ -1,5 +1,7 @@
 # Build brief: Phase 3, motion
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. The motion work is unchanged; the rest of this file is the brief as written.
+
 You're adding a small set of animations to the demo app in this repo. `docs/phases/Phase 3/PLAN.md` says **what** moves and why, with `motion-map.png` beside it. This brief (`docs/phases/Phase 3/BRIEF.md`) says **how**. If the two disagree, this brief wins.
 
 The working rules from `docs/phases/Phase 1/BRIEF.md` and `docs/phases/Phase 2/BRIEF.md` still apply (stop points, ask before touching AWS or GitHub, check installed library versions, short docs, focused diffs) unless this brief changes them.

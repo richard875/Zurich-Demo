@@ -1,0 +1,185 @@
+<!doctype html>
+<!-- The source of architecture.png. To redraw it, open this file in Chromium at device scale 2
+     and screenshot the svg element (1340 px wide). Every box and arrow should match infra/. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Zurich Direct architecture</title>
+    <style>
+      body {
+        margin: 0;
+        background: #fff;
+      }
+      svg {
+        display: block;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      .box {
+        fill: #fff;
+        stroke: #d3d0c9;
+        stroke-width: 1;
+      }
+      .app {
+        fill: #e7f0fb;
+        stroke: #3d7fe0;
+        stroke-width: 1.5;
+      }
+      .group {
+        fill: none;
+        stroke: #d3d0c9;
+        stroke-width: 1;
+      }
+      .account {
+        fill: none;
+        stroke: #c9c6bf;
+        stroke-dasharray: 5 4;
+      }
+      .band {
+        fill: #ebeae5;
+        stroke: #d3d0c9;
+      }
+      .line {
+        fill: none;
+        stroke: #c9c5bb;
+        stroke-width: 1.5;
+      }
+      .title {
+        font-size: 15px;
+        font-weight: 700;
+        fill: #111;
+      }
+      .name {
+        font-size: 12.5px;
+        font-weight: 700;
+        fill: #111;
+        text-anchor: middle;
+      }
+      .sub {
+        font-size: 11px;
+        fill: #333;
+        text-anchor: middle;
+      }
+      .label {
+        font-size: 10.5px;
+        fill: #555;
+      }
+      .area {
+        font-size: 10.5px;
+        font-weight: 500;
+        fill: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 670 712" width="670" height="712" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="9"
+          refY="5"
+          markerWidth="7"
+          markerHeight="7"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="#c9c5bb" />
+        </marker>
+      </defs>
+
+      <text class="title" x="22" y="28">
+        One Modern.js app serves pages and API; policy issue runs on events
+      </text>
+
+      <!-- Browser -->
+      <rect class="box" x="205" y="50" width="263" height="48" rx="6" />
+      <text class="name" x="336.5" y="70">Customer browser</text>
+      <text class="sub" x="336.5" y="87">React pages + FingerprintJS sign-in</text>
+
+      <!-- AWS account -->
+      <rect class="account" x="22" y="122" width="628" height="492" rx="8" />
+      <text class="area" x="36" y="140">AWS account: zurich-demo (Sydney)</text>
+
+      <path class="line" d="M336.5 98 V156" marker-end="url(#arrow)" />
+      <text class="label" x="344" y="118">HTTPS</text>
+
+      <!-- CloudFront -->
+      <rect class="box" x="196" y="158" width="281" height="50" rx="6" />
+      <text class="name" x="336.5" y="178">Amazon CloudFront</text>
+      <text class="sub" x="336.5" y="195">
+        at the edge · ACM certificate · caches /static/ only
+      </text>
+
+      <!-- Web function -->
+      <rect class="group" x="36" y="232" width="600" height="112" rx="8" />
+      <text class="area" x="622" y="339" text-anchor="end">
+        Lambda: web · image from ECR · Lambda Web Adapter
+      </text>
+
+      <path class="line" d="M240 208 V260" marker-end="url(#arrow)" />
+      <text class="label" x="248" y="252">function URL + origin secret</text>
+
+      <rect class="app" x="50" y="262" width="300" height="64" rx="6" />
+      <text class="name" x="200" y="282">Modern.js app (Node server)</text>
+      <text class="sub" x="200" y="299">React SSR pages + BFF functions (api/)</text>
+      <text class="sub" x="200" y="315">Hono: session · CloudFront check · rate limits</text>
+
+      <path class="line" d="M350 294 H388" marker-end="url(#arrow)" />
+      <text class="label" x="355" y="287">HTTP</text>
+
+      <rect class="box" x="390" y="262" width="232" height="64" rx="6" />
+      <text class="name" x="506" y="282">Mock MuleSoft APIs</text>
+      <text class="sub" x="506" y="299">same server, called over HTTP</text>
+      <text class="sub" x="506" y="315">rating · underwriting · HMAC token</text>
+
+      <!-- Data and events -->
+      <path class="line" d="M140 328 V378" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+      <text class="label" x="148" y="366">read, write</text>
+
+      <path class="line" d="M300 326 V378" marker-end="url(#arrow)" />
+      <text class="label" x="294" y="366" text-anchor="end">read once</text>
+
+      <path class="line" d="M340 326 V354 H511 V378" marker-end="url(#arrow)" />
+      <text class="label" x="420" y="370">publish event</text>
+
+      <rect class="box" x="50" y="380" width="180" height="60" rx="6" />
+      <text class="name" x="140" y="400">Amazon DynamoDB</text>
+      <text class="sub" x="140" y="416">quotes and applications,</text>
+      <text class="sub" x="140" y="431">one table, capped on demand</text>
+
+      <rect class="box" x="242" y="380" width="142" height="60" rx="6" />
+      <text class="name" x="313" y="400">Parameter Store</text>
+      <text class="sub" x="313" y="416">session secret, read</text>
+      <text class="sub" x="313" y="431">as the function starts</text>
+
+      <rect class="box" x="400" y="380" width="222" height="60" rx="6" />
+      <text class="name" x="511" y="400">SNS topic → SQS queue</text>
+      <text class="sub" x="511" y="416">ApplicationSubmitted, 3 s delay</text>
+      <text class="sub" x="511" y="431">+ dead-letter queue</text>
+
+      <path class="line" d="M511 440 V474" marker-end="url(#arrow)" />
+      <text class="label" x="519" y="461">triggers</text>
+
+      <rect class="box" x="400" y="476" width="222" height="60" rx="6" />
+      <text class="name" x="511" y="496">Lambda: policy issuer</text>
+      <text class="sub" x="511" y="512">assigns a policy number</text>
+      <text class="sub" x="511" y="527">sets status to Active</text>
+
+      <path class="line" d="M400 506 H140 V442" marker-end="url(#arrow)" />
+      <text class="label" x="240" y="500">update status</text>
+
+      <!-- Observability -->
+      <rect class="band" x="36" y="560" width="600" height="34" rx="6" />
+      <text class="sub" x="336" y="581">
+        JSON logs → CloudWatch · traces from both Lambdas and SNS → X-Ray
+      </text>
+
+      <!-- Pipeline -->
+      <path class="line" d="M336.5 656 V616" marker-end="url(#arrow)" />
+      <text class="label" x="344" y="640">deploys</text>
+      <rect class="box" x="46" y="656" width="581" height="38" rx="6" />
+      <text class="sub" x="336.5" y="679">
+        GitHub Actions (OIDC, dev branch only): test + scan → ECR → Terraform → Lambda → smoke test
+      </text>
+    </svg>
+  </body>
+</html>

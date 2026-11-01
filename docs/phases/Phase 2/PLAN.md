@@ -1,5 +1,7 @@
 # Zurich Demo App — Phase 2 Plan: Zurich Direct, Redesigned
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. Nothing in this plan's scope changed; the rest of this file is the plan as written.
+
 ## The goal
 
 Turn the demo's public pages into "Zurich Direct, redesigned": every content block from today's direct.zurich.com.au home page, rebuilt in zurich.com.au's newer design language. The quote, apply and My policies flow keeps its structure and behaviour. It only picks up the new header, footer and rounder components.

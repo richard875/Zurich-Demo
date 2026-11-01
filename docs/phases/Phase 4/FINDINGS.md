@@ -1,5 +1,7 @@
 # Phase 4 findings
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. F-23 and F-30 are updated to match; the rest of this file is the record as written.
+
 Step 1 audit of `main` at `a024dfe`, 25 October 2026. Newest priority first. Evidence paths are under `docs/phases/Phase 4/evidence/` on the `phase-4-evidence` branch, which holds the full capture set; the scripts that produce it are in `scripts/`.
 
 **Step 2 (25 October 2026):** the P0, the code and UI P1s and most P2s are fixed, each with a regression test where one makes sense. Lint, types, 81 unit tests and 34 E2E tests pass. The docs P1s wait for Step 4, when the documents are updated last.
@@ -32,14 +34,14 @@ Step 1 audit of `main` at `a024dfe`, 25 October 2026. Newest priority first. Evi
 | F-20 | Code | P2 | `infra/events.tf` | There's no CloudWatch alarm on the dead-letter queue, which the plan lists. Adding one is an infrastructure change. | Terraform read | Logged for after the demo: an infrastructure and cost change |
 | F-21 | Code | P2 | `pnpm-workspace.yaml` | The four `minimumReleaseAgeExclude` lines are no longer needed: `pnpm install --frozen-lockfile` passes without them. | Local install in a scratch copy | Fixed in `chore(dev): drop release-age exclusions that are no longer needed` |
 | F-22 | Code | P2 | `.trivyignore` | One entry no longer matches anything in the filesystem or image scans, and a comment calls Modern.js 3.10.1 the latest (3.10.3 is, bundling the same packages, so the other entries still apply). | Local Trivy scans | Fixed in `chore(security): remove a scan exception that no longer matches anything` |
-| F-23 | Docs | P2 | `docs/architecture.png` | Accurate, but its editable source isn't kept beside it, and ECR, SSM Parameter Store and the ACM certificate aren't shown. | The image and `infra/` | Logged for after the demo: every box, label and arrow matches `infra/` and the code, and ECR shows in the pipeline line, so the diagram stays as it is |
+| F-23 | Docs | P2 | `docs/architecture.png` | Accurate, but its editable source isn't kept beside it, and ECR, SSM Parameter Store and the ACM certificate aren't shown. | The image and `infra/` | Logged for after the demo: every box, label and arrow matches `infra/` and the code, and ECR shows in the pipeline line, so the diagram stays as it is. Redrawn on 1 November 2026 for Lambda and CloudFront (`dev`), with ECR, Parameter Store and the certificate shown and its HTML source, `docs/architecture.html`, beside it |
 | F-24 | Code | P3 | `components/icon-link.tsx` | Imported nowhere. No other unused modules. | Import search | Logged |
 | F-25 | Code | P3 | BFF validation | A 400 response carries the raw Zod issue list as its message. The browser shows its own wording, so visitors never see it. | Local request | Logged |
 | F-26 | UI | P3 | Every page | The demo strip sits outside any landmark (axe "region", moderate). | `reports/*.json` | Logged |
 | F-27 | Motion | P3 | Home | The cover tab pills fade their focus ring in over 200ms. Tabbing in the first 0.7s can land on the hero's Get a quote while it is still rising. | `motion/motion-*-on.json` | Logged |
 | F-28 | Code | P3 | My policies, Apply | A failed load shows its error only after three retries, about 7 seconds. | Capture with `/api/policies` failing | Logged |
 | F-29 | Code | P3 | Dependencies | `pnpm audit --prod` also lists a moderate issue in a build-time CSS tool and a low one in a serialiser the app uses only for data. | Local audit | Logged |
-| F-30 | Code | P3 | `infra/ecs.tf` | The tracing sidecar's image is pinned by tag, not digest. | Terraform read | Logged |
+| F-30 | Code | P3 | `infra/ecs.tf` | The tracing sidecar's image is pinned by tag, not digest. | Terraform read | Gone on 1 November 2026: the sidecar was removed with ECS (`dev`) |
 | F-31 | Code | P3 | Tests | No E2E test covers the 404 status, sign out, loading or failed states, or WebKit. | Test list | Logged |
 | F-32 | Docs | P3 | `docs/phases/Phase 3/HANDOVER.md` | Says Phase 3 isn't deployed. Richard approved a one-line note that it shipped. | The file | Fixed in `docs: note that Phase 3 shipped` |
 | F-33 | UI | P3 | Firefox | Firefox warns about glyph boxes in the Ogg font from the design-tokens package. Nothing visible. | `reports/captures-firefox-report-firefox-1440.json` | Logged |

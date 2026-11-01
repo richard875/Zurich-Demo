@@ -1,6 +1,8 @@
 # Phase 3 (Motion): handover
 
 > **Shipped:** Phase 3 was merged into `main` through pull request 1 and deployed on 23 October 2026. The rest of this file is the record as written before that.
+>
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. Pushing to `main` no longer deploys, and the deploy steps below (ECS, `main`) are out of date; the motion work they describe is unchanged.
 
 | | |
 | --- | --- |

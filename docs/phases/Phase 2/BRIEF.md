@@ -1,5 +1,7 @@
 # Build brief: Phase 2, Zurich Direct redesigned
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. Nothing in this brief's scope changed; the rest of this file is the brief as written.
+
 You're updating the demo app in this repo. `docs/phases/Phase 2/PLAN.md` says **what** changes and why. This brief (`docs/phases/Phase 2/BRIEF.md`) says **how**. If the two disagree, this brief wins.
 
 The working rules from `docs/phases/Phase 1/BRIEF.md` still apply (phases with stop points, ask before touching AWS or GitHub, check installed library versions, short docs) unless this brief changes them.

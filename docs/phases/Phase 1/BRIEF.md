@@ -1,5 +1,7 @@
 # Build brief: Zurich Life Direct (demo)
 
+> **Since then:** after the demo, on 1 November 2026, the site moved from ECS Fargate behind a load balancer to a Lambda function behind CloudFront, cutting its running cost from about US$55 to about US$0.10 a month. That work is on the `dev` branch, now the only branch that deploys. The README and `docs/decisions.md` describe the current setup. The ECS, load balancer, VPC and OpenTelemetry sidecar this brief describes are gone; the rest of this file is the brief as written.
+
 You're building a small demo app described in `docs/phases/Phase 1/PLAN.md`. PLAN.md says **what** to build and with which stack. This brief (`docs/phases/Phase 1/BRIEF.md`) says **how**: it fills in the details the plan leaves open and sets the rules. If the two disagree, this brief wins.
 
 ## Files
