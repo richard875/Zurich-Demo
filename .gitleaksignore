@@ -18,3 +18,7 @@
 
 # Google Tag Manager click-tracking element ID: teaser-ff7d2002e6-cta-81e67e6b2e.
 07cbef99dc024e8740f4c7f9a9c65f2e1a473d43:doc/Zurich Direct/Zurich Direct_files/gtm.js:generic-api-key:14
+
+# Placeholder for the site gate's password variable in the Terraform test, which runs against mock
+# providers only. The real password comes from the SITE_PASSWORD GitHub secret and is in no commit.
+e4a5f041d7de9cd1406e8da513089b06b6dcf10e:infra/cost.tftest.hcl:hashicorp-tf-password:19
