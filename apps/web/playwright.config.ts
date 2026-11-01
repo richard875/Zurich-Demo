@@ -14,12 +14,18 @@ const serverEnv = (port: number, overrides: Record<string, string> = {}) => ({
   MOCK_MULESOFT_LATENCY_MS: '50',
   MOCK_MULESOFT_FAIL_RATE: '0',
   SESSION_SECRET: 'e2e-only-session-secret',
+  SITE_PASSWORD: sitePassword,
   COOKIE_SECURE: 'false',
   LOG_LEVEL: 'warn',
   ...overrides,
 });
 
 export const failingServerUrl = 'http://localhost:8091';
+
+// Both copies are behind the password gate. A setup step enters the password once and every test
+// starts with its pass (cookies ignore the port, so it works on both); gate.spec.ts starts without.
+export const sitePassword = 'e2e-only-site-password';
+export const gatePass = 'test-results/.auth/gate.json';
 
 export default defineConfig({
   testDir: './e2e',
@@ -28,7 +34,14 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: { baseURL: 'http://localhost:8090', trace: 'retain-on-failure' },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'gate', testMatch: 'gate.setup.ts', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'chromium',
+      dependencies: ['gate'],
+      use: { ...devices['Desktop Chrome'], storageState: gatePass },
+    },
+  ],
   webServer: [
     {
       command: 'node .output/start.cjs',

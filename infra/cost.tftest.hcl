@@ -16,6 +16,7 @@ run "keep_demo_cost_envelope" {
     aws_account_id = "123456789012"
     domain_name    = "demo.example.com"
     image_tag      = "test-image"
+    site_password  = "test-site-password"
   }
 
   assert {
@@ -30,9 +31,9 @@ run "keep_demo_cost_envelope" {
   assert {
     condition = (
       aws_cloudfront_distribution.web.default_cache_behavior[0].cache_policy_id == data.aws_cloudfront_cache_policy.disabled.id &&
-      one(aws_cloudfront_distribution.web.ordered_cache_behavior).path_pattern == "/static/*"
+      length(aws_cloudfront_distribution.web.ordered_cache_behavior) == 0
     )
-    error_message = "Pages and APIs must stay uncached at CloudFront; only /static/* is cached."
+    error_message = "Nothing may be cached at CloudFront: the password gate must see every request, static files included."
   }
 
   assert {

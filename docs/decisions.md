@@ -3,6 +3,7 @@
 - Mock MuleSoft is in the app but reached only over HTTP, behind an HMAC token. Inline events mean local and CI runs need no AWS.
 - FingerprintJS mock sign-in: no identity provider to set up for a demo. Not real auth.
 - Public URL, no WAF or IP allowlist: every page says it is a demo, and nothing is indexed.
+- Since the demo, a password gate in front of everything, checked by the server, not the browser: until a visitor enters the password, every page is the gate page and every API call and static file, the app's scripts included, gets a 401. The pass is a signed HttpOnly cookie that lasts 30 days, and changing the password ends every pass. CloudFront no longer caches `/static/*`, since an edge copy would skip the check; browsers still keep those files for a year.
 - The app guards itself instead: it refuses requests that skip CloudFront, keeps per-visitor rate limits in memory (each function instance has its own; no Redis), caps bodies at 16 KB and DynamoDB throughput too.
 - No real names: the apply form shows a made-up one, and the BFF rejects any request carrying a name.
 - Real Zurich Direct copy, photos and 5% bundle discount; only the home page and the quote flow are built, and other links go to the real site.

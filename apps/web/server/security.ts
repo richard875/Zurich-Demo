@@ -13,7 +13,7 @@ const compressStatic = compress({
   contentTypeFilter: /^(text\/|application\/(javascript|json)|image\/svg\+xml)/i,
 });
 
-// Compression is only for public assets, keeping personalised HTML and APIs out of it.
+// Compression is only for static assets, keeping personalised HTML and APIs out of it.
 export const responseSecurity: MiddlewareHandler = async (c, next) => {
   // The bundler can still emit its own helper map even when application maps are disabled.
   if (
@@ -31,7 +31,8 @@ export const responseSecurity: MiddlewareHandler = async (c, next) => {
     ['GET', 'HEAD'].includes(c.req.method) &&
     [200, 304].includes(c.res.status) &&
     !c.res.headers.has('set-cookie');
-  c.header('Cache-Control', cacheable ? 'public, max-age=31536000, immutable' : 'no-store');
+  // Private: assets are behind the site's password gate, so no shared cache may keep them.
+  c.header('Cache-Control', cacheable ? 'private, max-age=31536000, immutable' : 'no-store');
   c.header('X-Content-Type-Options', 'nosniff');
   c.header('X-Frame-Options', 'DENY');
   c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -88,19 +89,22 @@ function originOf(origin: string): string | null {
 // 127.0.0.1 and a bumped port (when 8080 is taken) keep working.
 // Mock MuleSoft is skipped because it stands in for an external system the BFF calls
 // server-to-server, without a browser Origin.
+export function fromOwnOrigin(c: Context): boolean {
+  const origin = originOf(c.req.header('origin') ?? '');
+  const host = c.req.header('host');
+  const ownOrigin = process.env.NODE_ENV !== 'production' && host ? `http://${host}` : null;
+  return !!origin && (origin === getEnv().APP_ORIGIN || origin === ownOrigin);
+}
+
 export const sameOrigin: MiddlewareHandler = async (c, next) => {
   const { method, path } = c.req;
   if (
     unsafeMethods.has(method) &&
     path.startsWith('/api/') &&
-    !path.startsWith('/api/mock-mulesoft/')
+    !path.startsWith('/api/mock-mulesoft/') &&
+    !fromOwnOrigin(c)
   ) {
-    const origin = originOf(c.req.header('origin') ?? '');
-    const host = c.req.header('host');
-    const ownOrigin = process.env.NODE_ENV !== 'production' && host ? `http://${host}` : null;
-    if (!origin || (origin !== getEnv().APP_ORIGIN && origin !== ownOrigin)) {
-      return c.json({ message: 'This request was blocked.' }, 403);
-    }
+    return c.json({ message: 'This request was blocked.' }, 403);
   }
   await next();
 };
@@ -155,7 +159,7 @@ export function visitorAddress(c: Context): string {
 
 // Logs name a visitor by a keyed hash of their address: enough to tell visitors apart, without
 // writing addresses down.
-const visitorTag = (address: string) =>
+export const visitorTag = (address: string) =>
   createHmac('sha256', getEnv().SESSION_SECRET)
     .update(`zurich-demo:visitor:${address}`)
     .digest('hex')

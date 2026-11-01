@@ -105,6 +105,8 @@ jobs:
     env:
       IMAGE_TAG: ${{ github.sha }}
       TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
+      # The site's gate password, written to Parameter Store as a write-only value (infra/data.tf).
+      TF_VAR_site_password: ${{ secrets.SITE_PASSWORD }}
       DEPLOY_ROLE_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -119,6 +121,10 @@ jobs:
           fi
           echo "AWS_ACCOUNT_ID=${BASH_REMATCH[1]}" >> "$GITHUB_ENV"
           echo "TF_VAR_aws_account_id=${BASH_REMATCH[1]}" >> "$GITHUB_ENV"
+          if [ -z "$TF_VAR_site_password" ]; then
+            echo "Set the SITE_PASSWORD repository secret: the site won't start without its gate password." >&2
+            exit 1
+          fi
       - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
@@ -190,4 +196,11 @@ jobs:
             exit 1
           fi
       - name: Smoke test the public URL
-        run: curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "https://${{ vars.DOMAIN_NAME }}/api/health"
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "https://${{ vars.DOMAIN_NAME }}/api/health"
+          # And the gate is up: without the password, the home page is the gate.
+          status=$(curl --silent --output /dev/null --write-out '%{http_code}' "https://${{ vars.DOMAIN_NAME }}/")
+          if [ "$status" != 401 ]; then
+            echo "The home page answered $status without the password; expected the gate's 401." >&2
+            exit 1
+          fi

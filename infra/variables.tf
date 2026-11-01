@@ -20,6 +20,17 @@ variable "image_tag" {
   type        = string
 }
 
+variable "site_password" {
+  description = "The password on the site's front gate. CI passes the SITE_PASSWORD secret as TF_VAR_site_password."
+  type        = string
+  sensitive   = true
+  ephemeral   = true
+  validation {
+    condition     = length(var.site_password) >= 12
+    error_message = "site_password must be at least 12 characters."
+  }
+}
+
 variable "github_repository" {
   description = "The repository whose main branch may deploy, as GitHub's OIDC subject names it: owner@owner-id/name@repo-id."
   type        = string

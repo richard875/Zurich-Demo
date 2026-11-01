@@ -49,6 +49,9 @@ const envSchema = z
     SESSION_SECRET: z.string().min(12),
     // Set in AWS only: the header CloudFront adds to prove a request came through it.
     ORIGIN_VERIFY_SECRET: z.preprocess(blankAsUndefined, z.string().min(32).optional()),
+    // The password on the site's front gate (server/site-gate.ts). Required in production, so a
+    // deployment can't come up ungated; blank locally leaves the gate off.
+    SITE_PASSWORD: z.preprocess(blankAsUndefined, z.string().min(12).optional()),
     COOKIE_SECURE: z.enum(['true', 'false']).transform((value) => value === 'true'),
     LOG_LEVEL: z
       .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
@@ -57,6 +60,10 @@ const envSchema = z
   .refine((env) => env.EVENTS_MODE !== 'sns' || env.SNS_TOPIC_ARN !== undefined, {
     message: 'is required when EVENTS_MODE=sns',
     path: ['SNS_TOPIC_ARN'],
+  })
+  .refine((env) => process.env.NODE_ENV !== 'production' || env.SITE_PASSWORD !== undefined, {
+    message: 'is required in production',
+    path: ['SITE_PASSWORD'],
   });
 
 export type Env = z.infer<typeof envSchema>;

@@ -3,6 +3,7 @@ import { getEnv } from '../api/lambda/_lib/env';
 import { logger } from '../api/lambda/_lib/logger';
 import { SESSION_COOKIE, verifySession } from '../api/lambda/_lib/session';
 import { requestLog } from './request-log';
+import { siteGate } from './site-gate';
 import {
   apiNotFound,
   apiRateLimit,
@@ -43,6 +44,8 @@ export default defineServerConfig({
     // Static serving can finish before ordinary middleware; this must wrap it too.
     { name: 'response-security', order: 'pre', handler: responseSecurity },
     { name: 'origin-verify', order: 'pre', handler: originVerify },
+    // Wraps static files and pages too: without the password, nothing else is served.
+    { name: 'site-gate', order: 'pre', handler: siteGate },
     { name: 'request-log', handler: requestLog(logger) },
     { name: 'no-index', handler: noIndex },
     { name: 'api-not-found', handler: apiNotFound },

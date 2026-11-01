@@ -44,7 +44,7 @@ describe('response security', () => {
     const response = await app.request('/static/js/main.12345678.js', {
       headers: { 'accept-encoding': 'gzip' },
     });
-    expect(response.headers.get('cache-control')).toBe('public, max-age=31536000, immutable');
+    expect(response.headers.get('cache-control')).toBe('private, max-age=31536000, immutable');
     expect(response.headers.get('content-encoding')).toBe('gzip');
     expect(response.headers.get('vary')).toContain('Accept-Encoding');
     const stream = response.body?.pipeThrough(new DecompressionStream('gzip'));

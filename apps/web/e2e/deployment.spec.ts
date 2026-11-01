@@ -44,7 +44,7 @@ test('production responses protect session data, reject unsafe API requests and 
   expect(asset).toBeTruthy();
   const response = await request.get(asset ?? '', { headers: { 'accept-encoding': 'gzip' } });
   expect(response.headers()['content-encoding']).toBe('gzip');
-  expect(response.headers()['cache-control']).toBe('public, max-age=31536000, immutable');
+  expect(response.headers()['cache-control']).toBe('private, max-age=31536000, immutable');
   expect((await request.get(`${asset}.map`)).status()).toBe(404);
   expect((await request.get('/static/js/builder-runtime.js.map')).status()).toBe(404);
   expect(violations).toEqual([]);

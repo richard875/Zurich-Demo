@@ -8,7 +8,7 @@ Zurich Direct's life insurance and income protection site, redesigned in zurich.
 
 You can get a quote, sign in with one click, apply, and watch your policy go from Processing to Active. The site is a design concept, not the live Zurich Direct site. Prices are invented, the sign-in is a mock, and no real names are collected.
 
-**Try it at [zurich.richardeverley.com](https://zurich.richardeverley.com/).**
+**Try it at [zurich.richardeverley.com](https://zurich.richardeverley.com/).** Since the demo the site sits behind a password, checked on the server; ask me for it.
 
 ![Architecture](docs/architecture.png)
 
@@ -29,6 +29,8 @@ pnpm install
 docker compose up -d   # DynamoDB Local
 pnpm dev               # http://localhost:8080
 ```
+
+The password gate is off locally. To try it, set `SITE_PASSWORD` in `apps/web/.env` (at least 12 characters) and restart `pnpm dev`.
 
 ## Test
 
@@ -70,17 +72,19 @@ Do this once, in a dedicated AWS account with a `zurich-demo` profile.
    ```
 
 5. Point a CNAME for your domain at the `cloudfront_domain_name` output. On Cloudflare, leave it DNS only (grey cloud).
-6. In GitHub, set the repository variables `AWS_DEPLOY_ROLE_ARN` (the `deploy_role_arn` output), `AWS_REGION` and `DOMAIN_NAME`.
+6. In GitHub, set the repository variables `AWS_DEPLOY_ROLE_ARN` (the `deploy_role_arn` output), `AWS_REGION` and `DOMAIN_NAME`, and the repository secret `SITE_PASSWORD`, the site's gate password. Pass the same password to step 4's apply as `TF_VAR_site_password`.
+
+To change the password later, update the secret, bump `value_wo_version` on `aws_ssm_parameter.site_password` in `infra/data.tf`, and push to `dev`.
 
 ## Where things are
 
-| Path                      | What                                                                               |
-| ------------------------- | ---------------------------------------------------------------------------------- |
-| `apps/web/src`            | Pages, components and motion                                                       |
-| `apps/web/api/lambda`     | BFF functions and the mock MuleSoft APIs                                           |
-| `apps/web/server`         | Middleware: sessions, security headers, the CloudFront check, rate limits, logging |
-| `apps/web/shared`         | Validation rules shared by the browser and the BFF                                 |
-| `functions/policy-issuer` | The Lambda that issues policies                                                    |
-| `infra`                   | Terraform for the whole AWS account                                                |
-| `.github/workflows`       | CI/CD                                                                              |
-| `docs/phases`             | Each phase's plan, brief and evidence                                              |
+| Path                      | What                                                                                                  |
+| ------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `apps/web/src`            | Pages, components and motion                                                                          |
+| `apps/web/api/lambda`     | BFF functions and the mock MuleSoft APIs                                                              |
+| `apps/web/server`         | Middleware: the password gate, sessions, security headers, the CloudFront check, rate limits, logging |
+| `apps/web/shared`         | Validation rules shared by the browser and the BFF                                                    |
+| `functions/policy-issuer` | The Lambda that issues policies                                                                       |
+| `infra`                   | Terraform for the whole AWS account                                                                   |
+| `.github/workflows`       | CI/CD                                                                                                 |
+| `docs/phases`             | Each phase's plan, brief and evidence                                                                 |

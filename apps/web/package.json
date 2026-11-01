@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "modern dev",
-    "build": "MODERNJS_DEPLOY=node modern deploy && pnpm build:start",
+    "build": "MODERNJS_DEPLOY=node modern deploy && pnpm build:start && pnpm build:gate",
     "typecheck": "tsc --noEmit",
     "db:init": "node scripts/db-init.mts",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
     "start": "node .output/start.cjs",
-    "build:start": "esbuild start.ts --bundle --platform=node --target=node22 --format=cjs --outfile=.output/start.cjs"
+    "build:start": "esbuild start.ts --bundle --platform=node --target=node22 --format=cjs --outfile=.output/start.cjs",
+    "build:gate": "node scripts/gate-assets.mts"
   },
   "engines": {
     "node": "^22.18.0 || >=24.3.0"

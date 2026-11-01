@@ -3,7 +3,7 @@
 # domain over HTTPS in front of the function URL. Nothing is billed by the hour, so a site that's
 # visited a few times a week stays inside the always-free allowances.
 
-# Used by the function: the table, the topic, the session secret, its logs and X-Ray.
+# Used by the function: the table, the topic, the session secret and site password, its logs and X-Ray.
 resource "aws_iam_role" "web" {
   name               = "${var.name}-web"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
@@ -21,8 +21,8 @@ data "aws_iam_policy_document" "web" {
   }
 
   statement {
-    actions   = ["ssm:GetParameter"]
-    resources = [aws_ssm_parameter.session_secret.arn]
+    actions   = ["ssm:GetParameters"]
+    resources = [aws_ssm_parameter.session_secret.arn, aws_ssm_parameter.site_password.arn]
   }
 
   statement {
@@ -66,8 +66,9 @@ locals {
     MOCK_MULESOFT_FAIL_RATE  = "0"
     COOKIE_SECURE            = "true"
     LOG_LEVEL                = "info"
-    # Read at start-up by load-secrets.ts, so the secret itself isn't in the function's settings.
+    # Read at start-up by start.ts, so the secrets themselves aren't in the function's settings.
     SESSION_SECRET_PARAMETER = aws_ssm_parameter.session_secret.name
+    SITE_PASSWORD_PARAMETER  = aws_ssm_parameter.site_password.name
     ORIGIN_VERIFY_SECRET     = random_password.origin_verify.result
   }
 }
@@ -126,10 +127,6 @@ data "aws_cloudfront_cache_policy" "disabled" {
   name = "Managed-CachingDisabled"
 }
 
-data "aws_cloudfront_cache_policy" "optimized" {
-  name = "Managed-CachingOptimized"
-}
-
 # Everything the visitor sent except Host (the function URL needs its own), plus CloudFront's
 # headers, including the CloudFront-Viewer-Address the rate limits use.
 data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
@@ -163,7 +160,10 @@ resource "aws_cloudfront_distribution" "web" {
     }
   }
 
-  # Pages and APIs are personal: nothing is cached, and the app marks them no-store too.
+  # Nothing is cached at the edge. Pages and APIs are personal, and everything, static files
+  # included, is behind the site's password gate, which only the function can check: an edge copy
+  # of a script or image would go to visitors without the password. Browsers still keep
+  # fingerprinted assets for a year (private, immutable), so a return visit fetches only the page.
   default_cache_behavior {
     target_origin_id         = "web"
     viewer_protocol_policy   = "redirect-to-https"
@@ -171,18 +171,6 @@ resource "aws_cloudfront_distribution" "web" {
     cached_methods           = ["GET", "HEAD"]
     cache_policy_id          = data.aws_cloudfront_cache_policy.disabled.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
-  }
-
-  # Fingerprinted assets, which the app marks immutable for a year, are cached at the edge, so
-  # most of a page load never reaches the function.
-  ordered_cache_behavior {
-    path_pattern           = "/static/*"
-    target_origin_id       = "web"
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    cache_policy_id        = data.aws_cloudfront_cache_policy.optimized.id
-    compress               = true
   }
 
   # CloudFront would otherwise cache these errors for 10 seconds and could hand one visitor's

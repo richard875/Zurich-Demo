@@ -42,6 +42,15 @@ resource "aws_ssm_parameter" "session_secret" {
   value_wo_version = 1
 }
 
+# The site's gate password, from the SITE_PASSWORD GitHub secret. Write-only like the session secret,
+# so it's never in Terraform state either. To change it, update the secret and bump the version.
+resource "aws_ssm_parameter" "site_password" {
+  name             = "/${var.name}/site-password"
+  type             = "SecureString"
+  value_wo         = var.site_password
+  value_wo_version = 1
+}
+
 resource "aws_ecr_repository" "web" {
   name                 = "zurich-life-direct"
   image_tag_mutability = "IMMUTABLE"
