@@ -31,13 +31,13 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: [
     {
-      command: 'node .output/index',
+      command: 'node .output/start.cjs',
       url: 'http://localhost:8090/api/health',
       env: serverEnv(8090),
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'node .output/index',
+      command: 'node .output/start.cjs',
       url: `${failingServerUrl}/api/health`,
       env: serverEnv(8091, { MOCK_MULESOFT_FAIL_RATE: '1' }),
       reuseExistingServer: !process.env.CI,

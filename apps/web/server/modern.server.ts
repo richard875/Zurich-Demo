@@ -7,6 +7,7 @@ import {
   apiNotFound,
   apiRateLimit,
   internalMulesoft,
+  originVerify,
   requestSize,
   responseSecurity,
   sameOrigin,
@@ -41,6 +42,7 @@ export default defineServerConfig({
   middlewares: [
     // Static serving can finish before ordinary middleware; this must wrap it too.
     { name: 'response-security', order: 'pre', handler: responseSecurity },
+    { name: 'origin-verify', order: 'pre', handler: originVerify },
     { name: 'request-log', handler: requestLog(logger) },
     { name: 'no-index', handler: noIndex },
     { name: 'api-not-found', handler: apiNotFound },

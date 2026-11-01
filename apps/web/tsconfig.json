@@ -23,7 +23,7 @@
     "e2e",
     "tests",
     "playwright.config.ts",
-    "otel.ts"
+    "start.ts"
   ],
   "exclude": ["**/node_modules"]
 }

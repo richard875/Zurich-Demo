@@ -16,11 +16,9 @@ CVE-2026-73086
 # at 16 KB before validation, so no request can carry a collection large enough to matter.
 CVE-2023-54404
 
-# The ALB is public on purpose: anyone may visit the demo.
-AWS-0053
-
-# No NAT gateway or VPC endpoints by design, so tasks reach AWS APIs over public HTTPS (port 443 only).
-AWS-0104
+# No WAF on CloudFront: a web ACL costs US$5 a month plus rules, more than the rest of the site.
+# The app rate-limits each visitor itself, and the site holds only made-up data.
+AWS-0011
 
 # The SNS topic is encrypted with the AWS-managed key; a customer-managed key isn't worth it for fake data.
 AWS-0136

@@ -1,4 +1,4 @@
-import { createHmac } from 'node:crypto';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
 import type { Context, MiddlewareHandler } from '@modern-js/server-runtime';
 import { bodyLimit } from 'hono/body-limit';
@@ -124,12 +124,31 @@ export const requestSize: MiddlewareHandler = async (c, next) => {
   return limitBody(c, next);
 };
 
-// The load balancer appends the address each request came from to X-Forwarded-For, so the last
-// entry is the visitor's own and can't be forged; earlier entries can. Local and CI runs have no
-// load balancer and use the socket's address.
+export const ORIGIN_VERIFY_HEADER = 'x-origin-verify';
+
+// The Lambda's function URL is public, so CloudFront adds a secret header to every request it
+// sends there, and anything without it went around CloudFront: its viewer address could be forged.
+// The adapter's readiness check and the BFF's mock MuleSoft calls come from inside the function,
+// and local and CI runs set no secret.
+export const originVerify: MiddlewareHandler = async (c, next) => {
+  const secret = getEnv().ORIGIN_VERIFY_SECRET;
+  const internal = c.req.path === '/api/health' || c.req.path.startsWith('/api/mock-mulesoft/');
+  if (!secret || internal) return next();
+  const given = Buffer.from(c.req.header(ORIGIN_VERIFY_HEADER) ?? '');
+  const expected = Buffer.from(secret);
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+    return c.json({ message: 'This request was blocked.' }, 403);
+  }
+  await next();
+};
+
+// CloudFront sets CloudFront-Viewer-Address to the visitor's address and port, replacing any copy
+// the visitor sent, and originVerify has already refused requests that didn't come through it.
+// Local and CI runs have no CloudFront and use the socket's address.
 export function visitorAddress(c: Context): string {
-  const forwarded = c.req.header('x-forwarded-for')?.split(',').at(-1)?.trim();
-  if (forwarded) return forwarded;
+  const viewer = c.req.header('cloudfront-viewer-address');
+  // "203.0.113.7:51234" or "2001:db8::1:51234": the port follows the last colon.
+  if (viewer?.includes(':')) return viewer.slice(0, viewer.lastIndexOf(':'));
   const env = c.env as { node?: { req?: IncomingMessage } } | undefined;
   return env?.node?.req?.socket.remoteAddress ?? 'unknown';
 }

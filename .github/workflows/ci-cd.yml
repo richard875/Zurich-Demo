@@ -1,9 +1,11 @@
 name: CI/CD
 
+# Checks run on main and dev, but only dev deploys: main still describes the earlier ECS and load
+# balancer setup, and AWS's deploy role trusts the dev branch alone.
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
   contents: read
@@ -89,7 +91,7 @@ jobs:
 
   deploy:
     name: Deploy to AWS
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     needs: [app, terraform, security]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -143,9 +145,10 @@ jobs:
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
+      # Lambda only runs single-platform images, so no provenance or SBOM attestations.
       - name: Build the image
         if: steps.image.outputs.exists == 'false'
-        run: docker build --platform linux/amd64 -t "${{ steps.image.outputs.ref }}" .
+        run: docker build --platform linux/amd64 --provenance=false --sbom=false -t "${{ steps.image.outputs.ref }}" .
       # Unfixed findings are skipped here: node:22-slim's Debian packages carry many HIGH CVEs
       # with no fixed version yet, which would block every deploy with nothing to act on.
       - name: Trivy (image)
@@ -175,13 +178,14 @@ jobs:
           terraform init -input=false -backend-config="bucket=zurich-demo-tfstate-$account_id"
           terraform plan -input=false -out=deploy.tfplan -var "image_tag=$IMAGE_TAG"
           terraform apply -input=false deploy.tfplan
-          echo "EXPECTED_TASK_DEFINITION=$(terraform output -raw ecs_task_definition_arn)" >> "$GITHUB_ENV"
-      - name: Wait for the ECS service to be stable
+          echo "WEB_FUNCTION=$(terraform output -raw web_function_name)" >> "$GITHUB_ENV"
+          echo "EXPECTED_IMAGE=$(terraform output -raw web_image_uri)" >> "$GITHUB_ENV"
+      - name: Wait for the web function to update
         run: |
-          aws ecs wait services-stable --cluster zurich-demo --services web
-          actual=$(aws ecs describe-services --cluster zurich-demo --services web --query 'services[0].taskDefinition' --output text)
-          if [ "$actual" != "$EXPECTED_TASK_DEFINITION" ]; then
-            echo "ECS rolled back or is running a different task definition." >&2
+          aws lambda wait function-updated-v2 --function-name "$WEB_FUNCTION"
+          actual=$(aws lambda get-function --function-name "$WEB_FUNCTION" --query 'Code.ImageUri' --output text)
+          if [ "$actual" != "$EXPECTED_IMAGE" ]; then
+            echo "The web function is running a different image." >&2
             exit 1
           fi
       - name: Smoke test the public URL

@@ -47,6 +47,8 @@ const envSchema = z
     MOCK_MULESOFT_LATENCY_MS: z.coerce.number().int().min(0).default(300),
     MOCK_MULESOFT_FAIL_RATE: z.coerce.number().min(0).max(1).default(0),
     SESSION_SECRET: z.string().min(12),
+    // Set in AWS only: the header CloudFront adds to prove a request came through it.
+    ORIGIN_VERIFY_SECRET: z.preprocess(blankAsUndefined, z.string().min(32).optional()),
     COOKIE_SECURE: z.enum(['true', 'false']).transform((value) => value === 'true'),
     LOG_LEVEL: z
       .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])

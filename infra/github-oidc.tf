@@ -1,4 +1,5 @@
-# Lets GitHub Actions on the main branch of one repository deploy, with no stored AWS keys.
+# Lets GitHub Actions on the dev branch of one repository deploy, with no stored AWS keys. Only dev
+# deploys: main keeps the earlier ECS and load balancer setup, and must never apply it again.
 resource "aws_iam_openid_connect_provider" "github" {
   url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]
@@ -24,7 +25,7 @@ data "aws_iam_policy_document" "github_assume" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repository}:ref:refs/heads/main"]
+      values   = ["repo:${var.github_repository}:ref:refs/heads/dev"]
     }
   }
 }
@@ -35,7 +36,7 @@ resource "aws_iam_role" "github_deploy" {
 }
 
 # AdministratorAccess is acceptable here only because this AWS account is isolated, holds
-# nothing but this demo, and is closed afterwards. A real pipeline would get a scoped policy.
+# nothing but this demo. A real pipeline would get a scoped policy.
 resource "aws_iam_role_policy_attachment" "github_deploy_admin" {
   role       = aws_iam_role.github_deploy.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { Logger } from 'pino';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { getEnv } from '../api/lambda/_lib/env';
 import { mulesoftToken, validMulesoftToken } from '../api/lambda/_lib/mulesoft-auth';
 import { perVisitor, tokenBucket } from '../server/request-limits';
@@ -8,6 +8,7 @@ import {
   apiNotFound,
   apiRateLimit,
   internalMulesoft,
+  originVerify,
   requestSize,
   responseSecurity,
   sameOrigin,
@@ -182,6 +183,35 @@ describe('same-origin check', () => {
   });
 });
 
+describe('CloudFront origin check', () => {
+  const app = new Hono();
+  app.use(originVerify);
+  app.get('/', (c) => c.html('<h1>Demo</h1>'));
+  app.get('/api/health', (c) => c.json({ ok: true }));
+  app.post('/api/mock-mulesoft/rating', (c) => c.json({ ok: true }));
+  const secret = 'a'.repeat(32);
+
+  it('lets everything through when no secret is set, as locally and in CI', async () => {
+    expect((await app.request('/')).status).toBe(200);
+  });
+
+  it("with a secret, refuses requests without CloudFront's header but not internal ones", async () => {
+    // Add the secret to the cached settings, the way the Lambda's environment would.
+    const env = getEnv();
+    env.ORIGIN_VERIFY_SECRET = secret;
+    onTestFinished(() => {
+      env.ORIGIN_VERIFY_SECRET = undefined;
+    });
+    expect((await app.request('/')).status).toBe(403);
+    expect(
+      (await app.request('/', { headers: { 'x-origin-verify': 'b'.repeat(32) } })).status,
+    ).toBe(403);
+    expect((await app.request('/', { headers: { 'x-origin-verify': secret } })).status).toBe(200);
+    expect((await app.request('/api/health')).status).toBe(200);
+    expect((await app.request('/api/mock-mulesoft/rating', { method: 'POST' })).status).toBe(200);
+  });
+});
+
 describe('rate limits', () => {
   const warn = vi.fn();
   const app = new Hono();
@@ -193,9 +223,9 @@ describe('rate limits', () => {
   app.get('/api/policies', (c) => c.json({ policies: [] }));
   app.post('/api/quotes', (c) => c.json({ ok: true }));
   app.get('/api/health', (c) => c.json({ ok: true }));
-  const from = (forwardedFor: string) => ({ headers: { 'x-forwarded-for': forwardedFor } });
-  const quote = (forwardedFor: string) =>
-    app.request('/api/quotes', { method: 'POST', ...from(forwardedFor) });
+  const from = (address: string) => ({ headers: { 'cloudfront-viewer-address': address } });
+  const quote = (address: string) =>
+    app.request('/api/quotes', { method: 'POST', ...from(address) });
 
   // Stopped clocks, so no tokens come back mid-test.
   beforeEach(() => {
@@ -204,23 +234,24 @@ describe('rate limits', () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it('gives each visitor, by the address the load balancer added, 300 writes of their own', async () => {
-    for (let i = 0; i < 300; i += 1) expect((await quote('198.51.100.1')).status).toBe(200);
-    const refused = await quote('198.51.100.1');
+  it('gives each visitor, by the address CloudFront saw, 300 writes of their own', async () => {
+    for (let i = 0; i < 300; i += 1) expect((await quote('198.51.100.1:50000')).status).toBe(200);
+    const refused = await quote('198.51.100.1:50000');
     expect(refused.status).toBe(429);
     expect(refused.headers.get('retry-after')).toBe('1');
-    // Adding an earlier address doesn't make them someone else.
-    expect((await quote('203.0.113.9, 198.51.100.1')).status).toBe(429);
-    expect((await quote('198.51.100.2')).status).toBe(200);
-    expect((await app.request('/api/health', from('198.51.100.1'))).status).toBe(200);
+    // A new connection from the same address is still the same visitor.
+    expect((await quote('198.51.100.1:50001')).status).toBe(429);
+    expect((await quote('198.51.100.2:50000')).status).toBe(200);
+    expect((await quote('2001:db8::1:50000')).status).toBe(200);
+    expect((await app.request('/api/health', from('198.51.100.1:50000'))).status).toBe(200);
   });
 
   it('gives each visitor 900 reads, and logs their first refusal without their address', async () => {
     for (let i = 0; i < 900; i += 1) {
-      expect((await app.request('/api/policies', from('198.51.100.3'))).status).toBe(200);
+      expect((await app.request('/api/policies', from('198.51.100.3:50000'))).status).toBe(200);
     }
     for (let i = 0; i < 3; i += 1) {
-      expect((await app.request('/api/policies', from('198.51.100.3'))).status).toBe(429);
+      expect((await app.request('/api/policies', from('198.51.100.3:50000'))).status).toBe(429);
     }
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn.mock.calls[0]?.[0]).toEqual({

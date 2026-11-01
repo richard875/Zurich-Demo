@@ -17,8 +17,15 @@ export function isLogged(method: string, path: string, status: number): boolean 
 }
 
 // Modern.js's error reports attach the request headers. These ones are dropped: they carry the
-// session, the mock MuleSoft token or the visitor's address.
-const hiddenHeaders = new Set(['authorization', 'cookie', 'x-forwarded-for', 'x-mulesoft-token']);
+// session, the mock MuleSoft token, CloudFront's origin secret or the visitor's address.
+const hiddenHeaders = new Set([
+  'authorization',
+  'cookie',
+  'x-forwarded-for',
+  'cloudfront-viewer-address',
+  'x-mulesoft-token',
+  'x-origin-verify',
+]);
 const withoutHiddenHeaders = (arg: unknown) =>
   arg && typeof arg === 'object' && !(arg instanceof Error)
     ? Object.fromEntries(Object.entries(arg).filter(([key]) => !hiddenHeaders.has(key)))

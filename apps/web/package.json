@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "modern dev",
-    "build": "MODERNJS_DEPLOY=node modern deploy && pnpm build:otel",
+    "build": "MODERNJS_DEPLOY=node modern deploy && pnpm build:start",
     "typecheck": "tsc --noEmit",
     "db:init": "node scripts/db-init.mts",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "start": "node --import ./.output/otel.mjs .output/index",
-    "build:otel": "esbuild otel.ts --bundle --platform=node --target=node22 --format=esm --outfile=.output/otel.mjs --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
+    "start": "node .output/start.cjs",
+    "build:start": "esbuild start.ts --bundle --platform=node --target=node22 --format=cjs --outfile=.output/start.cjs"
   },
   "engines": {
     "node": "^22.18.0 || >=24.3.0"
@@ -42,16 +42,10 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@aws-sdk/client-ssm": "3.1153.0",
     "@axe-core/playwright": "^4.14.0",
     "@modern-js/app-tools": "3.10.1",
     "@modern-js/tsconfig": "3.10.1",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.223.0",
-    "@opentelemetry/id-generator-aws-xray": "^2.1.0",
-    "@opentelemetry/instrumentation-aws-sdk": "^0.78.0",
-    "@opentelemetry/instrumentation-http": "^0.223.0",
-    "@opentelemetry/instrumentation-undici": "^0.33.0",
-    "@opentelemetry/propagator-aws-xray": "^2.2.0",
-    "@opentelemetry/sdk-node": "^0.223.0",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "4.3.3",
     "@testing-library/dom": "^10.4.2",

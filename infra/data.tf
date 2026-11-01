@@ -1,5 +1,5 @@
 # One table for quotes and applications. On demand, no backups and no deletion protection:
-# the whole account is closed after the demo.
+# everything in it is made-up demo data.
 resource "aws_dynamodb_table" "main" {
   name                        = var.name
   billing_mode                = "PAY_PER_REQUEST"
@@ -57,11 +57,11 @@ resource "aws_ecr_lifecycle_policy" "web" {
   policy = jsonencode({
     rules = [{
       rulePriority = 1
-      description  = "Keep the last 10 images"
+      description  = "Keep the last 3 images"
       selection = {
         tagStatus   = "any"
         countType   = "imageCountMoreThan"
-        countNumber = 10
+        countNumber = 3
       }
       action = { type = "expire" }
     }]

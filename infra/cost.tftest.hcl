@@ -1,10 +1,10 @@
 # Mock AWS only: these checks never create resources or contact the deployment account.
 mock_provider "aws" {
-  mock_data "aws_availability_zones" {
-    defaults = { names = ["ap-southeast-2a", "ap-southeast-2b"] }
-  }
   mock_data "aws_iam_policy_document" {
     defaults = { json = "{\"Version\":\"2012-10-17\",\"Statement\":[]}" }
+  }
+  mock_resource "aws_lambda_function_url" {
+    defaults = { function_url = "https://example.lambda-url.ap-southeast-2.on.aws/" }
   }
 }
 
@@ -20,11 +20,19 @@ run "keep_demo_cost_envelope" {
 
   assert {
     condition = (
-      aws_ecs_task_definition.web.cpu == "512" &&
-      aws_ecs_task_definition.web.memory == "1024" &&
-      aws_ecs_service.web.desired_count == 1
+      aws_lambda_function.web.memory_size == 1024 &&
+      aws_lambda_function.web.timeout == 30 &&
+      aws_lambda_function_url.web.invoke_mode == "RESPONSE_STREAM"
     )
-    error_message = "Keep one 0.5 vCPU / 1 GB task; increasing capacity needs explicit cost approval."
+    error_message = "Keep the web function at 1 GB and 30 seconds; more needs explicit cost approval."
+  }
+
+  assert {
+    condition = (
+      aws_cloudfront_distribution.web.default_cache_behavior[0].cache_policy_id == data.aws_cloudfront_cache_policy.disabled.id &&
+      one(aws_cloudfront_distribution.web.ordered_cache_behavior).path_pattern == "/static/*"
+    )
+    error_message = "Pages and APIs must stay uncached at CloudFront; only /static/* is cached."
   }
 
   assert {

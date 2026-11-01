@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build on the build machine's own platform: the output is plain JavaScript, so only the
-# runtime stage needs to match the target (linux/amd64 on Fargate).
+# runtime stage needs to match the target (linux/amd64 on Lambda).
 FROM --platform=$BUILDPLATFORM node:22-slim AS build
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable
@@ -19,13 +19,19 @@ RUN pnpm --filter policy-issuer build:lib && pnpm --filter web build
 
 FROM node:22-slim AS runtime
 ENV NODE_ENV=production \
-    PORT=8080
+    PORT=8080 \
+    AWS_LWA_READINESS_CHECK_PATH=/api/health \
+    AWS_LWA_INVOKE_MODE=response_stream \
+    AWS_LWA_ASYNC_INIT=true
 # The app never runs npm, npx, corepack or yarn, and npm's bundled packages carry known CVEs.
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
     /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
+# AWS Lambda Web Adapter: a Lambda extension that turns each invocation into an HTTP request to the
+# server on PORT, so the same Node server runs in Lambda unchanged. It waits for /api/health before
+# taking traffic and streams responses back through the function URL.
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:1.0.1 /lambda-adapter /opt/extensions/lambda-adapter
 WORKDIR /app
 COPY --from=build /repo/apps/web/.output ./.output
-COPY --from=build /repo/apps/web/.output/otel.mjs ./otel.mjs
 USER node
 EXPOSE 8080
-CMD ["node", "--import", "./otel.mjs", ".output/index"]
+CMD ["node", ".output/start.cjs"]
