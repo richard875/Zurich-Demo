@@ -1,7 +1,8 @@
-name: CI/CD
+name: CI/CD (dev)
 
 # Only pushes to dev run the pipeline, and only dev deploys: AWS's deploy role trusts that branch
-# alone. Pushes to main trigger nothing. Pull requests still run the checks, without deploying.
+# alone. Pull requests still run the checks, without deploying. main keeps the earlier ci-cd.yml,
+# which is disabled in GitHub, so pushes to main trigger nothing.
 on:
   pull_request:
   push:
