@@ -1,9 +1,9 @@
 name: CI/CD
 
+# Manual only: the site now deploys from the dev branch's deploy.yml, and AWS no longer lets main
+# deploy. Kept so main's history stays whole; nothing starts it on push or pull request.
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
