@@ -40,7 +40,7 @@ pnpm e2e                                   # builds, then runs Playwright
 
 ## Deploy
 
-Push to `dev`. GitHub Actions lints, tests and scans, pushes the image to ECR, applies Terraform, then smoke-tests the live URL once the Lambda function has updated. Only `dev` deploys: the AWS deploy role trusts that branch alone, and `main` still holds the earlier ECS and load balancer setup.
+Push to `dev`. GitHub Actions lints, tests and scans, pushes the image to ECR, applies Terraform, then smoke-tests the live URL once the Lambda function has updated. Only `dev` deploys, and the AWS deploy role trusts that branch alone. Pushes to `main` trigger nothing.
 
 The site runs on a Lambda function behind CloudFront, so nothing is billed by the hour. At a few visits a week it stays inside AWS's always-free allowances and costs about US$0.10 a month, mostly image storage. The first page after a quiet spell takes a second or two longer while the function starts.
 

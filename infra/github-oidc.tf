@@ -1,5 +1,5 @@
-# Lets GitHub Actions on the dev branch of one repository deploy, with no stored AWS keys. Only dev
-# deploys: main keeps the earlier ECS and load balancer setup, and must never apply it again.
+# Lets GitHub Actions on the dev branch of one repository deploy, with no stored AWS keys. No other
+# branch can assume this role.
 resource "aws_iam_openid_connect_provider" "github" {
   url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]

@@ -1,11 +1,11 @@
 name: CI/CD
 
-# Checks run on main and dev, but only dev deploys: main still describes the earlier ECS and load
-# balancer setup, and AWS's deploy role trusts the dev branch alone.
+# Only pushes to dev run the pipeline, and only dev deploys: AWS's deploy role trusts that branch
+# alone. Pushes to main trigger nothing. Pull requests still run the checks, without deploying.
 on:
   pull_request:
   push:
-    branches: [main, dev]
+    branches: [dev]
 
 permissions:
   contents: read
